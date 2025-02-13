@@ -5,7 +5,7 @@ npm install
 npm run dev  
 
 create file called .env inside of study-buddy folder  
-add these values into the .env file:  
+add values to these variables in the .env file:  
 VITE_FIREBASE_API_KEY=  
 VITE_FIREBASE_AUTH_DOMAIN=  
 VITE_FIREBASE_PROJECT_ID=  

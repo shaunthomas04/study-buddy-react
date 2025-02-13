@@ -1,24 +1,23 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+// src/firebase.js
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
-// Your web app's Firebase configuration
+// Use the VITE_ prefixed variables from .env
 const firebaseConfig = {
-  apiKey: "AIzaSyCsSDrxr5HihttFWT6AsqieOm50wuuINr0",
-  authDomain: "egr302-study-buddy.firebaseapp.com",
-  projectId: "egr302-study-buddy",
-  storageBucket: "egr302-study-buddy.firebasestorage.app",
-  messagingSenderId: "1086319398149",
-  appId: "1:1086319398149:web:cc708ace55be8b4f567b6c"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firestore & Auth
-const db = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Export the Firebase services and app instance
-export { app, db, auth };
+export { auth, db };
+

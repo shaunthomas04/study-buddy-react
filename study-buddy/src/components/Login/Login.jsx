@@ -3,6 +3,11 @@ import "./Login.css";
 import login_image from "../../assets/login_image.jpg";
 import logo from "../../assets/logo.png";
 
+const [isLogin, toggleLogin] = useState(true);
+function toggleForm(){
+  toggleLogin(!isLogin);
+}
+
 
 function LoginForm(){
   return (
@@ -15,7 +20,7 @@ function LoginForm(){
 
         <div className="buttons-container">   
           <button type="submit" className="action-button">Login</button>
-          <button id="switch-to-signup" className="action-button" >Sign Up</button>
+          <button id="switch-to-signup" className="action-button" onClick={toggleForm}>Sign Up</button>
         </div>
       </form>
     </div>
@@ -26,15 +31,18 @@ function SignupForm(){
   return (
     <div id="signup-form" className="auth-items-container">
         <img src={logo} className="login-logo" alt="Logo" />
-        <h2>Sign up to get started!</h2>
-        <form id="signup-form-element">
+        <h1>Sign up to get started!</h1>
+        <form id="signup-form-element" className="auth-form">
             <input type="text" id="signup-first-name" placeholder="First Name" required />
             <input type="text" id="signup-last-name" placeholder="Last Name" required />
             <input type="email" id="signup-email" placeholder="Email" required />
             <input type="password" id="signup-password" placeholder="Password" required />
-            <button type="submit">Sign Up</button>
+
+            <div className="buttons-container"> 
+              <button type="submit" className="action-button">Sign Up</button>
+              <button id="switch-to-login" className="action-button" onClick={toggleForm}>Login</button>
+          </div>
         </form>
-        <button id="switch-to-login">Already have an account? Login</button>
     </div>
   );
 }
@@ -47,7 +55,11 @@ function App() {
       <div class="login-and-image-container">
         <div class="login-container">
               <div class="auth-container">
-                <LoginForm />
+              {isLogin ? (
+                  <LoginForm toggleForm={toggleForm} />
+                ) : (
+                  <SignupForm toggleForm={toggleForm} />
+                )}
               </div>
         </div>
         <div class="image-container">

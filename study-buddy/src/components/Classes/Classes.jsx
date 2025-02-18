@@ -8,6 +8,7 @@ const Classes = () => {
     <Navbar />  
       <div>
         <h2>Welcome to the Classes Page!</h2>
+        <h2>Current Classes</h2>
       </div>
     </>
   );

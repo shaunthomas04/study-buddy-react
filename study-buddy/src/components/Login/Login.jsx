@@ -1,58 +1,82 @@
-// src/components/Login/Login.jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import "./Login.css";
+import login_image from "../../assets/login_image.jpg";
+import logo from "../../assets/logo.png";
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+function LoginPage() {
+  const [isLogin, setIsLogin] = useState(true); 
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Simple validation
-    if (!email || !password) {
-      setError('Please enter both email and password.');
-    } else {
-      setError('');
-      // Handle actual login logic here (e.g., API call)
-      console.log('Logged in with', { email, password });
-    }
+  const toggleForm = () => {
+    setIsLogin(!isLogin); 
   };
 
   return (
-    <div className="login-container">
-      <h2>Login Page</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message if any */}
-      <form onSubmit={handleSubmit}>
-        <div className="input-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-          />
+    <div className="login-page">
+      <div className="login-and-image-container">
+        <div className="login-container">
+          <div className="auth-container">
+            {isLogin ? (
+              <LoginForm toggleForm={toggleForm} />
+            ) : (
+              <SignupForm toggleForm={toggleForm} />
+            )}
+          </div>
         </div>
-
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-          />
+        <div className="image-container">
+          <img src={login_image} alt="Login Image" />
         </div>
+      </div>
+    </div>
+  );
+}
 
-        <button type="submit">Login</button>
+function LoginForm({ toggleForm }) {
+  return (
+    <div id="login-form" className="auth-items-container">
+      <img src={logo} className="login-logo" alt="Logo" />
+      <h1 style={{textAlign: "center"}} >Welcome to Study Buddy!</h1>
+      <form id="login-form-element" className="auth-form">
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+
+        <div className="buttons-container">
+          <button type="submit" className="action-button">Login</button>
+          <button
+            id="switch-to-signup"
+            className="action-button"
+            onClick={toggleForm}
+          >
+            Sign Up
+          </button>
+        </div>
       </form>
     </div>
   );
-};
+}
+function SignupForm({ toggleForm }) {
+  return (
+    <div id="signup-form" className="auth-items-container">
+      <img src={logo} className="login-logo" alt="Logo" />
+      <h1>Sign up to get started!</h1>
+      <form id="signup-form-element" className="auth-form">
+        <input type="text" id="signup-first-name" placeholder="First Name" required />
+        <input type="text" id="signup-last-name" placeholder="Last Name" required />
+        <input type="email" id="signup-email" placeholder="Email" required />
+        <input type="password" id="signup-password" placeholder="Password" required />
 
-export default Login;
+        <div className="buttons-container">
+          <button type="submit" className="action-button">Sign Up</button>
+          <button
+            id="switch-to-login"
+            className="action-button"
+            onClick={toggleForm} 
+          >
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default LoginPage;

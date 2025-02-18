@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 const Navbar = () => {
     return(
@@ -6,8 +7,7 @@ const Navbar = () => {
           <ul>
            
             <li>
-              <Link to="/">Login</Link>
-              <Link to="/home">Home</Link>
+              <Link to="/">Home</Link>
               <Link to="/classes">Classes</Link>
               <Link to="/buddies">Buddies</Link>
               <Link to="/agenda">Agenda</Link>

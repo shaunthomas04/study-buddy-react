@@ -1,10 +1,15 @@
 import React from 'react';
+import Navbar from '../Navbar/Navbar';
+
 
 const Classes = () => {
   return (
-    <div>
-      <h2>Welcome to the Classes Page!</h2>
-    </div>
+    <>
+    <Navbar />  
+      <div>
+        <h2>Welcome to the Classes Page!</h2>
+      </div>
+    </>
   );
 };
 

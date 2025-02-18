@@ -134,11 +134,13 @@ function SignupForm({ toggleForm }) {
       <img src={logo} className="login-logo" alt="Logo" />
       <h1>Sign up to get started!</h1>
       <form id="signup-form-element" className="auth-form" onSubmit={handleSignup}>
-      <input type="text" id="signup-first-name" placeholder="First Name" onChange={(e) => setFirstName(e.target.value)} required />
-        <input type="text" id="signup-last-name" placeholder="Last Name" onChange={(e) => setLastName(e.target.value)} required />
-        <input type="email" id="signup-email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" id="signup-password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
+          <input type="text" id="signup-first-name" placeholder="First Name" onChange={(e) => setFirstName(e.target.value)} required />
+          <input type="text" id="signup-last-name" placeholder="Last Name" onChange={(e) => setLastName(e.target.value)} required />
+          <input type="email" id="signup-email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" id="signup-password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
 
+        
         <div className="buttons-container">
           <button type="submit" className="action-button">Sign Up</button>
           <button

@@ -1,10 +1,14 @@
 import React from 'react';
+import Navbar from '../Navbar/Navbar';
 
 const Buddies = () => {
   return (
-    <div>
-      <h2>Welcome to the Buddies Page!</h2>
-    </div>
+    <>
+    <Navbar />  
+      <div>
+        <h2>Welcome to the Buddies Page!</h2>
+      </div>
+    </>
   );
 };
 

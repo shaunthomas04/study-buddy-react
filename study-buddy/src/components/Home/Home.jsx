@@ -5,6 +5,10 @@ const Home = () => {
   return (
     <>
     <Navbar />
+    <title> Home Page </title>
+       <h1>Welcome</h1>
+
+        
       <div>
         <h2>Welcome to the Home Page!</h2>
       </div>

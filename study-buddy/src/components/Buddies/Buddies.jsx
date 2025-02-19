@@ -12,10 +12,10 @@ const Buddies = () => {
           <h1 className = "title"> Buddies</h1>
         </div>
         <div className="nav-links">
-          <a href = "#" className = "nav-item">Agenda</a>
-          <a href = "#" className = "nav-item active">Buddies</a>    
-          <a href = "#" className = "nav-item">Classes</a>
-          <a href = "#" className = "nav-item">Settings</a>
+          <a href = "#" className = "nav-item">Agenda </a>
+          <a href = "#" className = "nav-item active">Buddies </a>    
+          <a href = "#" className = "nav-item">Classes </a>
+          <a href = "#" className = "nav-item">Settings </a>
           </div>
       </nav>
 

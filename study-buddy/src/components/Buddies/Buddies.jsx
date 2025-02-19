@@ -52,10 +52,20 @@ const Buddies = () => {
           <div className="action-card"> Buddy Up To Agenda</div>
         </div>
       </div>
-      
-      </main>
-      <h2>Welcome to the Buddies Page!</h2>
+
+      {/* Suggested Buddies (Find friends) */}
+      <div className ="suggestions">
+        <h4 className = "section-title"> You May Also Know</h4>
+        <div className ="suggestions-grid">
+          <div className = "suggestion-card">Buddy 14</div>
+          <div className ="suggestion-card"> Buddy 74</div>
+          <div className = "suggestion-card"> Buddy 3</div>
+        </div>
+      </div>
+    </main>
     </div>
+    </div>
+    
   );
 };
 

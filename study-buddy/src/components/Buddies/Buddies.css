@@ -49,9 +49,28 @@ box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 }
 
 /*Main Page Layout */
-
 .buddies-container .buddies-main {
     display:flex;
     padding: 30px;
     gap: 20px;
+}
+
+/* Sidebar */
+.buddies-container .sidebar {
+    width: 10%;
+    background: linear-gradient(0.25turn, #3f87a6, #ebf8e1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+h2 {
+    font-weight: 200;
+}
+
+.buddies-container .buddy-item {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: poiner;
+    transition: background 0.3s;
 }

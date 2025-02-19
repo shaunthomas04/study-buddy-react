@@ -49,7 +49,7 @@ const Buddies = () => {
             <div className="action-grid">
               <div className="action-card">Send Buddy Requests</div>
               <div className="action-card">View Courses</div>
-              <div className="action-card">Buddy Up To Agenda)</div>
+              <div className="action-card">Buddy Up To Agenda</div>
             </div>
           </div>
 

@@ -99,7 +99,52 @@ h2 {
     border-radius: 50%
 }
 
-h3 {
-    font-weight:normal;
+.buddies-container .profile-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
 
+}
+
+.buddies-container .profile-status {
+    font-size:16px;
+    color: #777;
+}
+
+/* Actions */
+
+.buddies-container .action-grid {
+    display: flex;
+    gap: 15px;
+}
+
+.buddies-container .action-card {
+    flex: 1;
+    background: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.buddies-container .action-card:hover {
+    transform: scale(1.04);
+    background: #dfe9df;
+}
+
+/* Suggested Buddies */
+.buddies-container .suggestions-grid {
+    display: flex;
+    gap: 15px;
+}
+
+.buddies-container .suggestion-card {
+    flex:1;
+    background: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3;
 }

@@ -1,0 +1,173 @@
+.buddies-container {
+    font-family:'Franklin Gothic Medium', sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+    background: white;
+}
+
+/* Navbar */
+.navbar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+/*background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c); */
+background:lightgrey; 
+padding: 20px 40px;
+color: white;
+box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+
+.buddies-container .logo-container {
+    display: flex;
+    align-items:center;
+    gap: 10px;
+
+}
+
+.buddies-container .logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    object-fit: cover;
+}
+
+.buddies-container .nav-links {
+    display: flex;
+    gap: 20px;
+
+}
+
+.buddies-container .nav-item {
+    color: darkgray;
+    text-decoration:none;
+    font-size: 20px;
+    transition: color 0.3s;
+    gap: 50px;
+}
+.buddies-container .nav-item:hover,
+.buddies-container .nav-item.active {
+    color: white;
+}
+
+/*Main Page Layout */
+.buddies-container .buddies-main {
+    display:flex;
+    padding: 30px;
+    gap: 20px;
+}
+
+/* Sidebar */
+.buddies-container .sidebar {
+    width: 15%;
+    /*background: linear-gradient(0.2turn, #3f87a6, #ebf8e1); */
+    background: lightgray; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+h2 {
+    font-weight: 200;
+    text-align: center;
+}
+
+.buddies-container .buddy-item {
+    background: white;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 8px;
+    cursor: poiner;
+    transition: background 0.3s;
+    text-align: center;
+}
+
+.buddies-container .buddy-item.active {
+   /*background: #f1bb81; */
+    background: white; 
+    font-weight: bold;
+}
+
+.buddies-container .buddy-item:hover {
+    background: lightgray;
+    
+}
+
+/*Profile Section */
+.buddies-container .profile-section {
+    flex-grow: 1;
+    /*background: #eff3ed;  */
+    background: lightgray; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+.buddies-container .profile-avatar {
+    width: 60px;
+    height: 60px;
+    background: black;
+    border-radius: 50%
+}
+
+.buddies-container .profile-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+
+}
+
+.buddies-container .profile-status {
+    font-size:16px;
+    color: #777;
+}
+
+/* Actions */
+
+.buddies-container .action-grid {
+    display: flex;
+    gap: 35px;
+}
+
+.buddies-container .action-card {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.buddies-container .action-card a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color:inherit;
+    text-decoration: none;;
+    
+}
+
+.buddies-container .action-card:hover {
+    transform: scale(1.04);
+    background: #dfe9df;
+}
+
+/* Suggested Buddies */
+.buddies-container .suggestions-grid {
+    display: flex;
+    gap: 35px;
+}
+
+.buddies-container .suggestion-card {
+    flex:1;
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3;
+}
+
+.buddies-container .suggestion-card:hover {
+    transform: scale(1.04);
+    background: #dfe9df;
+
+}

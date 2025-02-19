@@ -47,7 +47,12 @@ const Buddies = () => {
           <div className="actions">
             <h4 className="section-title">Actions</h4>
             <div className="action-grid">
-              <div className="action-card">Send Buddy Requests</div>
+              {/*<div className="action-card">Send Buddy Requests</div> */}
+              <div className="action-card">
+               <a href="sendBuddyRequest.jsx">Send Buddy Requests</a>
+              </div>
+
+              
               <div className="action-card">View Courses</div>
               <div className="action-card">Buddy Up To Agenda</div>
             </div>

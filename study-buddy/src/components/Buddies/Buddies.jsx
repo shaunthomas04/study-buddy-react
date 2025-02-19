@@ -30,11 +30,19 @@ const Buddies = () => {
             <div className ="buddy-item"> Buddy 3</div>
             <div className ="buddy-item"> Buddy 4</div>
             <div className ="buddy-item"> Buddy 5</div>
-
           </div>
-
         </aside>
+
+        {/*Profile Section*/}
+        <main className= "profile-section">
+          <div className = "profile-header">
+            <div className= "profile-avatar"></div>
+          </div>
+          <h3 className ="profile-name">Buddy XYZ</h3>
+          <p className ="profile-status"> Student at California Baptist University</p>
+          </div>
       </div>
+      </main>
       <h2>Welcome to the Buddies Page!</h2>
     </div>
   );

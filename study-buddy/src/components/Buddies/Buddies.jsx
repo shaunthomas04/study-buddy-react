@@ -42,6 +42,17 @@ const Buddies = () => {
           <p className ="profile-status"> Student at California Baptist University</p>
           </div>
       </div>
+
+      {/* Avliable Actions */}
+      <div className ="actions">
+        <h4 className ="section-title">Actions</h4>
+        <div className = "action-grid">
+          <div className ="action-card"> Send Buddy Requests</div>
+          <div className ="action-card">View Buddies Courses</div>
+          <div className="action-card"> Buddy Up To Agenda</div>
+        </div>
+      </div>
+      
       </main>
       <h2>Welcome to the Buddies Page!</h2>
     </div>

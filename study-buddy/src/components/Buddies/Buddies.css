@@ -11,7 +11,7 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 /*background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c); */
-background:lightgrey;
+background:lightgrey; 
 padding: 20px 40px;
 color: white;
 box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
@@ -59,8 +59,8 @@ box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 /* Sidebar */
 .buddies-container .sidebar {
     width: 15%;
-    /* background: linear-gradient(0.2turn, #3f87a6, #ebf8e1); */
-    background: lightgray;
+    /*background: linear-gradient(0.2turn, #3f87a6, #ebf8e1); */
+    background: lightgray; 
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
@@ -72,7 +72,8 @@ h2 {
 
 .buddies-container .buddy-item {
     background: white;
-    padding: 12px;
+    padding: 20px;
+    margin: 10px;
     border-radius: 8px;
     cursor: poiner;
     transition: background 0.3s;
@@ -80,8 +81,8 @@ h2 {
 }
 
 .buddies-container .buddy-item.active {
-    /* background: #f1bb81; */
-    background: white;
+   /*background: #f1bb81; */
+    background: white; 
     font-weight: bold;
 }
 
@@ -93,8 +94,8 @@ h2 {
 /*Profile Section */
 .buddies-container .profile-section {
     flex-grow: 1;
-    /*background: #eff3ed; */
-    background: lightgray;
+    /*background: #eff3ed;  */
+    background: lightgray; 
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
@@ -128,7 +129,7 @@ h2 {
 .buddies-container .action-card {
     flex: 1;
     background: white;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
     border-radius: 8px;
     cursor: pointer;
@@ -158,7 +159,7 @@ h2 {
 .buddies-container .suggestion-card {
     flex:1;
     background: white;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
     border-radius: 8px;
     cursor: pointer;

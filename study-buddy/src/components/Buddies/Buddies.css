@@ -1,0 +1,16 @@
+.buddies-container {
+    font-family: 'Impact', sans-serif;
+    margin: 0;
+    background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);
+}
+
+/* Navbar */
+.navbar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: #2c2c2c;
+padding: 15px 30px;
+color: white;
+box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}

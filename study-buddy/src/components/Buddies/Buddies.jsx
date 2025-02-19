@@ -9,8 +9,14 @@ const Buddies = () => {
       <nav className="navbar">
         <div className="logo-container">
           <img src={logo} alt ="Logo" className="logo" />
-          
+          <h1 className = "title"> Buddies</h1>
         </div>
+        <div className="nav-links">
+          <a href = "#" className = "nav-item">Agenda</a>
+          <a href = "#" className = "nav-item active">Buddies</a>    
+          <a href = "#" className = "nav-item">Classes</a>
+          <a href = "#" className = "nav-item">Settings</a>
+          </div>
 
       </nav>
       <h2>Welcome to the Buddies Page!</h2>

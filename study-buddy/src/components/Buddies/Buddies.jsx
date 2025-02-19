@@ -33,39 +33,38 @@ const Buddies = () => {
           </div>
         </aside>
 
-        {/*Profile Section*/}
-        <main className= "profile-section">
-          <div className = "profile-header">
-            <div className= "profile-avatar"></div>
+        {/* Profile Section */}
+        <main className="profile-section">
+          <div className="profile-header">
+            <div className="profile-avatar"></div>
+            <div>
+              <h3 className="profile-name">Study Buddy</h3>
+              <p className="profile-status">Student at California Baptist University</p>
+            </div>
           </div>
-          <h3 className ="profile-name">Buddy XYZ</h3>
-          <p className ="profile-status"> Student at California Baptist University</p>
+
+          {/* Actions */}
+          <div className="actions">
+            <h4 className="section-title">Actions</h4>
+            <div className="action-grid">
+              <div className="action-card">Send Buddy Requests</div>
+              <div className="action-card">View Courses</div>
+              <div className="action-card">Buddy Up To Agenda)</div>
+            </div>
           </div>
-      </div>
 
-      {/* Avliable Actions */}
-      <div className ="actions">
-        <h4 className ="section-title">Actions</h4>
-        <div className = "action-grid">
-          <div className ="action-card"> Send Buddy Requests</div>
-          <div className ="action-card">View Buddies Courses</div>
-          <div className="action-card"> Buddy Up To Agenda</div>
-        </div>
+          {/* Suggested Buddies (Friends) */}
+          <div className="suggestions">
+            <h4 className="section-title">You May Also Know</h4>
+            <div className="suggestions-grid">
+              <div className="suggestion-card">Buddy 17</div>
+              <div className="suggestion-card">Buddy 32</div>
+              <div className="suggestion-card">Buddy 74</div>
+            </div>
+          </div>
+        </main>
       </div>
-
-      {/* Suggested Buddies (Find friends) */}
-      <div className ="suggestions">
-        <h4 className = "section-title"> You May Also Know</h4>
-        <div className ="suggestions-grid">
-          <div className = "suggestion-card">Buddy 14</div>
-          <div className ="suggestion-card"> Buddy 74</div>
-          <div className = "suggestion-card"> Buddy 3</div>
-        </div>
-      </div>
-    </main>
     </div>
-    </div>
-    
   );
 };
 

@@ -37,7 +37,7 @@ box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 }
 
 .buddies-container .nav-item {
-    color: lightgrey;
+    color: darkgray;
     text-decoration:none;
     font-size: 20px;
     transition: color 0.3s;
@@ -46,4 +46,12 @@ box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 .buddies-container .nav-item:hover,
 .buddies-container .nav-item.active {
     color: white;
+}
+
+/*Main Page Layout */
+
+.buddies-container .buddies-main {
+    display:flex;
+    padding: 30px;
+    gap: 20px;
 }

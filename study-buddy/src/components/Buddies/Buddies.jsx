@@ -38,7 +38,7 @@ const Buddies = () => {
           <div className="profile-header">
             <div className="profile-avatar"></div>
             <div>
-              <h3 className="profile-name">Study Buddy</h3>
+              <h3 className="profile-name">Study Buddy XYZ</h3>
               <p className="profile-status">Student at California Baptist University</p>
             </div>
           </div>

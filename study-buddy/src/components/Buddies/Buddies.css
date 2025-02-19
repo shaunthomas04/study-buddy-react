@@ -58,7 +58,7 @@ box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 /* Sidebar */
 .buddies-container .sidebar {
     width: 10%;
-    background: linear-gradient(0.25turn, #3f87a6, #ebf8e1);
+    background: linear-gradient(0.2turn, #3f87a6, #ebf8e1);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
@@ -78,4 +78,28 @@ h2 {
 .buddies-container .buddy-item.active {
     background: #f1bb81;
     font-weight: bold;
+}
+
+.buddies-container .buddy-item:hover {
+    background: lightgray;
+}
+
+/*Profile Section */
+.buddies-container .profile-section {
+    flex-grow: 1;
+    background: #eff3ed;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+.buddies-container .profile-avatar {
+    width: 60px;
+    height: 60px;
+    background: #CCC;
+    border-radius: 50%
+}
+
+h3 {
+    font-weight:normal;
+
 }

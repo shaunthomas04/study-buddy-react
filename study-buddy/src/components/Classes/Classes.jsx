@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
+import './Classes.css';
 
 
 const Classes = () => {
@@ -7,7 +8,6 @@ const Classes = () => {
     <>
       <Navbar />
       <div className="classes-container">
-        {/* Sidebar */}
         <aside className="sidebar">
           <h3>Classes</h3>
           <ul>
@@ -19,10 +19,14 @@ const Classes = () => {
           </ul>
         </aside>
 
-        {/* Main Content */}
         <main className="main-content">
           <h2>Welcome to the Classes Page!</h2>
           <h2>Current Classes</h2>
+
+          <div className="class-card">
+            <h3>CSC 312 - Class Discussion</h3>
+            <p>Ask questions, share notes, and discuss topics here!</p>
+          </div>
         </main>
       </div>
     </>

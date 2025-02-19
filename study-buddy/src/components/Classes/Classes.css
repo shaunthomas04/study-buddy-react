@@ -29,12 +29,32 @@
   }
   
   .sidebar li.selected {
-    background: #ffb6c1;
+    background: #8b7276;
     font-weight: bold;
   }
   
   .main-content {
     flex-grow: 1;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #e8decc;
   }
   
+  .class-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .class-card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .class-card p {
+    color: #555;
+  }

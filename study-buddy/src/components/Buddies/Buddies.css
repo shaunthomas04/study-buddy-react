@@ -74,3 +74,8 @@ h2 {
     cursor: poiner;
     transition: background 0.3s;
 }
+
+.buddies-container .buddy-item.active {
+    background: #f1bb81;
+    font-weight: bold;
+}

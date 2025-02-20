@@ -26,6 +26,11 @@
     background: #fff;
     border-radius: 8px;
     cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .sidebar li:hover {
+    background: #ffe4e1;
   }
   
   .sidebar li.selected {

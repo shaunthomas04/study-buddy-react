@@ -1,36 +1,15 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
+import "./homeIndex.css";
 
-// Scrapped for now
-// const Header = () => (
-//   <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
-//     <div className="logo"></div>
-//     <input type="text" placeholder="Search" className="p-2 rounded" />
-//     <nav>
-//       <a href="#" className="mx-2">Agenda</a>
-//       <a href="#" className="mx-2">Buddies</a>
-//       <a href="#" className="mx-2">Classes</a>
-//       <a href="#" className="mx-2">Settings</a>
-//     </nav>
-//   </header>
-// );
-
-const Navbar = () => {
-    return(
-        <nav>
-          <ul>
-           
-            <li>
-              <Link to="/">Home</Link>
-              <Link to="/classes">Classes</Link>
-              <Link to="/buddies">Buddies</Link>
-              <Link to="/agenda">Agenda</Link>
-            </li>
-           
-          </ul>
-        </nav>
-    )
-}
+// Import Navbar from NavBar.jsx
+const Header = () => (
+  <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
+    <div className="logo"></div>
+    <input type="text" placeholder="Search" className="p-2 rounded" />
+  <Navbar />
+  </header>
+);
 
 const Sidebar = () => (
   <aside className="w-1/5 bg-gray-200 p-4">

@@ -27,6 +27,13 @@ const Classes = () => {
             <h3>CSC 312 - Class Discussion</h3>
             <p>Ask questions, share notes, and discuss topics here!</p>
           </div>
+
+          <div className="discussion-container">
+            <div className="discussion-box">
+              <h3>Discussion Board</h3>
+              <p>Interact with classmates and post your thoughts!</p>
+            </div>
+          </div>
         </main>
       </div>
     </>

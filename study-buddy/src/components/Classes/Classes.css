@@ -63,3 +63,29 @@
   .class-card p {
     color: #555;
   }
+
+  .discussion-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .discussion-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+  }
+  
+  .discussion-box h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .discussion-box p {
+    color: #555;
+  }

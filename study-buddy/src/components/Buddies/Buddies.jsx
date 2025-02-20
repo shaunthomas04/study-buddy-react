@@ -37,7 +37,7 @@ const Buddies = () => {
               <h4 className="section-title">Actions</h4>
               <div className="action-grid">
                 <div className="action-card">
-                  <a href="sendBuddyRequest.jsx">Send Buddy Requests</a>
+                  <a href="sendBuddyRequest.jsx">View Study Preferences</a>
                 </div>
                 <div className="action-card">View Courses</div>
                 <div className="action-card">Buddy Up To Agenda</div>

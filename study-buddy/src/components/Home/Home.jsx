@@ -1,18 +1,36 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
 
-const Header = () => (
-  <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
-    <div className="logo"></div>
-    <input type="text" placeholder="Search" className="p-2 rounded" />
-    <nav>
-      <a href="#" className="mx-2">Agenda</a>
-      <a href="#" className="mx-2">Buddies</a>
-      <a href="#" className="mx-2">Classes</a>
-      <a href="#" className="mx-2">Settings</a>
-    </nav>
-  </header>
-);
+// Scrapped for now
+// const Header = () => (
+//   <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
+//     <div className="logo"></div>
+//     <input type="text" placeholder="Search" className="p-2 rounded" />
+//     <nav>
+//       <a href="#" className="mx-2">Agenda</a>
+//       <a href="#" className="mx-2">Buddies</a>
+//       <a href="#" className="mx-2">Classes</a>
+//       <a href="#" className="mx-2">Settings</a>
+//     </nav>
+//   </header>
+// );
+
+const Navbar = () => {
+    return(
+        <nav>
+          <ul>
+           
+            <li>
+              <Link to="/">Home</Link>
+              <Link to="/classes">Classes</Link>
+              <Link to="/buddies">Buddies</Link>
+              <Link to="/agenda">Agenda</Link>
+            </li>
+           
+          </ul>
+        </nav>
+    )
+}
 
 const Sidebar = () => (
   <aside className="w-1/5 bg-gray-200 p-4">
@@ -56,9 +74,9 @@ const Content = () => (
 const Glance = () => (
   <aside className="w-1/5 bg-gray-200 p-4">
     <h2>At a Glance</h2>
-    <div className="bg-white p-2 border rounded">Request Buddy XYZ</div>
+    <div className="bg-white p-2 border rounded"> Request Buddy XYZ</div>
     <div className="bg-white p-2 border rounded mt-2">Tue, Jan 4 - Study Session with XYZ</div>
-    <div className="bg-white p-2 border rounded mt-2">Wed, Jan 5 - Study Session with XYZ</div>
+    <div className="bg-white p-2 border rounded mt-2">Wed, Jan 5 - Nothing Scheduled</div>
     <div className="bg-white p-2 border rounded mt-2">Thur, Jan 6 - Study Session with XYZ</div>
     <div className="bg-white p-2 border rounded mt-2">Fri, Jan 7 - Study Session with XYZ</div>
   </aside>

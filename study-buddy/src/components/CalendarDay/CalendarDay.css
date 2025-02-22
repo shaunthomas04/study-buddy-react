@@ -1,0 +1,12 @@
+.CalendarDay-outer-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    background-color: #d10000;
+    border-radius: 20px;
+    margin: 10px;
+ 
+}

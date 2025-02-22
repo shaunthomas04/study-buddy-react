@@ -1,6 +1,16 @@
+.Agenda-outer-container{
+    background-color: aquamarine;
+    background-color: aquamarine;
+    width: 100%;       /* Full width of the parent container */
+    height: 90vh;     /* Full height of the viewport */
+
+}
+
 .Agenda-calendar-day-container{
     display: flex;
-    flex-wrap: wrap; /* Allows items to wrap to the next row */
-    gap: 10px; /* Adjust spacing between items */
+    flex-wrap: wrap; 
+    gap: 10px; 
     width: 100%;
+    justify-content: center;
+    
 }

@@ -1,12 +1,22 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
+import CalendarDay from '../CalendarDay/CalendarDay';
+
+
 
 const Agenda = () => {
   return (
     <>
-    <Navbar />    
-      <div>
-        <h2>Welcome to the Agenda Page!</h2>
+    <Navbar /> 
+       
+      <div className="Agenda-calendar-day-container">
+        <CalendarDay/>
+        <CalendarDay/>
+        <CalendarDay/>
+        <CalendarDay/>
+        <CalendarDay/>
+        <CalendarDay/>
+        <CalendarDay/>
       </div>
     </>
   );

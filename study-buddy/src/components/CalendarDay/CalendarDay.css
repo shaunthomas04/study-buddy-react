@@ -3,11 +3,29 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 120px;
-    height: 120px;
-    background-color: #d7b345;
-    border-radius: 20px;
+    width: 130px;
+    height: 130px;
+    background: linear-gradient(0.1turn, #3f87a6, #ebf8e1);
+    border-radius: 15px;
     border: green 2px solid;
     margin: 10px;
- 
+    position: relative;
+}
+
+.CalendarDay-outer-container:hover {
+    background: lightgray;
+    transform: scale(1.05);
+    transition: color 0.3s;
+    cursor: pointer;
+
+}
+
+
+.CalendarDay-date{
+    font-size: 30px;
+    font-weight: bold;
+    color: #3f87a6;
+    position: absolute;
+    top: 1px;
+    right: 10px;
 }

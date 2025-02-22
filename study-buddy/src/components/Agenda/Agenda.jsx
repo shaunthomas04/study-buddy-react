@@ -10,13 +10,7 @@ const Agenda = () => {
     <Navbar /> 
        <div className="Agenda-outer-container">
         <div className="Agenda-calendar-day-container">
-          <CalendarDay/>
-          <CalendarDay/>
-          <CalendarDay/>
-          <CalendarDay/>
-          <CalendarDay/>
-          <CalendarDay/>
-          <CalendarDay/>
+          <CalendarDay date="10"/>
         </div>
       </div>
     </>

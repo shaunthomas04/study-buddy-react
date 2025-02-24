@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './CalendarDay.css';
 
 const CalendarDayDate = ({studySession}) => {
-    console.log(studySession.status);
     const color = studySession.status === "accepted" ? "green" : studySession.status === "in progress" ? "yellow" : "red";
     return(
         <div className="CalendarDay-study-session-outer-container" style={{backgroundColor: color}}> 
@@ -13,17 +12,54 @@ const CalendarDayDate = ({studySession}) => {
 
 };
 
+const CalendarDayDatePopup = ({ studySessionsForCalendarDay, isOpen, setIsOpen}) => {
+  console.log(studySessionsForCalendarDay);
+  if (!isOpen) return null;
+
+  const closePopup = () => {
+    e.stopPropagation();
+    setIsOpen(false);
+  }
+
+
+  return (
+      <div className="CalendarDay-popup-outer-container">
+      <button className="CalendarDay-popup-close-button" onClick={closePopup}>X</button>
+        <h1 style={{"margin":"20px"}}>Agenda for {studySessionsForCalendarDay[0].date}</h1>
+          <div className="CalendarDay-popup-inner-container" onClick={(e) => e.stopPropagation()}>
+              {studySessionsForCalendarDay.map((studySession, index) => (
+                  <CalendarPopupSessions key={index} studySession={studySession} />
+              ))}
+          </div>
+      </div>
+  );
+};
+
+const CalendarPopupSessions = ({studySession}) => {
+  const color = studySession.status === "accepted" ? "green" : studySession.status === "in progress" ? "yellow" : "red";
+    return(
+        <div className="CalendarDay-popup-session-container" style={{backgroundColor: color}}>
+            <div className="CalendarDay-popup-session-text"> {studySession.time} with {studySession.person}</div>
+        </div>
+    )
+};
+
 
 const CalendarDay = ({date, studySessionsForCalendarDay}) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const togglePopup = () => {
+        setIsOpen(true);
+    };
+    
     return(
-        <div className="CalendarDay-outer-container">
+        <div className="CalendarDay-outer-container" onClick={togglePopup}>
             <h1 className="CalendarDay-date">{date}</h1>
             <div className='CalendarDay-tasks-container'>
             {studySessionsForCalendarDay.map((studySession, index) => (
                     <CalendarDayDate key={index} studySession={studySession} />
                 ))}
             </div>
-
+            <CalendarDayDatePopup studySessionsForCalendarDay={studySessionsForCalendarDay} isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
     )
     

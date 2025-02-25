@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./Buddies.css"; // Importing the Style Sheet for Buddies
-import logo from "./Logo.png";
+
 
 const Buddies = () => {
   return (
@@ -18,7 +18,7 @@ const Buddies = () => {
               <div className="buddy-item">Buddy 2</div>
               <div className="buddy-item">Buddy 3</div>
               <div className="buddy-item">Buddy 4</div>
-              <div className="buddy-item">Buddy 5</div>
+              
             </div>
           </aside>
 

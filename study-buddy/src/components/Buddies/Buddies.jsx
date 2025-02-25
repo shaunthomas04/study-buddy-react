@@ -11,7 +11,7 @@ const Buddies = () => {
         {/* Main Content of Buddies Page */}
         <div className="buddies-main">
           <aside className="sidebar">
-            <h2 className="sidebar-title">Find Buddies</h2>
+            <h2 className="sidebar-title">Current Buddies</h2>
             <div className="buddy-list">
               <div className="buddy-item active">Buddy [Viewing]</div>
               <div className="buddy-item">Buddy 1</div>

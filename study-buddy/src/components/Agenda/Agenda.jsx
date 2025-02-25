@@ -86,6 +86,7 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
         {daysInfo.map(dayInfo => (
           <CalendarDay date={dayInfo.dayNumber} />
         ))}
+        <CalendarDay />
     </div>
     </>
   )

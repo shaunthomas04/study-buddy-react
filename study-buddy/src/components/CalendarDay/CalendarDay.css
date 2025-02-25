@@ -3,12 +3,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 130px;
-    height: 130px;
+    width: 80%;
+    height: 180px;
     background-color:#e2f6d9;
     border-radius: 15px;
     border: green 2px solid;
-    margin: 10px;
+    margin: 5px;
     position: relative;
 }
 

@@ -13,7 +13,7 @@ const CalendarDayDate = ({studySession}) => {
 };
 
 const CalendarDayDatePopup = ({ studySessionsForCalendarDay, isOpen, setIsOpen}) => {
-  console.log(studySessionsForCalendarDay);
+//   console.log(studySessionsForCalendarDay);
   if (!isOpen) return null;
 
   const closePopup = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./Buddies.css"; // Importing the Style Sheet for Buddies
-import logo from "./Logo.png";
+
 
 const Buddies = () => {
   return (
@@ -11,14 +11,14 @@ const Buddies = () => {
         {/* Main Content of Buddies Page */}
         <div className="buddies-main">
           <aside className="sidebar">
-            <h2 className="sidebar-title">Find Buddies</h2>
+            <h2 className="sidebar-title">Current Buddies</h2>
             <div className="buddy-list">
               <div className="buddy-item active">Buddy [Viewing]</div>
               <div className="buddy-item">Buddy 1</div>
               <div className="buddy-item">Buddy 2</div>
               <div className="buddy-item">Buddy 3</div>
               <div className="buddy-item">Buddy 4</div>
-              <div className="buddy-item">Buddy 5</div>
+              
             </div>
           </aside>
 
@@ -37,7 +37,7 @@ const Buddies = () => {
               <h4 className="section-title">Actions</h4>
               <div className="action-grid">
                 <div className="action-card">
-                  <a href="sendBuddyRequest.jsx">Send Buddy Requests</a>
+                  <a href="sendBuddyRequest.jsx">View Study Preferences</a>
                 </div>
                 <div className="action-card">View Courses</div>
                 <div className="action-card">Buddy Up To Agenda</div>

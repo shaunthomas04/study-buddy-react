@@ -1,6 +1,6 @@
 .buddies-container {
     font-family: 'Franklin Gothic Medium', sans-serif;
-    min-height: 100vh;
+    height: 90vh;
     padding: 20px;
     background: white;
     display: flex;

@@ -3,11 +3,106 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 120px;
-    height: 120px;
-    background-color: #d7b345;
-    border-radius: 20px;
+    width: 80%;
+    height: 180px;
+    background-color:#e2f6d9;
+    border-radius: 15px;
     border: green 2px solid;
-    margin: 10px;
- 
+    margin: 5px;
+    position: relative;
+}
+
+/* .CalendarDay-outer-container:hover {
+    background: lightgray;
+    transform: scale(1.05);
+    transition: background-color 0.5s ease, transform 0.3s ease, color 0.5s ease;
+    cursor: pointer;
+
+} */
+
+.CalendarDay-date{
+    font-size: 30px;
+    font-weight: bold;
+    color: #3f87a6;
+    position: absolute;
+    top: 0px;
+    right: 5px;
+}
+
+.CalendarDay-tasks-container{
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    height: 89px;    
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    scrollbar-width: none;
+    justify-content: flex-start;
+
+}
+
+.CalendarDay-study-session-outer-container{
+    width: 84%;
+    height: 24px;
+    margin: 3px;
+    flex-shrink: 0;
+    border-radius: 5px;
+
+}
+
+.CalendarDay-study-session-text{
+    font-size: 10px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding: 2px;
+
+}
+
+.CalendarDay-popup-outer-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%); 
+    width: 40vw; 
+    height: 600px; 
+    background-color: rgb(236, 216, 216);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.CalendarDay-popup-inner-container {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    scrollbar-width: none;
+    justify-content: flex-start;
+}
+
+.CalendarDay-popup-session-container{
+    width: 70%;
+    height: 60px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    border: 1px solid black;
+    font-size: 1vw;
+    text-align: center;
+    font-weight: bold;
+    flex-shrink: 0;
+
 }

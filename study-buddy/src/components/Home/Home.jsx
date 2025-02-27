@@ -6,7 +6,7 @@ import "./homeIndex.css";
 const Header = () => (
   <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
     <div className="logo"></div>
-    <input type="text" placeholder="Search" className="p-2 rounded" />
+    {/* <input type="text" placeholder="Search" className="p-2 rounded" /> */}
   <Navbar />
   </header>
 );
@@ -37,11 +37,7 @@ const Card = ({ title, description }) => (
 );
 
 const Content = () => (
-<<<<<<< HEAD
   <section className="content">
-=======
-  <section className="test">
->>>>>>> 6ae7dfaa632193c6b948ade72a343696f3e10fcf
     <h2>Good Evening, [Name]</h2>
     <h3>Upcoming</h3>
     <Card title="Assignment Due 2/15" description="Algorithms" />

@@ -37,7 +37,7 @@ const Card = ({ title, description }) => (
 );
 
 const Content = () => (
-  <section className="flex-grow p-4">
+  <section className="test">
     <h2>Good Evening, [Name]</h2>
     <h3>Upcoming</h3>
     <Card title="Assignment Due 2/15" description="Algorithms" />

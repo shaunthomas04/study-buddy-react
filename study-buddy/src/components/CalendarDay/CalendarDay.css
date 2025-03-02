@@ -3,12 +3,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 85%;
     height: 180px;
+    margin: 5px;
     background-color:#e2f6d9;
     border-radius: 15px;
     border: green 2px solid;
-    margin: 5px;
     position: relative;
 }
 
@@ -21,7 +21,7 @@
 } */
 
 .CalendarDay-date{
-    font-size: 30px;
+    font-size: 25px;
     font-weight: bold;
     color: #3f87a6;
     position: absolute;

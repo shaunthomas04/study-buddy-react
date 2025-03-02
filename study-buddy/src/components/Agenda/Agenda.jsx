@@ -22,34 +22,35 @@ const getNumbersForWeekdays1 = () => {
     date: format(day, "yyyy-MM-dd"),
     dayNumber: format(day, "d"),
     weekday: format(day, "EEEE"),  
-    weekdayNumber: getDay(day)
+    weekdayNumber: getDay(day),
+    studySessions: []
   }));
 
   // Add empty day objects to weekdays that are before month (e.g. if first day of month is a Wednesday, add Sunday, Monday, and Tuesday placeholders)
   if (formattedDays[0].weekdayNumber > 0 || formattedDays[0].weekdayNumber < 6) {
     for (let i = 0; i < formattedDays[0].weekdayNumber; i++) {   
       if (i === 0) {
-        const dateObject = {date: '', dayNumber: '', weekday: 'Sunday', weekdayNumber: 0}
+        const dateObject = {date: '', dayNumber: '', weekday: 'Sunday', weekdayNumber: 0, studySessions: []}
         weekdays["Sunday"].push(dateObject);
       }
       else if (i === 1) {
-        const dateObject = {date: '', dayNumber: '', weekday: 'Monday', weekdayNumber: 1}
+        const dateObject = {date: '', dayNumber: '', weekday: 'Monday', weekdayNumber: 1, studySessions: []}
         weekdays["Monday"].push(dateObject);
       }
       else if (i === 2){
-        const dateObject = {date: '', dayNumber: '', weekday: 'Tuesday', weekdayNumber: 2}
+        const dateObject = {date: '', dayNumber: '', weekday: 'Tuesday', weekdayNumber: 2, studySessions: []}
         weekdays["Tuesday"].push(dateObject);
       }
       else if (i === 3){
-        const dateObject = {date: '', dayNumber: '', weekday: 'Wednesday', weekdayNumber: 3}
+        const dateObject = {date: '', dayNumber: '', weekday: 'Wednesday', weekdayNumber: 3, studySessions: []}
         weekdays["Wednesday"].push(dateObject);
       }
       else if (i === 4){
-        const dateObject = {date: '', dayNumber: '', weekday: 'Thursday', weekdayNumber: 4}
+        const dateObject = {date: '', dayNumber: '', weekday: 'Thursday', weekdayNumber: 4, studySessions: []}
         weekdays["Thursday"].push(dateObject);
       }
       else if (i === 5){
-        const dateObject = {date: '', dayNumber: '', weekday: 'Friday', weekdayNumber: 5}
+        const dateObject = {date: '', dayNumber: '', weekday: 'Friday', weekdayNumber: 5, studySessions: []}
         weekdays["Friday"].push(dateObject);
       }
 
@@ -91,6 +92,28 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
 
 
 const Agenda = () => {
+  // Dummy data for study sessions
+  const studySessions = [
+    {
+      "id": "1a2b3c4d5e6f",
+      "classCode": "MAT101",
+      "date": "2025-03-31",
+      "time": "14:00",
+      "person": "John Doe",
+      "status": "accepted",
+      "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
+    },
+    {
+      "id": "2f3g4h5i6j7k",
+      "classCode": "CS101",
+      "date": "2025-03-23",
+      "time": "09:00",
+      "person": "Jane Smith",
+      "status": "in progress",
+      "notes": "Let's go over the project draft together to discuss the improvements. I'll bring my laptop, so we can work on the code directly. I think we need to focus on debugging the algorithm section as it's been causing some issues, and we need to fix it before submission."
+    }
+  ];
+
   // Get all the weekdays for the current month
   const weekdays = getNumbersForWeekdays1();
   const sundays = weekdays["Sunday"];
@@ -102,6 +125,25 @@ const Agenda = () => {
   const saturdays = weekdays["Saturday"];
   const today = new Date();
   const currentMonth = format(today, "MMMM");
+
+  // Get the weekday for each study session and then find weekday array and then add session to sessions array in that weekday object
+  studySessions.forEach(studySession => {
+    const [year, month, day] = studySession.date.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    const weekday = format(dateObj, "EEEE");
+    console.log(weekday);
+
+    const currentWeekday = weekdays[weekday];
+    currentWeekday.forEach(day => {
+      if (day.date === studySession.date) {
+        day.studySessions.push(studySession);
+      }
+    });
+  });
+
+  console.log(weekdays);
+
+
 
   return (
     <>

@@ -63,7 +63,7 @@ const getNumbersForWeekdays1 = () => {
 
   // Add empty objects to the weekdays that have less than 5 days so all CalendarDay components are same size
   Object.keys(weekdays).forEach(weekday => {
-    while (weekdays[weekday].length < 5) {
+    while (weekdays[weekday].length < 6) {
       weekdays[weekday].push({ date: '', dayNumber: '', weekday, weekdayNumber: getDay(new Date(weekday)) });
     }
   });
@@ -102,7 +102,6 @@ const Agenda = () => {
   const saturdays = weekdays["Saturday"];
   const today = new Date();
   const currentMonth = format(today, "MMMM");
-  console.log(currentMonth)
 
   return (
     <>

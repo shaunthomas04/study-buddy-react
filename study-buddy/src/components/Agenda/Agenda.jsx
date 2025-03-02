@@ -82,7 +82,7 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
       <div className='Agenda-weekday-name'>{weekday}</div>
       {/* Map each array's days into CalendarDay components into the WeekdayCalendarDayContainer component */}
         {daysInfo.map(dayInfo => (
-          <CalendarDay date={dayInfo.dayNumber} />
+          <CalendarDay date={dayInfo.dayNumber} calendarDayInfo={dayInfo}/>
         ))}
     </div>
     </>
@@ -94,6 +94,15 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
 const Agenda = () => {
   // Dummy data for study sessions
   const studySessions = [
+    {
+      "id": "1a2b3c4d5e6f",
+      "classCode": "MAT101",
+      "date": "2025-03-31",
+      "time": "14:00",
+      "person": "John Doe",
+      "status": "accepted",
+      "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
+    },
     {
       "id": "1a2b3c4d5e6f",
       "classCode": "MAT101",
@@ -131,7 +140,6 @@ const Agenda = () => {
     const [year, month, day] = studySession.date.split('-').map(Number);
     const dateObj = new Date(year, month - 1, day);
     const weekday = format(dateObj, "EEEE");
-    console.log(weekday);
 
     const currentWeekday = weekdays[weekday];
     currentWeekday.forEach(day => {
@@ -140,9 +148,6 @@ const Agenda = () => {
       }
     });
   });
-
-  console.log(weekdays);
-
 
 
   return (

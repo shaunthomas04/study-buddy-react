@@ -9,7 +9,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #077d56;
+    background: linear-gradient(0.1turn, #3f87a6, #ebf8e1);
 }
 
 .login-and-image-container{

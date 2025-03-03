@@ -38,9 +38,21 @@ const CalendarPopupSessions = ({studySession}) => {
    : studySession.status === "request" ? `Study session with ${studySession.person} at ${studySession.time} is requested`
    : `Study session with ${studySession.person} at ${studySession.time} has been rejected`;
 
+   const [isOpen, setIsOpen] = useState(false);
+   const togglePopup = () => {
+    setIsOpen(prevState => !prevState); 
+};
+
+
     return(
-        <div className="CalendarDay-popup-session-container" style={{backgroundColor: color}}>
+        <div className="CalendarDay-popup-session-container" style={{backgroundColor: color}}  onClick={togglePopup}>
             <div className="CalendarDay-popup-session-text"> {studySessionText}</div>
+
+            {isOpen && (
+                <div className="CalendarDay-popup-session-notes">
+                {studySession.notes}
+                </div>
+            )}
         </div>
     )
   

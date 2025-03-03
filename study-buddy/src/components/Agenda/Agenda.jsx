@@ -113,6 +113,15 @@ const Agenda = () => {
       "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
     },
     {
+      "id": "1a2b3c4d5e6f",
+      "classCode": "MAT101",
+      "date": "2025-03-31",
+      "time": "14:00",
+      "person": "John Doe",
+      "status": "accepted",
+      "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
+    },
+    {
       "id": "2f3g4h5i6j7k",
       "classCode": "CS101",
       "date": "2025-03-23",

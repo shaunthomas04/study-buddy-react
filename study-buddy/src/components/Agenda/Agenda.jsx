@@ -1,8 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import CalendarDay from '../CalendarDay/CalendarDay';
 import './Agenda.css';
 import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate } from "date-fns";
+
+// popup for to be able to add study sessions
+const AddStudySessionPopup = ({ studySessions}) => {
+  const [formData, setFormData] = useState({
+    classCode: '',
+    date: '',
+    time: '',
+    person: '',
+    status: 'In Progress',
+    notes: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const studySessionJson = {
+      classCode: formData.classCode,
+      date: formData.date,
+      time: formData.time,
+      person: formData.person,
+      status: formData.status,
+      notes: formData.notes,
+    };
+    console.log(studySessionJson);
+    setFormData({
+      classCode: '',
+      date: '',
+      time: '',
+      person: '',
+      status: 'In Progress',
+      notes: '',
+    });
+  };
+
+  return (
+    <div className="Agenda-popup-add-sessions-container">
+      <h2>Add Study Session</h2>
+      <form onSubmit={handleSubmit} className='Agenda-popup-add-sessions-form'>
+        <input type="text" name="classCode" placeholder="Enter class code" value={formData.classCode} onChange={handleChange} required className='Agenda-popup-form-field'/>
+        <input type="date" name="date" placeholder="date" value={formData.date} onChange={handleChange}required className='Agenda-popup-form-field'/>
+        <input type="time" id="time" name="time" value={formData.time} onChange={handleChange} required className='Agenda-popup-form-field'/>        
+        <input type="text" id="person" name="person" placeholder="Person" value={formData.person} onChange={handleChange}required className='Agenda-popup-form-field'/>
+        <textarea style={{marginBottom: '20px',height: "90px"}} name="notes" placeholder="Notes" value={formData.notes} onChange={handleChange} className='Agenda-popup-form-field' />
+        <button type="submit">Submit</button>
+
+      </form>
+
+    </div>
+  );
+};
+
+
 
 // Second function to get all the numbers for the weekdays of the current month that accoutns for previous days, need to update jsx to support this
 const getNumbersForWeekdays1 = () => {
@@ -72,8 +131,6 @@ const getNumbersForWeekdays1 = () => {
   return weekdays;
 };
 
-
-
 const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
   // Take in the weekday info to create the column title and the daysInto to add specific days to calendar
   return(
@@ -95,7 +152,6 @@ const Agenda = () => {
   // Dummy data for study sessions
   const studySessions = [
     {
-      "id": "1a2b3c4d5e6f",
       "classCode": "MAT101",
       "date": "2025-03-31",
       "time": "14:00",
@@ -104,7 +160,6 @@ const Agenda = () => {
       "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
     },
     {
-      "id": "1a2b3c4d5e6f",
       "classCode": "MAT101",
       "date": "2025-03-31",
       "time": "14:00",
@@ -113,7 +168,6 @@ const Agenda = () => {
       "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
     },
     {
-      "id": "1a2b3c4d5e6f",
       "classCode": "MAT101",
       "date": "2025-03-31",
       "time": "14:00",
@@ -122,7 +176,6 @@ const Agenda = () => {
       "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
     },
     {
-      "id": "2f3g4h5i6j7k",
       "classCode": "CS101",
       "date": "2025-03-23",
       "time": "09:00",
@@ -158,7 +211,10 @@ const Agenda = () => {
     });
   });
 
-
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
   return (
     <>
     <Navbar /> 
@@ -176,6 +232,10 @@ const Agenda = () => {
           <WeekdayCalendarDayContainer weekday={"Saturday"} daysInfo={saturdays}/>
 
         </div>
+        <button className='Agenda-popup-add-sessions' onClick={toggleVisibility}>
+          {isVisible ? 'x' : '+'}
+        </button>
+        {isVisible && <AddStudySessionPopup studySessions={studySessions}/>}
       </div>
     </>
   );

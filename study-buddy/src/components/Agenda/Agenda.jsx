@@ -30,27 +30,27 @@ const getNumbersForWeekdays1 = () => {
   if (formattedDays[0].weekdayNumber > 0 || formattedDays[0].weekdayNumber < 6) {
     for (let i = 0; i < formattedDays[0].weekdayNumber; i++) {   
       if (i === 0) {
-        const dateObject = {date: '', dayNumber: '', weekday: 'Sunday', weekdayNumber: 0, studySessions: []}
+        const dateObject = {date: '', dayNumber: null, weekday: 'Sunday', weekdayNumber: 0, studySessions: []}
         weekdays["Sunday"].push(dateObject);
       }
       else if (i === 1) {
-        const dateObject = {date: '', dayNumber: '', weekday: 'Monday', weekdayNumber: 1, studySessions: []}
+        const dateObject = {date: '', dayNumber: null, weekday: 'Monday', weekdayNumber: 1, studySessions: []}
         weekdays["Monday"].push(dateObject);
       }
       else if (i === 2){
-        const dateObject = {date: '', dayNumber: '', weekday: 'Tuesday', weekdayNumber: 2, studySessions: []}
+        const dateObject = {date: '', dayNumber: null, weekday: 'Tuesday', weekdayNumber: 2, studySessions: []}
         weekdays["Tuesday"].push(dateObject);
       }
       else if (i === 3){
-        const dateObject = {date: '', dayNumber: '', weekday: 'Wednesday', weekdayNumber: 3, studySessions: []}
+        const dateObject = {date: '', dayNumber: null, weekday: 'Wednesday', weekdayNumber: 3, studySessions: []}
         weekdays["Wednesday"].push(dateObject);
       }
       else if (i === 4){
-        const dateObject = {date: '', dayNumber: '', weekday: 'Thursday', weekdayNumber: 4, studySessions: []}
+        const dateObject = {date: '', dayNumber: null, weekday: 'Thursday', weekdayNumber: 4, studySessions: []}
         weekdays["Thursday"].push(dateObject);
       }
       else if (i === 5){
-        const dateObject = {date: '', dayNumber: '', weekday: 'Friday', weekdayNumber: 5, studySessions: []}
+        const dateObject = {date: '', dayNumber: null, weekday: 'Friday', weekdayNumber: 5, studySessions: []}
         weekdays["Friday"].push(dateObject);
       }
 

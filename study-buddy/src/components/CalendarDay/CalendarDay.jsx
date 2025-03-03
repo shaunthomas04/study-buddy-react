@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import React, { useState, useEffect  } from 'react';
 import './CalendarDay.css';
 
 // This component is used to show the study sessions for a specific day in a popup when the user clicks on the day in the calendar
@@ -8,8 +7,10 @@ const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }
     if (calendarDayStudySessions){
         studySessions = calendarDayStudySessions;
     }
+    else{
+        return null;
+    }
     
-
     if (!isOpen) return null;
     const closePopup = (e) => {
         e.stopPropagation(); 
@@ -19,7 +20,7 @@ const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }
     return (
         <div className="CalendarDay-popup-outer-container" onClick={(e) => e.stopPropagation()}>
             <button className="CalendarDay-popup-close-button" onClick={closePopup}>X</button>
-            <h1 style={{ margin: "20px" }}>Agenda for {calendarDayStudySessions.date}</h1>
+            <h1 style={{ margin: "20px" }}>Agenda for {studySessions[0].date}</h1>
             <div className="CalendarDay-popup-inner-container">
                 {studySessions?.map((studySession, index) => (
                     <CalendarPopupSessions studySession={studySession} />
@@ -29,39 +30,20 @@ const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }
     );
 };
 
-// // // This component is used to show the study sessions for a day in a popup when the pipup is open
+//This component is used to show the study sessions for a day in a popup when the pipup is open
 const CalendarPopupSessions = ({studySession}) => {
   const color = studySession.status === "accepted" ? "green" : studySession.status === "pending" ? "yellow" : studySession.status === "request" ? "blue": "red";
+  const studySessionText = studySession.status === "accepted" ? `Study session with ${studySession.person} at ${studySession.time}`
+   : studySession.status === "pending" ? `Study session with ${studySession.person} at ${studySession.time} is pending` 
+   : studySession.status === "request" ? `Study session with ${studySession.person} at ${studySession.time} is requested`
+   : `Study session with ${studySession.person} at ${studySession.time} has been rejected`;
 
-  if (studySession.status === "accepted") {
     return(
         <div className="CalendarDay-popup-session-container" style={{backgroundColor: color}}>
-            <div className="CalendarDay-popup-session-text"> Study session with {studySession.person} at {studySession.time}</div>
+            <div className="CalendarDay-popup-session-text"> {studySessionText}</div>
         </div>
     )
-  }
-  else if (studySession.status === "pending") {
-    return(
-        <div className="CalendarDay-popup-session-container" style={{backgroundColor: color}}>
-            <div className="CalendarDay-popup-session-text"> Study session with {studySession.person} at {studySession.time} is pending</div>
-        </div>
-    )
-  }
-  else if (studySession.status === "request") {
-    return(
-        <div className="CalendarDay-popup-session-container" style={{backgroundColor: color}}>
-            <div className="CalendarDay-popup-session-text"> Study session with {studySession.person} at {studySession.time} is requested</div>
-        </div>
-    )
-  }
-  else{
-    return(
-        <div className="CalendarDay-popup-session-container" style={{backgroundColor: color}}>
-            <div className="CalendarDay-popup-session-text"> Study session with {studySession.person} at {studySession.time} has been rejected</div>
-        </div>
-    )
-  }
-
+  
 };
 
 

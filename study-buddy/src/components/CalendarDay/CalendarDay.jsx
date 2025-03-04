@@ -17,12 +17,16 @@ const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }
         setIsOpen(false); 
     }
 
+    if (studySessions[0] === undefined){
+        return null;
+    }
+
     return (
         <div className="CalendarDay-popup-outer-container" onClick={(e) => e.stopPropagation()}>
             <button className="CalendarDay-popup-close-button" onClick={closePopup}>X</button>
             <h1 style={{ margin: "20px" }}>Agenda for {studySessions[0].date}</h1>
             <div className="CalendarDay-popup-inner-container">
-                {studySessions?.map((studySession, index) => (
+                {studySessions?.map((studySession) => (
                     <CalendarPopupSessions studySession={studySession} />
                 ))}
             </div>
@@ -83,8 +87,8 @@ const CalendarDay = ({date, calendarDayInfo}) => {
             <div className='CalendarDay-tasks-container'>
             
             {calendarDayInfo.studySessions?.length > 0 &&  
-                    calendarDayInfo.studySessions.map((studySession, index) => (
-                        <CalendarDaySession key={index} studySession={studySession} />
+                    calendarDayInfo.studySessions.map((studySession) => (
+                        <CalendarDaySession studySession={studySession} />
                     ))
                 }
             </div>

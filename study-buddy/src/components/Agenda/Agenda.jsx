@@ -62,8 +62,6 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible })
   );
 };
 
-
-
 // Second function to get all the numbers for the weekdays of the current month that accoutns for previous days, need to update jsx to support this
 const getNumbersForWeekdays1 = () => {
   const weekdays = {"Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": [], "Friday": [], "Saturday": [], "Sunday": []};
@@ -139,8 +137,8 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
     <div className="Agenda-weekday-day-container">
       <div className='Agenda-weekday-name'>{weekday}</div>
       {/* Map each array's days into CalendarDay components into the WeekdayCalendarDayContainer component */}
-        {daysInfo.map(dayInfo => (
-          <CalendarDay date={dayInfo.dayNumber} calendarDayInfo={dayInfo}/>
+        {daysInfo.map((dayInfo, index) => (
+          <CalendarDay key={index} date={dayInfo.dayNumber} calendarDayInfo={dayInfo}/>
         ))}
     </div>
     </>

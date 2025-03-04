@@ -14,7 +14,7 @@ const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }
     if (!isOpen) return null;
     const closePopup = (e) => {
         e.stopPropagation(); 
-        setIsOpen(false); 
+        setIsOpen(!isOpen); 
     }
 
     if (studySessions[0] === undefined){
@@ -26,8 +26,8 @@ const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }
             <button className="CalendarDay-popup-close-button" onClick={closePopup}>X</button>
             <h1 style={{ margin: "20px" }}>Agenda for {studySessions[0].date}</h1>
             <div className="CalendarDay-popup-inner-container">
-                {studySessions?.map((studySession) => (
-                    <CalendarPopupSessions studySession={studySession} />
+                {studySessions?.map((studySession, index) => (
+                    <CalendarPopupSessions key={index} studySession={studySession} />
                 ))}
             </div>
         </div>
@@ -78,7 +78,7 @@ const CalendarDay = ({date, calendarDayInfo}) => {
     // calendarDayInfo
     const [isOpen, setIsOpen] = useState(false);
     const togglePopup = () => {
-        setIsOpen(true);
+        setIsOpen(!isOpen);
     };
     
     return(
@@ -87,8 +87,8 @@ const CalendarDay = ({date, calendarDayInfo}) => {
             <div className='CalendarDay-tasks-container'>
             
             {calendarDayInfo.studySessions?.length > 0 &&  
-                    calendarDayInfo.studySessions.map((studySession) => (
-                        <CalendarDaySession studySession={studySession} />
+                    calendarDayInfo.studySessions.map((studySession, index) => (
+                        <CalendarDaySession key={index} studySession={studySession} />
                     ))
                 }
             </div>

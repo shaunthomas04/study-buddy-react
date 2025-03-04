@@ -5,15 +5,10 @@ import "./Configuration.css";
 const SettingsPage = () => {
     return (
       <div className="settings-page">
-        <header className="header">
-          <div className="logo"></div>
-          <input type="text" placeholder="Search" className="search-bar" />
-          <nav>
-            <a href="#">Agenda</a>
-            <a href="#">Buddies</a>
-            <a href="#">Classes</a>
-            <a href="#">Settings</a>
-          </nav>
+        <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
+            <div className="logo"></div>
+            {/* <input type="text" placeholder="Search" className="p-2 rounded" /> */}
+        <Navbar />
         </header>
   
         <div className="settings-container">

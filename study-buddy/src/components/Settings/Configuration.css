@@ -8,7 +8,7 @@ body {
     background-color: #f4f4f4;
   }
   
-  /* Header */
+  /* Header
   .header {
     display: flex;
     justify-content: space-between;
@@ -28,7 +28,7 @@ body {
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
-  }
+  } */
   
   /* Settings Page Layout */
   .settings-container {

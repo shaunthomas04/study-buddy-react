@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import "./Buddies.css"; // Importing the Style Sheet for Buddies
+import StudyPreferences from './StudyPreferences';
+
 
 const BuddySidebar = ({ buddies, activeBuddy, setActiveBuddy }) => {
   return (
@@ -44,7 +47,7 @@ const BuddyActions = () => {
       <h4 className="buddy-section-title">Actions</h4>
       <div className="buddy-action-grid">
         <div className="buddy-action-card">
-          <a href="sendBuddyRequest.jsx">View Study Preferences</a>
+          <Link to = "/buddies/study-preferences">View Study Preferences</Link>
         </div>
         <div className="buddy-action-card">View Courses</div>
         <div className="buddy-action-card">Buddy Up To Agenda</div>
@@ -82,9 +85,16 @@ const Buddies = () => {
         <div className="buddy-main">
           <BuddySidebar buddies={buddies} activeBuddy={activeBuddy} setActiveBuddy={setActiveBuddy} />
           <div className="buddy-profile-content">
-            <BuddyProfile activeBuddy={activeBuddy} />
-            <BuddyActions />
-            <SuggestedBuddies suggestions={suggestions} />
+            <Routes>
+              <Route path ="/" element = {
+                <>
+                  <BuddyProfile activeBuddy={activeBuddy} />
+                  <BuddyActions />
+                 <SuggestedBuddies suggestions={suggestions} />
+            </>
+              } />
+              <Route path ="/study-preferences" element={<StudyPreferences />} />
+              </Routes>
           </div>
         </div>
       </div>

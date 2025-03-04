@@ -50,14 +50,15 @@ const Content = () => (
   </section>
 );
 
+// Feature temporaily relocated
 const Glance = () => (
   <aside className="glance">
-    <h2>At a Glance</h2>
+    {/* <h2>At a Glance</h2>
     <div className="event">Request Buddy XYZ</div>
     <div className="event">Tue, Jan 4 - Study Session with XYZ</div>
     <div className="event">Wed, Jan 5 - Study Session with XYZ</div>
     <div className="event">Thur, Jan 6 - Study Session with XYZ</div>
-    <div className="event">Fri, Jan 7 - Study Session with XYZ</div>
+    <div className="event">Fri, Jan 7 - Study Session with XYZ</div> */}
   </aside>
 );
 

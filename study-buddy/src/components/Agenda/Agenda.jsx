@@ -5,7 +5,7 @@ import './Agenda.css';
 import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate } from "date-fns";
 
 // popup for to be able to add study sessions
-const AddStudySessionPopup = ({ studySessions}) => {
+const AddStudySessionPopup = ({ studySessions, setStudySessions }) => {
   const [formData, setFormData] = useState({
     classCode: '',
     date: '',
@@ -25,15 +25,9 @@ const AddStudySessionPopup = ({ studySessions}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const studySessionJson = {
-      classCode: formData.classCode,
-      date: formData.date,
-      time: formData.time,
-      person: formData.person,
-      status: formData.status,
-      notes: formData.notes,
-    };
-    console.log(studySessionJson);
+    const newSession = { ...formData };
+    
+
     setFormData({
       classCode: '',
       date: '',
@@ -41,6 +35,11 @@ const AddStudySessionPopup = ({ studySessions}) => {
       person: '',
       status: 'In Progress',
       notes: '',
+    });
+
+    setStudySessions(prevSessions => {
+      const updatedSessions = [...prevSessions, newSession];
+      return updatedSessions;
     });
   };
 
@@ -150,40 +149,24 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
 
 const Agenda = () => {
   // Dummy data for study sessions
-  const studySessions = [
+  const [studySessions, setStudySessions] = useState([
     {
-      "classCode": "MAT101",
-      "date": "2025-03-31",
-      "time": "14:00",
-      "person": "John Doe",
-      "status": "accepted",
-      "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
+      classCode: "MAT101",
+      date: "2025-03-31",
+      time: "14:00",
+      person: "John Doe",
+      status: "accepted",
+      notes: "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals.",
     },
     {
-      "classCode": "MAT101",
-      "date": "2025-03-31",
-      "time": "14:00",
-      "person": "John Doe",
-      "status": "accepted",
-      "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
-    },
-    {
-      "classCode": "MAT101",
-      "date": "2025-03-31",
-      "time": "14:00",
-      "person": "John Doe",
-      "status": "accepted",
-      "notes": "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals. Also, review the sample exam questions I sent last week, as they are likely to be similar to what will be on the exam."
-    },
-    {
-      "classCode": "CS101",
-      "date": "2025-03-23",
-      "time": "09:00",
-      "person": "Jane Smith",
-      "status": "in progress",
-      "notes": "Let's go over the project draft together to discuss the improvements. I'll bring my laptop, so we can work on the code directly. I think we need to focus on debugging the algorithm section as it's been causing some issues, and we need to fix it before submission."
+      classCode: "CS101",
+      date: "2025-03-23",
+      time: "09:00",
+      person: "Jane Smith",
+      status: "in progress",
+      notes: "Let's go over the project draft together to discuss improvements.",
     }
-  ];
+  ]);
 
   // Get all the weekdays for the current month
   const weekdays = getNumbersForWeekdays1();
@@ -235,7 +218,7 @@ const Agenda = () => {
         <button className='Agenda-popup-add-sessions' onClick={toggleVisibility}>
           {isVisible ? 'x' : '+'}
         </button>
-        {isVisible && <AddStudySessionPopup studySessions={studySessions}/>}
+        {isVisible && <AddStudySessionPopup studySessions={studySessions} setStudySessions={setStudySessions}/>}
       </div>
     </>
   );

@@ -35,8 +35,9 @@
 }
 
 .image-container{
-    height: 100%;
-    width: 60%; 
+    height: 85%;
+    width: 45%; 
+    margin-right: 7rem;
 }
 
 .image-container img{

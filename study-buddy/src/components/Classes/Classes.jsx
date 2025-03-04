@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
-import ClassesSidebar from './ClassesSidebar';
+// import ClassesSidebar from './ClassesSidebar';
 import './Classes.css';
 
 const Classes = () => {
@@ -8,7 +8,7 @@ const Classes = () => {
     <>
       <Navbar />
       <div className="classes-container">
-        <ClassesSidebar />
+        {/* <ClassesSidebar /> */}
         <main className="classes-main-content">
           <h2>Welcome to the Classes Page!</h2>
           <h2>Current Classes</h2>

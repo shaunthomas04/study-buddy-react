@@ -5,7 +5,7 @@ import './Agenda.css';
 import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate } from "date-fns";
 
 // popup for to be able to add study sessions
-const AddStudySessionPopup = ({ studySessions, setStudySessions }) => {
+const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible }) => {
   const [formData, setFormData] = useState({
     classCode: '',
     date: '',
@@ -41,6 +41,8 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions }) => {
       const updatedSessions = [...prevSessions, newSession];
       return updatedSessions;
     });
+
+    setIsVisible(false);
   };
 
   return (
@@ -218,7 +220,7 @@ const Agenda = () => {
         <button className='Agenda-popup-add-sessions' onClick={toggleVisibility}>
           {isVisible ? 'x' : '+'}
         </button>
-        {isVisible && <AddStudySessionPopup studySessions={studySessions} setStudySessions={setStudySessions}/>}
+        {isVisible && <AddStudySessionPopup studySessions={studySessions} setStudySessions={setStudySessions} setIsVisible={setIsVisible}/>}
       </div>
     </>
   );

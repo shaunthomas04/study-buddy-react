@@ -84,9 +84,9 @@
   width: 100%;
 }
 .Classes-class-codes-container{
-  background-color: #93dda5;
+  background-color: #e2f6d9;
   border: green 3px solid;
-  width: 18%;
+  width: 16%;
   height: 96%;
   margin: 20px;
   border-radius: 20px;
@@ -99,7 +99,7 @@
 }
 
 .Classes-questions-container{
-  background-color: #93dda5;
+  background-color: #e2f6d9;
   border: green 3px solid;  width: 80%;
   height: 96%;
   display: flex;
@@ -149,14 +149,14 @@
 
 .Classes-question-title{
   margin: 10px;
-  background-color: rgb(135, 203, 215);
+  background-color: rgb(208, 219, 221);
   width: 90%;
   border-radius: 10px;
   padding: 10px;
 }
 
 .Classes-reply-container{
-  background-color: rgb(135, 203, 215);
+  background-color: rgb(208, 219, 221);
   width: 90%;
   border-radius: 10px;
   padding: 10px;

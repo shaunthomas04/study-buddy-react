@@ -171,13 +171,17 @@ const ClassQuestion = ({ question }) => {
 };
 
 const ClassForum = ({questionsContainer}) => {
-  // questions = questionsContainer.questions;
+  const ClassQuestions = questionsContainer.questions;
 
   return (
     <div className="Classes-class-forum">
         <h2>CS 101</h2>
-        <ClassQuestion question={dummyData.questions[0]}/>
-        <ClassQuestion question={dummyData.questions[1]}/>
+        {ClassQuestions.map((question, index) => (
+            <ClassQuestion question={question} key={index}/>
+          ))}
+
+        {/* <ClassQuestion question={dummyData.questions[0]}/>
+        <ClassQuestion question={dummyData.questions[1]}/> */}
 
     </div>
   )

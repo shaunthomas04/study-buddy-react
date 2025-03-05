@@ -7,12 +7,11 @@ const Classes = () => {
   return (
     <>
       <Navbar />
-      <div className="classes-container">
-        {/* <ClassesSidebar /> */}
-        <main className="classes-main-content">
-          <h2>Welcome to the Classes Page!</h2>
-          <h2>Current Classes</h2>
-        </main>
+      <div className="Classes-outer-container">
+        <div className='Classes-inner-container'>
+          <div className="Classes-class-codes-container"></div>
+          <div className="Classes-questions-container"></div>
+        </div>
       </div>
     </>
   );

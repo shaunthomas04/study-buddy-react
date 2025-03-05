@@ -5,7 +5,7 @@ import "./Buddies.css";
 const Buddies = () => {
     const [buddies] = useState(["Jane Doe", "Buddy 2", "Buddy 3", "Buddy 4", "Buddy 5"]);
     const [activeBuddy, setActiveBuddy] = useState("Jane Doe"); 
-    const [requestBuddy, setRequestSent] = useState(false);
+    const [requestSent, setRequestSent] = useState(false);
 
     // Define Buddies' Study Preferences
     const buddyPreferences = {
@@ -31,7 +31,7 @@ const Buddies = () => {
         },
         "Buddy 3": {
             school: "California Baptist University",
-            major: "Biomedical Engieering",
+            major: "Biomedical Engineering",
             studyTime: "Afternoon",
             environment: "Home Office",
             collaboration: "Pair Programming",
@@ -41,7 +41,7 @@ const Buddies = () => {
         },
         "Buddy 4": {
             school: "California Baptist University",
-            major: "Software Engieering",
+            major: "Software Engineering",
             studyTime: "Night",
             environment: "Dorm Room",
             collaboration: "Solo Study",
@@ -51,7 +51,7 @@ const Buddies = () => {
         },
         "Buddy 5": {
             school: "California Baptist University",
-            major: "Civil Engieering",
+            major: "Civil Engineering",
             studyTime: "Morning",
             environment: "Library",
             collaboration: "Group Study",
@@ -64,10 +64,9 @@ const Buddies = () => {
     // Get selected buddy’s preferences
     const buddyPref = buddyPreferences[activeBuddy];
 
-    const handleSendRequest () => {
-      setRequestSent(true);
-      setTimeout(() => setRequestSent(false), 3000)
-    }
+    const handleSendRequest = () => {
+        setRequestSent(true);
+    };
 
     return (
         <>
@@ -94,11 +93,16 @@ const Buddies = () => {
                     <div className="profile-section">
                         <div className="profile-header">
                             <div className="profile-avatar"></div>
-                            <div>
+                            <div className="profile-info">
                                 <h1 className="profile-name">{activeBuddy}</h1>
                                 <h3 className="profile-status">{buddyPref.school}</h3>
-                                <h4 clasName = "profile-major">{buddyPref.major}</h4>
+                                <h4 className="profile-major">{buddyPref.major}</h4> 
                             </div>
+
+                            
+                            <button className="send-request-btn" onClick={handleSendRequest}>
+                                {requestSent ? "Request Sent" : "Send Buddy Request"}
+                            </button>
                         </div>
                     </div>
 
@@ -111,14 +115,6 @@ const Buddies = () => {
                             <PreferenceCard title="Type of Learner" value={buddyPref.typeLearner} />
                             <CourseList title="Courses to Study" courses={buddyPref.preferredCourses} />
                             <CourseList title="School Interests" courses={buddyPref.schoolInterests} />
-                        </div>
-
-                        {/* Send Buddy Request Button */}
-                        <div className ="buddy-request-section">
-                          <button className = "send-request-btn" onClick={handleSendRequest}>
-                            Send Buddy Request
-                          </button>
-                          {requestSent && <p className ="request-message">Request sent to {activeBuddy}!</p>}
                         </div>
                     </main>
                 </div>

@@ -4,8 +4,8 @@ import "./Buddies.css";
 
 const Buddies = () => {
     const [buddies] = useState(["Jane Doe", "Buddy 2", "Buddy 3", "Buddy 4", "Buddy 5"]);
-    const [activeBuddy, setActiveBuddy] = useState("Jane Doe"); 
-    const [requestSent, setRequestSent] = useState(false);
+    const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
+    const [sentRequests, setSentRequests] = useState({}); 
 
     // Define Buddies' Study Preferences
     const buddyPreferences = {
@@ -61,11 +61,15 @@ const Buddies = () => {
         }
     };
 
-    // Get selected buddy’s preferences
+  
     const buddyPref = buddyPreferences[activeBuddy];
 
+
     const handleSendRequest = () => {
-        setRequestSent(true);
+        setSentRequests(prev => ({
+            ...prev,
+            [activeBuddy]: true 
+        }));
     };
 
     return (
@@ -100,9 +104,9 @@ const Buddies = () => {
                             </div>
                         </div>
 
-                        {/* ✅ Send Buddy Request Button (Fixed size & positioned to the right) */}
+                        {/*Send Buddy Request Button*/}
                         <button className="send-request-btn" onClick={handleSendRequest}>
-                            {requestSent ? "Request Sent" : "Send Buddy Request"}
+                            {sentRequests[activeBuddy] ? "Request Sent" : "Send Buddy Request"}
                         </button>
                     </div>
 

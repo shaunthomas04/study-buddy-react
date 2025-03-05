@@ -99,8 +99,8 @@
 }
 
 .Classes-questions-container{
-  background-color: #fdddbb;
-  width: 80%;
+  background-color: #93dda5;
+  border: green 3px solid;  width: 80%;
   height: 96%;
   display: flex;
   flex-direction: column;
@@ -137,7 +137,7 @@
 }
 
 .Classes-question{
-  background-color: #837f7b;
+  background-color: #fdddbb;
   width: 65%;
   margin: 20px;
   border-radius: 20px;
@@ -149,17 +149,41 @@
 
 .Classes-question-title{
   margin: 10px;
-  background-color: blue;
+  background-color: rgb(135, 203, 215);
   width: 90%;
   border-radius: 10px;
   padding: 10px;
 }
 
 .Classes-reply-container{
-  background-color: blue;
+  background-color: rgb(135, 203, 215);
   width: 90%;
   border-radius: 10px;
   padding: 10px;
-  margin-top: 5px;
   margin-bottom: 20px;
+}
+
+.Classes-class-forum-title{
+  background-color: #fdddbb;
+  height: 90px;
+  line-height: 50px;
+  width: 25%;
+  margin-top: 10px;
+  border-radius: 20px;
+}
+
+.Classes-popup-add-questions{
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6fca86;
 }

@@ -135,16 +135,17 @@ const dummyData = {
 }
 
 
-
+// Button component that displays the class code
 const ClassCodeButton = ({ code }) => {
   return (
       <button className="Classes-class-code-button">{code}</button>
   );
 }
 
+// Reply component that contains a reply and all replies to that reply
 const Reply = ({ reply, level = 0 }) => {
   return (
-    <div style={{ marginLeft: `${level * 20}px`, borderLeft: "2px solid #ccc", paddingLeft: "10px", marginTop: "10px" }}>
+    <div style={{ marginLeft: `${level * 20}px`, borderLeft: "3px solid black", paddingLeft: "10px", marginTop: "10px" }}>
       <p style={{fontSize:"20px"}}><h5>{reply.author}:</h5> {reply.message}</p>
       {reply.replies && reply.replies.length > 0 && (
         <div>
@@ -157,6 +158,7 @@ const Reply = ({ reply, level = 0 }) => {
   );
 };
 
+// Question component that contains a question and all replies to that question
 const ClassQuestion = ({ question }) => {
   return (
     <div className="Classes-question">
@@ -170,18 +172,16 @@ const ClassQuestion = ({ question }) => {
   );
 };
 
-const ClassForum = ({questionsContainer}) => {
+// Forum container for each class that maps all questions from a class into this forum container
+const ClassForum = ({questionsContainer, classCode}) => {
   const ClassQuestions = questionsContainer.questions;
 
   return (
     <div className="Classes-class-forum">
-        <h2>CS 101</h2>
+        <h2 className='Classes-class-forum-title'>{classCode}</h2>
         {ClassQuestions.map((question, index) => (
             <ClassQuestion question={question} key={index}/>
           ))}
-
-        {/* <ClassQuestion question={dummyData.questions[0]}/>
-        <ClassQuestion question={dummyData.questions[1]}/> */}
 
     </div>
   )
@@ -189,7 +189,7 @@ const ClassForum = ({questionsContainer}) => {
 
 }
 
-
+// Main component
 const Classes = () => {
   return (
     <>
@@ -197,13 +197,16 @@ const Classes = () => {
       <div className="Classes-outer-container">
         <div className='Classes-inner-container'>
           <div className="Classes-class-codes-container">
-            <ClassCodeButton code="CS 101" />
-            <ClassCodeButton code="CS 102" />
+            <ClassCodeButton code="CSC 101" />
+            <ClassCodeButton code="CSC 102" />
             
           </div>
           <div className="Classes-questions-container">
-            <ClassForum questionsContainer={dummyData}/>
+            <ClassForum questionsContainer={dummyData} classCode={"CSC 101"}/>
           </div>
+          {/* Button to add additional classes */}
+          <button className='Classes-popup-add-questions' > x </button>
+
         </div>
       </div>
     </>

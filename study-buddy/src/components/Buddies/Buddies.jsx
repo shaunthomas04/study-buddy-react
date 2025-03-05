@@ -5,6 +5,7 @@ import "./Buddies.css";
 const Buddies = () => {
     const [buddies] = useState(["Jane Doe", "Buddy 2", "Buddy 3", "Buddy 4", "Buddy 5"]);
     const [activeBuddy, setActiveBuddy] = useState("Jane Doe"); 
+    const [requestBuddy, setRequestSent] = useState(false);
 
     // Define Buddies' Study Preferences
     const buddyPreferences = {
@@ -62,6 +63,11 @@ const Buddies = () => {
 
     // Get selected buddy’s preferences
     const buddyPref = buddyPreferences[activeBuddy];
+
+    const handleSendRequest () => {
+      setRequestSent(true);
+      setTimeout(() => setRequestSent(false), 3000)
+    }
 
     return (
         <>

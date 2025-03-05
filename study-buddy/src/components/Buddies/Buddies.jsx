@@ -5,7 +5,7 @@ import "./Buddies.css";
 const Buddies = () => {
     const [buddies] = useState(["Jane Doe", "Buddy 2", "Buddy 3", "Buddy 4", "Buddy 5"]);
     const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
-    const [sentRequests, setSentRequests] = useState({}); 
+    const [sentRequests, setSentRequests] = useState({});
 
     // Define Buddies' Study Preferences
     const buddyPreferences = {
@@ -14,10 +14,10 @@ const Buddies = () => {
             major: "Mechanical Engineering",
             studyTime: "Morning",
             environment: "Coffee Shop",
-            collaboration: "Solo Study",
+            collaboration: "One-on-One Study",
             typeLearner: "Auditory Learner",
-            preferredCourses: ["Cybersecurity", "Data Science"],
-            schoolInterests: ["Machine Learning", "Cybersecurity"]
+            preferredCourses: ["Circuits II", "Fluid Mechanics"],
+            schoolInterests: ["ASME", "Intramural Sports"]
         },
         "Buddy 2": {
             school: "California Baptist University",
@@ -27,27 +27,27 @@ const Buddies = () => {
             collaboration: "Group Study",
             typeLearner: "Visual Learner",
             preferredCourses: ["Algorithms", "Artificial Intelligence"],
-            schoolInterests: ["Software Development", "Game Design"]
+            schoolInterests: ["ACM", "Game Design and Video Game"]
         },
         "Buddy 3": {
             school: "California Baptist University",
             major: "Biomedical Engineering",
             studyTime: "Afternoon",
-            environment: "Home Office",
-            collaboration: "Pair Programming",
+            environment: "Empty Class",
+            collaboration: "Group Discussion",
             typeLearner: "Kinesthetic Learner",
-            preferredCourses: ["Networking", "Machine Learning"],
-            schoolInterests: ["Cybersecurity", "Cloud Computing"]
+            preferredCourses: ["Biomaterials I", "Machine Learning"],
+            schoolInterests: ["BMES", "Basketball Games"]
         },
         "Buddy 4": {
             school: "California Baptist University",
             major: "Software Engineering",
             studyTime: "Night",
             environment: "Dorm Room",
-            collaboration: "Solo Study",
-            typeLearner: "Reading/Writing",
-            preferredCourses: ["Ethical Hacking", "Cybersecurity"],
-            schoolInterests: ["Ethical Hacking", "Data Privacy"]
+            collaboration: "Group Study",
+            typeLearner: "Pair Programming",
+            preferredCourses: ["Machine Learning", "Information Security"],
+            schoolInterests: ["SWE", "Cruize at CBU"]
         },
         "Buddy 5": {
             school: "California Baptist University",
@@ -56,8 +56,8 @@ const Buddies = () => {
             environment: "Library",
             collaboration: "Group Study",
             typeLearner: "Visual Learner",
-            preferredCourses: ["Software Engineering", "Databases"],
-            schoolInterests: ["Software Engineering", "AI"]
+            preferredCourses: ["Fluid Mechanics", "Hydrology"],
+            schoolInterests: ["Disney Club", "Lacrosse Club"]
         }
     };
 

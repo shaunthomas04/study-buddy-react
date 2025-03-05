@@ -95,15 +95,15 @@ const Buddies = () => {
                             <div className="profile-avatar"></div>
                             <div className="profile-info">
                                 <h1 className="profile-name">{activeBuddy}</h1>
-                                <h3 className="profile-status">{buddyPref.school}</h3>
+                                <h3 className="profile-school">{buddyPref.school}</h3>
                                 <h4 className="profile-major">{buddyPref.major}</h4> 
                             </div>
-
-                            
-                            <button className="send-request-btn" onClick={handleSendRequest}>
-                                {requestSent ? "Request Sent" : "Send Buddy Request"}
-                            </button>
                         </div>
+
+                        {/* ✅ Send Buddy Request Button (Fixed size & positioned to the right) */}
+                        <button className="send-request-btn" onClick={handleSendRequest}>
+                            {requestSent ? "Request Sent" : "Send Buddy Request"}
+                        </button>
                     </div>
 
                     {/* Study Preferences Section */}

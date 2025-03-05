@@ -132,13 +132,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: scroll;
+  scrollbar-width: none;
 }
 
 .Classes-question{
   background-color: #837f7b;
-  min-height: 200px;
-  width: 80%;
-  margin: 30px;
+  width: 65%;
+  margin: 20px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -149,7 +150,16 @@
 .Classes-question-title{
   margin: 10px;
   background-color: blue;
-  width: 80%;
+  width: 90%;
   border-radius: 10px;
   padding: 10px;
+}
+
+.Classes-reply-container{
+  background-color: blue;
+  width: 90%;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }

@@ -6,48 +6,126 @@ import './Classes.css';
 const dummyData = {
   "questions": [
     {
-      "title": "What's due tonight?",
-      "author": "Jane Doe",
-      "description": "I am confused about what is due tonight. Please help.",
+      "title": "What's the deadline for the project?",
+      "author": "Alice Johnson",
+      "description": "Can someone clarify the deadline for the project? I missed the announcement.",
       "replies": [
         {
-          "author": "John Smith",
-          "message": "Video Lecture is due",
+          "author": "Bob Adams",
+          "message": "The project is due next Friday at 5 PM.",
           "replies": [
             {
-              "author": "Jane Doe",
-              "message": "Thanks for the clarification!"
-            },
-            {
-              "author": "Bob Williams",
-              "message": "Is there a quiz too?"
+              "author": "Alice Johnson",
+              "message": "Thanks for the info, Bob!",
+              "replies": [
+                {
+                  "author": "Charlie Green",
+                  "message": "Actually, it was extended to next Monday."
+                }
+              ]
             }
           ]
         },
         {
-          "author": "Bob Williams",
-          "message": "Well, actually",
+          "author": "Dave Lee",
+          "message": "Don't forget about the group presentation as well, which is right after the project deadline.",
           "replies": [
             {
-              "author": "John Smith",
-              "message": "What do you mean?"
+              "author": "Alice Johnson",
+              "message": "Got it! Thanks for the heads-up."
             }
           ]
         }
       ]
     },
     {
-      "title": "How do I submit the assignment?",
-      "author": "Alice Johnson",
-      "description": "I'm not sure where to upload my project file.",
+      "title": "Can I submit my homework late?",
+      "author": "Eva Mitchell",
+      "description": "I missed the homework submission. Is there a possibility of submitting it late?",
       "replies": [
         {
-          "author": "David Lee",
-          "message": "You need to submit it through the course portal.",
+          "author": "George White",
+          "message": "You can submit it up to 2 days late with a 10% penalty.",
           "replies": [
             {
-              "author": "Alice Johnson",
-              "message": "Got it, thanks!"
+              "author": "Eva Mitchell",
+              "message": "Thanks for the info! Do I need to inform the professor?",
+              "replies": [
+                {
+                  "author": "Hannah Brown",
+                  "message": "Yes, make sure to send them an email explaining the situation."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "author": "James Black",
+          "message": "I think there’s also an automatic 5% deduction for late submissions, even without the 10% penalty.",
+          "replies": [
+            {
+              "author": "Eva Mitchell",
+              "message": "I'll keep that in mind. Thanks!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "When is the next class session?",
+      "author": "Michael Turner",
+      "description": "I need to confirm the timing for the next class. Can anyone help?",
+      "replies": [
+        {
+          "author": "Sarah Lewis",
+          "message": "It’s scheduled for Monday at 2 PM.",
+          "replies": [
+            {
+              "author": "Michael Turner",
+              "message": "Thanks, Sarah! Is it in the same room as last time?",
+              "replies": [
+                {
+                  "author": "Robert Scott",
+                  "message": "Yes, same room, 101."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "author": "Daniel Wilson",
+          "message": "Don't forget, there’s also a guest lecture next week, and it starts at 3:30 PM.",
+          "replies": [
+            {
+              "author": "Michael Turner",
+              "message": "I almost forgot about that! Thanks for the reminder."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Can we review for the final exam in class?",
+      "author": "Samantha Clark",
+      "description": "Will we be reviewing for the final exam in class before it starts?",
+      "replies": [
+        {
+          "author": "Olivia Harris",
+          "message": "Yes, there will be a review session this Friday in class.",
+          "replies": [
+            {
+              "author": "Samantha Clark",
+              "message": "Perfect, I’ll make sure to attend."
+            }
+          ]
+        },
+        {
+          "author": "Liam Martinez",
+          "message": "There’s also an online review session available if you can’t make it to class.",
+          "replies": [
+            {
+              "author": "Samantha Clark",
+              "message": "That sounds great, thanks for the info!"
             }
           ]
         }
@@ -57,26 +135,50 @@ const dummyData = {
 }
 
 
+
 const ClassCodeButton = ({ code }) => {
   return (
       <button className="Classes-class-code-button">{code}</button>
   );
 }
 
-const ClassQuestion = () => {
+const Reply = ({ reply, level = 0 }) => {
+  return (
+    <div style={{ marginLeft: `${level * 20}px`, borderLeft: "2px solid #ccc", paddingLeft: "10px", marginTop: "10px" }}>
+      <p style={{fontSize:"20px"}}><h5>{reply.author}:</h5> {reply.message}</p>
+      {reply.replies && reply.replies.length > 0 && (
+        <div>
+          {reply.replies.map((nestedReply, index) => (
+            <Reply key={index} reply={nestedReply} level={level + 1} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ClassQuestion = ({ question }) => {
   return (
     <div className="Classes-question">
-      <h2 className="Classes-question-title">Class Code - I am confused what is due tonight</h2>
+      <h2 className="Classes-question-title">{question.author}: {question.description}</h2>
+      <div className='Classes-reply-container'>
+        {question.replies.map((reply, index) => (
+          <Reply key={index} reply={reply} />
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-const ClassForum = () => {
+const ClassForum = ({questionsContainer}) => {
+  // questions = questionsContainer.questions;
+
   return (
     <div className="Classes-class-forum">
         <h2>CS 101</h2>
-        <ClassQuestion />
-      
+        <ClassQuestion question={dummyData.questions[0]}/>
+        <ClassQuestion question={dummyData.questions[1]}/>
+
     </div>
   )
 
@@ -96,7 +198,7 @@ const Classes = () => {
             
           </div>
           <div className="Classes-questions-container">
-            <ClassForum />
+            <ClassForum questionsContainer={dummyData}/>
           </div>
         </div>
       </div>

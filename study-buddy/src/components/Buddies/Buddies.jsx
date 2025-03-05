@@ -112,6 +112,14 @@ const Buddies = () => {
                             <CourseList title="Courses to Study" courses={buddyPref.preferredCourses} />
                             <CourseList title="School Interests" courses={buddyPref.schoolInterests} />
                         </div>
+
+                        {/* Send Buddy Request Button */}
+                        <div className ="buddy-request-section">
+                          <button className = "send-request-btn" onClick={handleSendRequest}>
+                            Send Buddy Request
+                          </button>
+                          {requestSent && <p className ="request-message">Request sent to {activeBuddy}!</p>}
+                        </div>
                     </main>
                 </div>
             </div>

@@ -1,105 +1,138 @@
 import React, { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
-import "./Buddies.css"; // Importing the Style Sheet for Buddies
-import StudyPreferences from './StudyPreferences';
+import "./Buddies.css";
 
-
-const BuddySidebar = ({ buddies, activeBuddy, setActiveBuddy }) => {
-  return (
-    <aside className="buddy-sidebar">
-      <h2 className="buddy-sidebar-title">Current Buddies</h2>
-      <div className="buddy-list">
-        {buddies.map((buddy, index) => (
-          <div
-            key={index}
-            className={`buddy-item ${activeBuddy === buddy ? "buddy-active" : ""}`}
-            onClick={() => setActiveBuddy(buddy)}
-          >
-            {buddy}
-          </div>
-        ))}
-      </div>
-    </aside>
-  );
-};
-
-// Component for Profile Section
-const BuddyProfile = ({ activeBuddy }) => {
-  return (
-    <main className="buddy-profile-section">
-      <div className="buddy-profile-header">
-        <div className="buddy-profile-avatar"></div>
-        <div>
-          <h3 className="buddy-profile-name">{activeBuddy}</h3>
-          <p className="buddy-profile-status">Student at California Baptist University</p>
-          <p className="buddy-profile-major"> Junior Studying Computer Science</p>
-        </div>
-      </div>
-    </main>
-  );
-};
-
-// Component for Actions Section
-const BuddyActions = () => {
-  return (
-    <div className="buddy-actions">
-      <h4 className="buddy-section-title">Actions</h4>
-      <div className="buddy-action-grid">
-        <div className="buddy-action-card">
-          <Link to = "/buddies/study-preferences">View Study Preferences</Link>
-        </div>
-        <div className="buddy-action-card">View Courses</div>
-        <div className="buddy-action-card">Buddy Up To Agenda</div>
-      </div>
-    </div>
-  );
-};
-
-// Component for Suggested Buddies
-const SuggestedBuddies = ({ suggestions }) => {
-  return (
-    <div className="buddy-suggestions">
-      <h4 className="buddy-section-title">You May Also Know</h4>
-      <div className="buddy-suggestions-grid">
-        {suggestions.map((buddy, index) => (
-          <div key={index} className="buddy-suggestion-card">
-            {buddy}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Main Buddies Component
 const Buddies = () => {
-  const [buddies] = useState(["Jane Doe","Buddy 2", "Buddy 3", "Buddy 4", "Buddy 5", "Buddy 6"]);
-  const [suggestions] = useState(["Buddy 17", "Buddy 32", "Buddy 74"]);
-  const [activeBuddy, setActiveBuddy] = useState(buddies[0]);
+    const [buddies] = useState(["Jane Doe", "Buddy 2", "Buddy 3", "Buddy 4", "Buddy 5"]);
+    const [activeBuddy, setActiveBuddy] = useState("Jane Doe"); 
 
-  return (
-    <>
-      <Navbar />
-      <div className="buddy-container">
-        <div className="buddy-main">
-          <BuddySidebar buddies={buddies} activeBuddy={activeBuddy} setActiveBuddy={setActiveBuddy} />
-          <div className="buddy-profile-content">
-            <Routes>
-              <Route path ="/" element = {
-                <>
-                  <BuddyProfile activeBuddy={activeBuddy} />
-                  <BuddyActions />
-                 <SuggestedBuddies suggestions={suggestions} />
-            </>
-              } />
-              <Route path ="/study-preferences" element={<StudyPreferences />} />
-              </Routes>
-          </div>
+    // Define Buddies' Study Preferences
+    const buddyPreferences = {
+        "Jane Doe": {
+            school: "California Baptist University",
+            major: "Mechanical Engineering",
+            studyTime: "Morning",
+            environment: "Coffee Shop",
+            collaboration: "Solo Study",
+            typeLearner: "Auditory Learner",
+            preferredCourses: ["Cybersecurity", "Data Science"],
+            schoolInterests: ["Machine Learning", "Cybersecurity"]
+        },
+        "Buddy 2": {
+            school: "California Baptist University",
+            major: "Computer Science",
+            studyTime: "Evening",
+            environment: "Library",
+            collaboration: "Group Study",
+            typeLearner: "Visual Learner",
+            preferredCourses: ["Algorithms", "Artificial Intelligence"],
+            schoolInterests: ["Software Development", "Game Design"]
+        },
+        "Buddy 3": {
+            school: "California Baptist University",
+            major: "Biomedical Engieering",
+            studyTime: "Afternoon",
+            environment: "Home Office",
+            collaboration: "Pair Programming",
+            typeLearner: "Kinesthetic Learner",
+            preferredCourses: ["Networking", "Machine Learning"],
+            schoolInterests: ["Cybersecurity", "Cloud Computing"]
+        },
+        "Buddy 4": {
+            school: "California Baptist University",
+            major: "Software Engieering",
+            studyTime: "Night",
+            environment: "Dorm Room",
+            collaboration: "Solo Study",
+            typeLearner: "Reading/Writing",
+            preferredCourses: ["Ethical Hacking", "Cybersecurity"],
+            schoolInterests: ["Ethical Hacking", "Data Privacy"]
+        },
+        "Buddy 5": {
+            school: "California Baptist University",
+            major: "Civil Engieering",
+            studyTime: "Morning",
+            environment: "Library",
+            collaboration: "Group Study",
+            typeLearner: "Visual Learner",
+            preferredCourses: ["Software Engineering", "Databases"],
+            schoolInterests: ["Software Engineering", "AI"]
+        }
+    };
+
+    // Get selected buddy’s preferences
+    const buddyPref = buddyPreferences[activeBuddy];
+
+    return (
+        <>
+            <Navbar />
+            <div className="buddy-container">
+                {/* Sidebar - Buddy List */}
+                <aside className="buddy-sidebar">
+                    <h2>Find Buddies</h2>
+                    <ul>
+                        {buddies.map((buddy, index) => (
+                            <li 
+                                key={index} 
+                                className={activeBuddy === buddy ? "buddy-active" : ""}
+                                onClick={() => setActiveBuddy(buddy)}
+                            >
+                                {buddy}
+                            </li>
+                        ))}
+                    </ul>
+                </aside>
+
+                <div className="buddy-main">
+                    {/* Profile Header Bar Across the Page */}
+                    <div className="profile-section">
+                        <div className="profile-header">
+                            <div className="profile-avatar"></div>
+                            <div>
+                                <h1 className="profile-name">{activeBuddy}</h1>
+                                <h3 className="profile-status">{buddyPref.school}</h3>
+                                <h4 clasName = "profile-major">{buddyPref.major}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Study Preferences Section */}
+                    <main className="buddy-profile-content">
+                        <div className="preference-grid">
+                            <PreferenceCard title="Preferred Study Time" value={buddyPref.studyTime} />
+                            <PreferenceCard title="Study Environment" value={buddyPref.environment} />
+                            <PreferenceCard title="Collaboration Style" value={buddyPref.collaboration} />
+                            <PreferenceCard title="Type of Learner" value={buddyPref.typeLearner} />
+                            <CourseList title="Courses to Study" courses={buddyPref.preferredCourses} />
+                            <CourseList title="School Interests" courses={buddyPref.schoolInterests} />
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </>
+    );
+};
+
+const PreferenceCard = ({ title, value }) => {
+    return (
+        <div className="preference-card">
+            <h4>{title}</h4>
+            <p>{value}</p>
         </div>
-      </div>
-    </>
-  );
+    );
+};
+
+const CourseList = ({ title, courses }) => {
+    return (
+        <div className="preference-card">
+            <h4>{title}</h4>
+            <ul>
+                {courses.map((course, index) => (
+                    <li key={index}>{course}</li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default Buddies;

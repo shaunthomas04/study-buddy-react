@@ -1,196 +1,140 @@
-.buddy-container {
-    font-family: 'Franklin Gothic Medium', sans-serif;
-    height: 90vh;
-    padding: 20px;
-    background: white;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+/* Full Page Background */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
 }
 
-/* Main Layout */
-.buddy-main {
+/* Layout */
+.buddy-container {
     display: flex;
-    flex-grow: 1;
-    gap: 30px;
-    height: 100%;
+    height: 90vh; 
+    background: linear-gradient(0.25turn, #3f87a6,#d5f5bc ,#ebf8e1);
 }
 
 /* Sidebar */
 .buddy-sidebar {
-    width: 25%;
-    background: linear-gradient(0.1turn, #3f87a6, #ebf8e1);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    padding: 20px;
+    height: 90vh;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
+.buddy-sidebar ul {
+    list-style: none;
+    padding: 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
+}
 
-.buddy-sidebar-title { 
-    font-weight: 600;
+.buddy-sidebar ul li {
+    padding: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
     text-align: center;
-}
-
-/* Buddy List */
-.buddy-list {
+    border-radius: 8px;
+    margin: 8px 0;
+    background: white;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
     display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    gap: 10px;
-}
-
-.buddy-item {
-    flex-grow: 1;
-    display:flex;
     align-items: center;
     justify-content: center;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.buddy-sidebar ul li:hover {
+    background: #3f87a6;
+    color: white;
 }
 
 .buddy-active {
-    background: #fdddbb;
+    background: #fbc993 !important;
+    color: white;
     font-weight: bold;
 }
 
-.buddy-item:hover {
-    background: #e2f6d9;
-    transform: scale(1.05);
-}
-
 /* Profile Section */
-.buddy-profile-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.buddy-profile-section {
-    background: #e2f6d9;
+.profile-section {
+    width: 100%;
+    height: 140px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Avatar & Name */
-.buddy-profile-header {
+.profile-header {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 15px; 
+    gap: 20px;
 }
 
-.buddy-profile-avatar {
+.profile-avatar {
     width: 80px;
     height: 80px;
-    background: black;
+    background: black; /* Black profile picture */
     border-radius: 50%;
 }
 
-.buddy-profile-name {
+.profile-name {
     font-size: 24px;
     font-weight: bold;
     color: #333;
 }
 
-.buddy-profile-status {
+.profile-school {
+    font-size: 18px;
+    color: #555;
+}
+
+.profile-major {
     font-size: 16px;
     color: #777;
 }
-.buddy-profile-major {
-    font-size: 16px;
-    color: #777
 
-}
-
-/* Actions Section */
-.buddy-actions {
-    background: #e2f6d9;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.buddy-section-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.buddy-action-grid {
+/* Main Content */
+.buddy-main {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    justify-content: space-between;
+    height: 90vh;
 }
 
-.buddy-action-card {
+/* Study Preferences Section */
+.buddy-profile-content {
     flex: 1;
-    min-width: 175px;
-    background: white;
     padding: 30px;
-    text-align: center;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    transition: transform 0.2s, background 0.3s;
+    border-radius: 10px;
+    overflow-y: auto;
 }
 
-.buddy-action-card a {
-    text-decoration: none;
-    color: inherit;
+/* Preference Cards */
+.preference-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: auto;
 }
 
-.buddy-action-card:hover {
-    transform: scale(1.05);
-    background: #dfe9df;
-}
-
-/* Suggested Buddies Section */
-.buddy-suggestions {
-    background: #e2f6d9;
+.preference-card {
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.buddy-suggestions-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: space-between;
-}
-
-.buddy-suggestion-card {
-    flex: 1;
-    min-width: 150px;
-    background: white;
-    padding: 20px;
     text-align: center;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    transition: transform 0.2s, background 0.3s;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    background: white;  
 }
 
-.buddy-suggestion-card:hover {
-    transform: scale(1.05);
-    background: #dfe9df;
-}
-
-/* Style Section for Study Preferences /*
-
+.preference-card h4 {
+    font-size: 1.1rem;
+    color: #3f87a6;
+    margin-bottom: 10px;
+} 

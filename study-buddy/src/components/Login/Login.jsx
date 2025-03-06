@@ -78,7 +78,7 @@ function LoginForm({ toggleForm }) {
     e.preventDefault();
     try {
       await userLogin(email, password);
-      navigate("/");
+      navigate("/home");
 
     } catch (error) {
       console.error(error);

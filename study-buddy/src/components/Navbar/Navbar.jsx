@@ -20,7 +20,7 @@ const Navbar = () => {
                 </div>
                 <ul className="nav-list">
                     <li className="nav-item" onClick={() => setActiveIndex(0)}>
-                        <Link className={activeIndex === 0 ? "nav-link active" : "nav-link"} to="/">Home</Link>
+                        <Link className={activeIndex === 0 ? "nav-link active" : "nav-link"} to="/home">Home</Link>
                     </li>
                     <li className="nav-item" onClick={() => setActiveIndex(1)}>
                         <Link className={activeIndex === 1 ? "nav-link active" : "nav-link"} to="/classes">Classes</Link>

@@ -4,6 +4,7 @@ import Home from './components/Home/Home';
 import Classes from './components/Classes/Classes';
 import Buddies from './components/Buddies/Buddies';
 import Agenda from './components/Agenda/Agenda';
+import Configuration from './components/Settings/Configuration';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
@@ -16,7 +17,7 @@ const App = () => {
           <Route path="/classes" element={<Classes />} />
           <Route path="/buddies" element={<Buddies />} />
           <Route path="/agenda" element={<Agenda />} />
-          <Route path="/profile" element={<Agenda />} />
+          <Route path="/profile" element={<Configuration/>} />
         </Routes>
       </div>
   );

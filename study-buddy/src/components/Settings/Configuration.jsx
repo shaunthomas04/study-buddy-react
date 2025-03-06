@@ -4,16 +4,16 @@ import "./Configuration.css";
 
 const SettingsPage = () => {
     return (
-      <div className="settings-page">
+      <div className="configuration-settings-page">
         <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
             <div className="logo"></div>
             {/* <input type="text" placeholder="Search" className="p-2 rounded" /> */}
         <Navbar />
         </header>
   
-        <div className="settings-container">
-          <div className="profile-description">
-            <div className="profile-image"></div>
+        <div className="configuration-settings-container">
+          <div className="configuration-profile-description">
+            <div className="configuration-profile-image"></div>
             <h2>[firstName], [lastName]</h2>
             <p className="description">
               <strong>Desc:</strong> Current student at XYZ EDU <br />
@@ -22,16 +22,16 @@ const SettingsPage = () => {
                 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
                  sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
-            <button className="logout-button">Logout</button>
+            <button className="configuration-logout-button">Logout</button>
           </div>
   
-          <div className="settings-options">
-            <button className="settings-button">Change Image</button>
-            <button className="settings-button">Change Description</button>
-            <button className="settings-button">Email Preferences</button>
-            <button className="settings-button">Accessibility Options</button>
-            <button className="settings-button">Change Password</button>
-            <button className="settings-button">Your Preferences</button>
+          <div className="configuration-settings-options">
+            <button className="configuration-settings-button">Change Image</button>
+            <button className="configuration-settings-button">Change Description</button>
+            <button className="configuration-settings-button">Email Preferences</button>
+            <button className="configuration-settings-button">Accessibility Options</button>
+            <button className="configuration-settings-button">Change Password</button>
+            <button className="configuration-settings-button">Your Preferences</button>
           </div>
         </div>
       </div>

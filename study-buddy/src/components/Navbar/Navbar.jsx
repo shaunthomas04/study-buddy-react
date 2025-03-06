@@ -9,6 +9,11 @@ const Navbar = () => {
     return (
         <div className="navbar-container">
             <nav className="navbar">
+                <ul className="nav-list-left">
+                    <li className="nav-item" onClick={() => setActiveIndex(0)}>
+                        <Link className={activeIndex === 0 ? "nav-link active" : "nav-link"} to="/">Home</Link>
+                    </li>
+                </ul>
                 <div className="search-container">
                     <input 
                         type="text"
@@ -18,10 +23,7 @@ const Navbar = () => {
                         placeholder="Search..."
                     />
                 </div>
-                <ul className="nav-list">
-                    <li className="nav-item" onClick={() => setActiveIndex(0)}>
-                        <Link className={activeIndex === 0 ? "nav-link active" : "nav-link"} to="/">Home</Link>
-                    </li>
+                <ul className="nav-list-right">
                     <li className="nav-item" onClick={() => setActiveIndex(1)}>
                         <Link className={activeIndex === 1 ? "nav-link active" : "nav-link"} to="/classes">Classes</Link>
                     </li>
@@ -32,7 +34,7 @@ const Navbar = () => {
                         <Link className={activeIndex === 3 ? "nav-link active" : "nav-link"} to="/agenda">Agenda</Link>
                     </li>
                     <li className="nav-item" onClick={() => setActiveIndex(4)}>
-                        <Link className={activeIndex === 3 ? "nav-link active" : "nav-link"} to="/profile">Profile</Link>
+                        <Link className={activeIndex === 4 ? "nav-link active" : "nav-link"} to="/profile">Profile</Link>
                     </li>
                 </ul>
             </nav>

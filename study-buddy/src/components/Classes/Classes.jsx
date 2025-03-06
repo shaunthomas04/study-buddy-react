@@ -178,7 +178,7 @@ const ClassForum = ({questionsContainer, classCode}) => {
 
   return (
     <div className="Classes-class-forum">
-        <h2 className='Classes-class-forum-title'>{classCode}</h2>
+        <h2 className='Classes-class-forum-title1'>{classCode}</h2>
         {ClassQuestions.map((question, index) => (
             <ClassQuestion question={question} key={index}/>
           ))}

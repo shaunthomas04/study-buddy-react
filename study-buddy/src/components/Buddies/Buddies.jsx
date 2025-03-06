@@ -3,7 +3,7 @@ import Navbar from '../Navbar/Navbar';
 import "./Buddies.css";
 
 const Buddies = () => {
-    const [buddies] = useState(["Jane Doe", "Buddy 2", "Buddy 3", "Buddy 4", "Buddy 5"]);
+    const [buddies] = useState(["Jane Doe", "John Smith", "Taylor Smith", "Alice John", "Bob Anderson"]);
     const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
     const [sentRequests, setSentRequests] = useState({});
 
@@ -19,7 +19,7 @@ const Buddies = () => {
             preferredCourses: ["Circuits II", "Fluid Mechanics"],
             schoolInterests: ["ASME", "Intramural Sports"]
         },
-        "Buddy 2": {
+        "John Smith": {
             school: "California Baptist University",
             major: "Computer Science",
             studyTime: "Evening",
@@ -27,19 +27,19 @@ const Buddies = () => {
             collaboration: "Group Study",
             typeLearner: "Visual Learner",
             preferredCourses: ["Algorithms", "Artificial Intelligence"],
-            schoolInterests: ["ACM", "Game Design and Video Game"]
+            schoolInterests: ["ACM", "Game Design and Video Games"]
         },
-        "Buddy 3": {
+        "Taylor Smith": {
             school: "California Baptist University",
             major: "Biomedical Engineering",
             studyTime: "Afternoon",
-            environment: "Empty Class",
+            environment: "Empty Classroom",
             collaboration: "Group Discussion",
             typeLearner: "Kinesthetic Learner",
-            preferredCourses: ["Biomaterials I", "Machine Learning"],
-            schoolInterests: ["BMES", "Basketball Games"]
+            preferredCourses: ["Biomaterials I", "Machine Learning", "Strength of Materials"],
+            schoolInterests: ["BMES", "Basketball Games", "Crochet Club"]
         },
-        "Buddy 4": {
+        "Alice John": {
             school: "California Baptist University",
             major: "Software Engineering",
             studyTime: "Night",
@@ -47,16 +47,16 @@ const Buddies = () => {
             collaboration: "Group Study",
             typeLearner: "Pair Programming",
             preferredCourses: ["Machine Learning", "Information Security"],
-            schoolInterests: ["SWE", "Cruize at CBU"]
+            schoolInterests: ["SWE", "Cruize at CBU", "Competitive Soccer"]
         },
-        "Buddy 5": {
+        "Bob Anderson": {
             school: "California Baptist University",
             major: "Civil Engineering",
             studyTime: "Morning",
             environment: "Library",
             collaboration: "Group Study",
             typeLearner: "Visual Learner",
-            preferredCourses: ["Fluid Mechanics", "Hydrology"],
+            preferredCourses: ["Fluid Mechanics", "Hydrology", "Structural Design II"],
             schoolInterests: ["Disney Club", "Lacrosse Club"]
         }
     };
@@ -138,7 +138,7 @@ const PreferenceCard = ({ title, value }) => {
 
 const CourseList = ({ title, courses }) => {
     return (
-        <div className="preference-card">
+        <div className="preference-card course-list">
             <h4>{title}</h4>
             <ul>
                 {courses.map((course, index) => (

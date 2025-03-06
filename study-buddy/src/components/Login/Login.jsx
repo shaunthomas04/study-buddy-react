@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import login_image from "../../assets/login_image.jpg";
+import login_image2 from "../../assets/login_background2.png";
 import logo from "../../assets/logo.png";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth , db } from "../../firebase.js"; 
@@ -60,7 +61,7 @@ function LoginPage() {
           </div>
         </div>
         <div className="image-container">
-          <img src={login_image} alt="Login Image" />
+          <img src={login_image2} alt="Login Image" />
         </div>
       </div>
     </div>

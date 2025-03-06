@@ -7,37 +7,51 @@ body {
     background-color: #f4f4f4;
   }
   
-  /* Header
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #333;
-    color: white;
-    padding: 10px;
-  } */
-  
-  /* .header nav a {
-    color: white;
-    margin: 0 10px;
-    text-decoration: none;
-  } */
-  
-  /* Search Bar
-  .search-bar {
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  } */
   
   /* Sidebar */
-  .sidebar,
-   .glance {
-    width: 20%;
-    padding: 20px;
-    background: #dddddd00;
+  .sidebar {
+    background: rgba(255, 255, 255, 0.6); /* Light transparency */
+    border-radius: 10px; /* Adds soft edges */
+    padding: 10px;
+  }
+  .friends-list {
+    background: transparent; /* Removes the stark white background */
+    padding: 10px;
+    width: 20%; /* Adjust as needed to fit your layout */
   }
   
+  .friends-list h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .friends-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .friends-list li {
+    margin-bottom: 10px;
+  }
+  
+  .friend-button {
+    width: 100%; /* Makes buttons take full width */
+    height: max-content;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.2); /* Slight transparency to blend with gradient */
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .friend-button:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+
   /* Main Layout */
   .main-layout {
     display: flex;

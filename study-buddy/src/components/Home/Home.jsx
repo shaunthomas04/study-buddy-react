@@ -12,21 +12,25 @@ const Header = () => (
 );
 
 const Sidebar = () => (
-  <aside className="sidebar">
-    <h2>Online</h2>
-    <ul>
-      <li>John Doe</li>
-      <li>Jane Doe</li>
-      <li>John Smith</li>
-      <li>Jane Smith</li>
-    </ul>
-    <h2>You May Know</h2>
-    <ul>
-      <li>John Doe</li>
-      <li>John Doe</li>
-      <li>John Doe</li>
-    </ul>
-  </aside>
+<aside className="friends-list">
+  <h2>Online</h2>
+  <ul>
+    {["John Doe", "Jane Doe", "John Smith", "Jane Smith"].map((friend, index) => (
+      <li key={index}>
+        <button className="friend-button">{friend}</button>
+      </li>
+    ))}
+  </ul>
+
+  <h2>You May Know</h2>
+  <ul>
+    {["John Doe", "John Doe", "John Doe"].map((friend, index) => (
+      <li key={index}>
+        <button className="friend-button" onClick={() => navigate("./buddies.jsx")}>{friend}</button>
+      </li>
+    ))}
+  </ul>
+</aside>
 );
 
 const Card = ({ title, description }) => (

@@ -1,6 +1,8 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./homeIndex.css";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
 
 // Import Navbar from NavBar.jsx
 const Header = () => (
@@ -66,15 +68,38 @@ const Glance = () => (
   </aside>
 );
 
-const Dashboard = () => (
-  <div className="dashboard">
-    <Header />
-    <main className="main-layout">
-      <Sidebar />
-      <Content />
-      <Glance />
-    </main>
-  </div>
-);
+// const Dashboard = () => (
+//   <div className="dashboard">
+//     <Header />
+//     <main className="main-layout">
+//       <Sidebar />
+//       <Content />
+//       <Glance />
+//     </main>
+//   </div>
+// );
+
+// export default Dashboard;
+
+const Dashboard = () => {
+  useEffect(() => {
+    // Check if the user is stored in localStorage
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      throw new Error("Failed to load user data from localStorage");
+    }
+  }); 
+
+  return (
+    <div className="dashboard">
+      <Header />
+      <main className="main-layout">
+        <Sidebar />
+        <Content />
+        <Glance />
+      </main>
+    </div>
+  );
+};
 
 export default Dashboard;

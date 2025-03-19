@@ -3,6 +3,8 @@ import Navbar from '../Navbar/Navbar';
 import CalendarDay from '../CalendarDay/CalendarDay';
 import './Agenda.css';
 import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate } from "date-fns";
+import { useEffect } from 'react';
+
 
 // popup for to be able to add study sessions
 const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible }) => {
@@ -148,6 +150,14 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
 
 
 const Agenda = () => {
+  useEffect(() => {
+      // Check if the user is stored in localStorage
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) {
+        throw new Error("Failed to load user data from localStorage");
+      }
+    }); 
+  
   // Dummy data for study sessions
   const [studySessions, setStudySessions] = useState([
     {

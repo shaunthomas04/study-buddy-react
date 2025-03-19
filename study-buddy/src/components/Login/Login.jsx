@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Profiler, useState } from "react";
 import "./Login.css";
 import login_image from "../../assets/login_image.jpg";
 import login_image2 from "../../assets/login_background2.png";
@@ -32,6 +32,18 @@ const userSignup = async (email, password, firstName, lastName) => {
       email: email,
       firstName: firstName,
       lastName: lastName,
+      buddies: [],
+      buddyRequests: [],
+      buddyRequestsSent: [],
+      buddySuggestions: [],
+      collaborationStyles: [],
+      courses: [],
+      learnTypes: [],
+      interests: [],
+      studyEnvironment: [],
+      studyTimes: [],
+      agendaStudySessions: [],
+      profilePicture: "default"
     });
     return user;
   } catch (error) {
@@ -121,7 +133,7 @@ function SignupForm({ toggleForm }) {
     e.preventDefault();
     try {
       await userSignup(email, password, firstName, lastName);
-      navigate("/");
+      navigate("/home");
 
     } catch (error) {
       console.error(error);

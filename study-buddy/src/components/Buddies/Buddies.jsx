@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./Buddies.css";
+import { useEffect } from 'react';
+
 
 const Buddies = () => {
+    useEffect(() => {
+          // Check if the user is stored in localStorage
+          const storedUser = localStorage.getItem("user");
+          if (!storedUser) {
+            throw new Error("Failed to load user data from localStorage");
+          }
+        });
+    
     const [buddies] = useState(["Jane Doe", "John Smith", "Taylor Smith", "Alice John", "Bob Anderson"]);
     const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
     const [sentRequests, setSentRequests] = useState({});

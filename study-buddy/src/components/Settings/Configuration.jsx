@@ -1,9 +1,19 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./Configuration.css";
+import { useEffect } from 'react';
+
 
 const SettingsPage = () => {
-    return (
+  useEffect(() => {
+        // Check if the user is stored in localStorage
+        const storedUser = localStorage.getItem("user");
+        if (!storedUser) {
+          throw new Error("Failed to load user data from localStorage");
+        }
+      });  
+  
+  return (
       <div className="configuration-settings-page">
         <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
             <div className="logo"></div>

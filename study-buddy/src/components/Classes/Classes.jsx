@@ -2,6 +2,8 @@ import React from 'react';
 import Navbar from '../Navbar/Navbar';
 // import ClassesSidebar from './ClassesSidebar';
 import './Classes.css';
+import { useEffect } from 'react';
+
 
 const dummyData = {
   "questions": [
@@ -191,6 +193,14 @@ const ClassForum = ({questionsContainer, classCode}) => {
 
 // Main component
 const Classes = () => {
+  useEffect(() => {
+        // Check if the user is stored in localStorage
+        const storedUser = localStorage.getItem("user");
+        if (!storedUser) {
+          throw new Error("Failed to load user data from localStorage");
+        }
+      });
+  
   return (
     <>
       <Navbar />

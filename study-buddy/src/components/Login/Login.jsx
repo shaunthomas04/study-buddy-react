@@ -5,8 +5,9 @@ import login_image2 from "../../assets/login_background2.png";
 import logo from "../../assets/logo.png";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth , db } from "../../firebase.js"; 
-import { setDoc, doc } from "firebase/firestore"; 
+import { setDoc, doc, } from "firebase/firestore"; 
 import { useNavigate } from "react-router-dom";
+import { getDoc } from "firebase/firestore";
 
 
 const userLogin = async (email, password) => {
@@ -23,7 +24,36 @@ const userLogin = async (email, password) => {
 
 }
 
+const getSchoolsMap = async () => {
+  const map = doc(db, "availableSchools", "map");
+
+  try {
+    const docSnapshot = await getDoc(map);  // Fetch the document snapshot
+    if (docSnapshot.exists()) {
+      return docSnapshot.data().schoolDomains;  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
+
 const userSignup = async (email, password, firstName, lastName) => {
+  const schoolsMap = await getSchoolsMap();
+
+  const emailDomain = email.split('@')[1];  
+    
+    // Check if the domain exists as a key in the schoolsMap
+    if (!schoolsMap || !schoolsMap[emailDomain]) {
+      throw new Error("No matching school for this email.");
+    }
+
+
   const auth = getAuth();
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -43,8 +73,12 @@ const userSignup = async (email, password, firstName, lastName) => {
       studyEnvironment: [],
       studyTimes: [],
       agendaStudySessions: [],
-      profilePicture: "default"
+      profilePicture: "default",
+      school: schoolsMap[emailDomain]
     });
+
+    localStorage.setItem("user", JSON.stringify(userCredential.user));
+
     return user;
   } catch (error) {
     console.error(error);
@@ -133,6 +167,7 @@ function SignupForm({ toggleForm }) {
     e.preventDefault();
     try {
       await userSignup(email, password, firstName, lastName);
+      console.log(userSignup);
       navigate("/home");
 
     } catch (error) {

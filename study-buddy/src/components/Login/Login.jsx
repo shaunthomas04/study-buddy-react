@@ -50,7 +50,7 @@ const userSignup = async (email, password, firstName, lastName) => {
     
     // Check if the domain exists as a key in the schoolsMap
     if (!schoolsMap || !schoolsMap[emailDomain]) {
-      throw new Error("No matching school for this email.");
+      throw new Error("Invalid School Email");;
     }
 
 
@@ -81,8 +81,20 @@ const userSignup = async (email, password, firstName, lastName) => {
 
     return user;
   } catch (error) {
-    console.error(error);
-    throw error;
+    if (error.code === "auth/email-already-in-use") {
+      throw new Error("Email is already in use.");
+    }
+    else if (error.code === "auth/invalid-email") {
+      throw new Error("Invalid Email.");
+    }
+    else if (error.code === "auth/weak-password") {
+      throw new Error("Password is not strong enough.");
+    }
+
+    else {
+      console.error(error);
+      throw new Error("Signup failed. Please try again.");
+    }
   }
 
 }
@@ -172,7 +184,7 @@ function SignupForm({ toggleForm }) {
 
     } catch (error) {
       console.error(error);
-      setErrorMessage("Signup failed. Please try again.");
+      setErrorMessage(error.message);
     }
 
   }

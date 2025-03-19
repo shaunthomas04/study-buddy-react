@@ -1,63 +1,152 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
-import "./Buddies.css"; // Importing the Style Sheet for Buddies
-import logo from "./Logo.png";
+import "./Buddies.css";
 
 const Buddies = () => {
-  return (
-    <>
-      <Navbar />
-      <div className="buddies-container">
-        {/* Main Content of Buddies Page */}
-        <div className="buddies-main">
-          <aside className="sidebar">
-            <h2 className="sidebar-title">Find Buddies</h2>
-            <div className="buddy-list">
-              <div className="buddy-item active">Buddy [Viewing]</div>
-              <div className="buddy-item">Buddy 1</div>
-              <div className="buddy-item">Buddy 2</div>
-              <div className="buddy-item">Buddy 3</div>
-              <div className="buddy-item">Buddy 4</div>
-              <div className="buddy-item">Buddy 5</div>
-            </div>
-          </aside>
+    const [buddies] = useState(["Jane Doe", "John Smith", "Taylor Smith", "Alice John", "Bob Anderson"]);
+    const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
+    const [sentRequests, setSentRequests] = useState({});
 
-          {/* Profile Section */}
-          <main className="profile-section">
-            <div className="profile-header">
-              <div className="profile-avatar"></div>
-              <div>
-                <h3 className="profile-name">Study Buddy XYZ</h3>
-                <p className="profile-status">Student at California Baptist University</p>
-              </div>
-            </div>
+    // Define Buddies' Study Preferences
+    const buddyPreferences = {
+        "Jane Doe": {
+            school: "California Baptist University",
+            major: "Mechanical Engineering",
+            studyTime: "Morning",
+            environment: "Coffee Shop",
+            collaboration: "One-on-One Study",
+            typeLearner: "Auditory Learner",
+            preferredCourses: ["Circuits II", "Fluid Mechanics"],
+            schoolInterests: ["ASME", "Intramural Sports"]
+        },
+        "John Smith": {
+            school: "California Baptist University",
+            major: "Computer Science",
+            studyTime: "Evening",
+            environment: "Library",
+            collaboration: "Group Study",
+            typeLearner: "Visual Learner",
+            preferredCourses: ["Algorithms", "Artificial Intelligence"],
+            schoolInterests: ["ACM", "Game Design and Video Games"]
+        },
+        "Taylor Smith": {
+            school: "California Baptist University",
+            major: "Biomedical Engineering",
+            studyTime: "Afternoon",
+            environment: "Empty Classroom",
+            collaboration: "Group Discussion",
+            typeLearner: "Kinesthetic Learner",
+            preferredCourses: ["Biomaterials I", "Machine Learning", "Strength of Materials"],
+            schoolInterests: ["BMES", "Basketball Games", "Crochet Club"]
+        },
+        "Alice John": {
+            school: "California Baptist University",
+            major: "Software Engineering",
+            studyTime: "Night",
+            environment: "Dorm Room",
+            collaboration: "Group Study",
+            typeLearner: "Pair Programming",
+            preferredCourses: ["Machine Learning", "Information Security"],
+            schoolInterests: ["SWE", "Cruize at CBU", "Competitive Soccer"]
+        },
+        "Bob Anderson": {
+            school: "California Baptist University",
+            major: "Civil Engineering",
+            studyTime: "Morning",
+            environment: "Library",
+            collaboration: "Group Study",
+            typeLearner: "Visual Learner",
+            preferredCourses: ["Fluid Mechanics", "Hydrology", "Structural Design II"],
+            schoolInterests: ["Disney Club", "Lacrosse Club"]
+        }
+    };
 
-            {/* Actions */}
-            <div className="actions">
-              <h4 className="section-title">Actions</h4>
-              <div className="action-grid">
-                <div className="action-card">
-                  <a href="sendBuddyRequest.jsx">Send Buddy Requests</a>
+  
+    const buddyPref = buddyPreferences[activeBuddy];
+
+
+    const handleSendRequest = () => {
+        setSentRequests(prev => ({
+            ...prev,
+            [activeBuddy]: true 
+        }));
+    };
+
+    return (
+        <>
+            <Navbar />
+            <div className="buddy-container">
+                {/* Sidebar - Buddy List */}
+                <aside className="buddy-sidebar">
+                    <h2>Find Buddies</h2>
+                    <ul>
+                        {buddies.map((buddy, index) => (
+                            <li 
+                                key={index} 
+                                className={activeBuddy === buddy ? "buddy-active" : ""}
+                                onClick={() => setActiveBuddy(buddy)}
+                            >
+                                {buddy}
+                            </li>
+                        ))}
+                    </ul>
+                </aside>
+
+                <div className="buddy-main">
+                    {/* Profile Header Bar Across the Page */}
+                    <div className="profile-section">
+                        <div className="profile-header">
+                            <div className="profile-avatar"></div>
+                            <div className="profile-info">
+                                <h1 className="profile-name">{activeBuddy}</h1>
+                                <h3 className="profile-school">{buddyPref.school}</h3>
+                                <h4 className="profile-major">{buddyPref.major}</h4> 
+                            </div>
+                        </div>
+
+                        {/*Send Buddy Request Button*/}
+                        <button className="send-request-btn" onClick={handleSendRequest}>
+                            {sentRequests[activeBuddy] ? "Request Sent" : "Send Buddy Request"}
+                        </button>
+                    </div>
+
+                    {/* Study Preferences Section */}
+                    <main className="buddy-profile-content">
+                        <div className="preference-grid">
+                            <PreferenceCard title="Preferred Study Time" value={buddyPref.studyTime} />
+                            <PreferenceCard title="Study Environment" value={buddyPref.environment} />
+                            <PreferenceCard title="Collaboration Style" value={buddyPref.collaboration} />
+                            <PreferenceCard title="Type of Learner" value={buddyPref.typeLearner} />
+                            <CourseList title="Courses to Study" courses={buddyPref.preferredCourses} />
+                            <CourseList title="School Interests" courses={buddyPref.schoolInterests} />
+                        </div>
+                    </main>
                 </div>
-                <div className="action-card">View Courses</div>
-                <div className="action-card">Buddy Up To Agenda</div>
-              </div>
             </div>
+        </>
+    );
+};
 
-            {/* Suggested Buddies (Friends) */}
-            <div className="suggestions">
-              <h4 className="section-title">You May Also Know</h4>
-              <div className="suggestions-grid">
-                <div className="suggestion-card">Buddy 17</div>
-                <div className="suggestion-card">Buddy 32</div>
-                <div className="suggestion-card">Buddy 74</div>
-              </div>
-            </div>
-          </main>
+const PreferenceCard = ({ title, value }) => {
+    return (
+        <div className="preference-card">
+            <h4>{title}</h4>
+            <p>{value}</p>
         </div>
-      </div>
-    </>
-  );
+    );
+};
+
+const CourseList = ({ title, courses }) => {
+    return (
+        <div className="preference-card course-list">
+            <h4>{title}</h4>
+            <ul>
+                {courses.map((course, index) => (
+                    <li key={index}>{course}</li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default Buddies;

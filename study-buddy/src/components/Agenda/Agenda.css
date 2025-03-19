@@ -1,6 +1,113 @@
+.Agenda-outer-container{
+    width: 100%;       
+    height: 90vh;  
+    display: flex;
+    flex-direction: column;               
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(0.1turn, #3f87a6, #ebf8e1);
+
+}
+
 .Agenda-calendar-day-container{
     display: flex;
-    flex-wrap: wrap; /* Allows items to wrap to the next row */
-    gap: 10px; /* Adjust spacing between items */
-    width: 100%;
+    width: 77%;
+    height: 88%;
+    justify-content: center;
+    align-items: center;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background-color: #93dda5;
+    border: green 3px solid;
+    border-top: none;
+}
+
+.Agenda-weekday-day-container{
+    width: 50%;
+    height: 95%;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-size-adjust: 100%;
+    font-size: 1.5vw
+}
+
+.Agenda-weekday-name {
+    background-color:#e2f6d9;
+    width: 90%;
+    height: 35px;
+    text-align: center;
+    display: flex;      
+    justify-content: center; 
+    align-items: center;
+    border-radius: 10px;
+    color: #0b90c9;
+    font-weight: bold;
+
+}
+
+.Agenda-month-heading{
+    text-align: center;
+    padding-left: 20px;
+    font-size: 42px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #0b90c9;
+    background: #93dda5;
+    width: 77%;
+    height: 8%;
+    border: green 3px solid;
+    border-bottom: none;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.Agenda-popup-add-sessions{
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6fca86;
+}
+.Agenda-popup-add-sessions-container{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%); 
+    width: 30vw; 
+    height: 500px; 
+    background-color:#e2f6d9;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+.Agenda-popup-add-sessions-form{
+    width: 90%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Agenda-popup-form-field{
+    width: 85%;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

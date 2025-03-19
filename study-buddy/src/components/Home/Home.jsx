@@ -6,38 +6,42 @@ import "./homeIndex.css";
 const Header = () => (
   <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
     <div className="logo"></div>
-    <input type="text" placeholder="Search" className="p-2 rounded" />
+    {/* <input type="text" placeholder="Search" className="p-2 rounded" /> */}
   <Navbar />
   </header>
 );
 
 const Sidebar = () => (
-  <aside className="w-1/5 bg-gray-200 p-4">
-    <h2>Online</h2>
-    <ul>
-      <li>John Doe</li>
-      <li>Jane Doe</li>
-      <li>John Smith</li>
-      <li>Jane Smith</li>
-    </ul>
-    <h2 className="mt-4">You May Know</h2>
-    <ul>
-      <li>John Doe</li>
-      <li>John Doe</li>
-      <li>John Doe</li>
-    </ul>
-  </aside>
+<aside className="friends-list">
+  <h2>Online</h2>
+  <ul>
+    {["John Doe", "Jane Doe", "John Smith", "Jane Smith"].map((friend, index) => (
+      <li key={index}>
+        <button className="friend-button">{friend}</button>
+      </li>
+    ))}
+  </ul>
+
+  <h2>You May Know</h2>
+  <ul>
+    {["John Doe", "John Doe", "John Doe"].map((friend, index) => (
+      <li key={index}>
+        <button className="friend-button" onClick={() => navigate("./buddies.jsx")}>{friend}</button>
+      </li>
+    ))}
+  </ul>
+</aside>
 );
 
 const Card = ({ title, description }) => (
-  <div className="bg-gray-300 p-4 m-2 rounded">
+  <div className="card">
     <h4>{title}</h4>
     <p>{description}</p>
   </div>
 );
 
 const Content = () => (
-  <section className="flex-grow p-4">
+  <section className="content">
     <h2>Good Evening, [Name]</h2>
     <h3>Upcoming</h3>
     <Card title="Assignment Due 2/15" description="Algorithms" />
@@ -50,21 +54,22 @@ const Content = () => (
   </section>
 );
 
+// Feature temporaily relocated
 const Glance = () => (
-  <aside className="w-1/5 bg-gray-200 p-4">
-    <h2>At a Glance</h2>
-    <div className="bg-white p-2 border rounded"> Request Buddy XYZ</div>
-    <div className="bg-white p-2 border rounded mt-2">Tue, Jan 4 - Study Session with XYZ</div>
-    <div className="bg-white p-2 border rounded mt-2">Wed, Jan 5 - Nothing Scheduled</div>
-    <div className="bg-white p-2 border rounded mt-2">Thur, Jan 6 - Study Session with XYZ</div>
-    <div className="bg-white p-2 border rounded mt-2">Fri, Jan 7 - Study Session with XYZ</div>
+  <aside className="glance">
+    {/* <h2>At a Glance</h2>
+    <div className="event">Request Buddy XYZ</div>
+    <div className="event">Tue, Jan 4 - Study Session with XYZ</div>
+    <div className="event">Wed, Jan 5 - Study Session with XYZ</div>
+    <div className="event">Thur, Jan 6 - Study Session with XYZ</div>
+    <div className="event">Fri, Jan 7 - Study Session with XYZ</div> */}
   </aside>
 );
 
 const Dashboard = () => (
-  <div className="flex flex-col h-screen">
+  <div className="dashboard">
     <Header />
-    <main className="flex flex-grow">
+    <main className="main-layout">
       <Sidebar />
       <Content />
       <Glance />

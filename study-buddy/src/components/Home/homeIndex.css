@@ -1,50 +1,95 @@
+/* styles.css */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-/* header {
-    display: flex;
-    justify-content: space-between;
-    background: #333;
-    color: white;
+    background-color: #f4f4f4;
+  }
+  
+  
+  /* Sidebar */
+  .sidebar {
+    background: rgba(255, 255, 255, 0.6); /* Light transparency */
+    border-radius: 10px; /* Adds soft edges */
     padding: 10px;
-    align-items: center;
-} */
+  }
+  .friends-list {
+    background: transparent; /* Removes the stark white background */
+    padding: 10px;
+    width: 20%; /* Adjust as needed to fit your layout */
+  }
+  
+  .friends-list h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .friends-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .friends-list li {
+    margin-bottom: 10px;
+  }
+  
+  .friend-button {
+    width: 100%; /* Makes buttons take full width */
+    height: max-content;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.2); /* Slight transparency to blend with gradient */
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .friend-button:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
 
-nav a {
-    color: rgb(0, 0, 0);
-    margin: 0 10px;
-    text-decoration: none;
-}
 
-.sidebar, .glance {
-    width: 20%;
-    padding: 20px;
-    background: #f4f4f4;
-}
-
-.content {
+  /* Main Layout */
+  .main-layout {
+    display: flex;
+    flex-grow: 1;
+  }
+  
+  /* Content */
+  .content {
     flex-grow: 1;
     padding: 20px;
-}
-
-.card {
-    background: #ccc;
-    padding: 10px;
+  }
+  
+  /* Cards */
+  .card {
+    background: #bfe5becd;
+    width: 50px, auto;
+    height: 50px, auto;
+    padding: 15px;
     margin: 10px 0;
-}
-
-.event {
+    border-radius: 5px;
+  }
+  
+  /* Event */
+  /* .event {
     background: white;
     padding: 10px;
     margin: 10px 0;
-    border: 1px solid #ddd;
-}
-
-main {
+    border: 1px solid #aaa;
+    border-radius: 5px;
+  } */
+  
+  /* Overall Dashboard Layout */
+  .dashboard {
     display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;                   
+    background: linear-gradient(0.1turn, #3f87a6, #ebf8e1);
+
 }
+  

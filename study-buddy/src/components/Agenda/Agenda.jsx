@@ -4,6 +4,9 @@ import CalendarDay from '../CalendarDay/CalendarDay';
 import './Agenda.css';
 import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate } from "date-fns";
 import { useEffect } from 'react';
+import { auth , db } from "../../firebase.js"; 
+import { setDoc, doc, } from "firebase/firestore"; 
+import { getDoc } from "firebase/firestore";
 
 
 // popup for to be able to add study sessions
@@ -147,15 +150,50 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
   )
 }
 
+// Function to retrieve the user's agenda
+const getUserAgenda = async (userHash) => {
+  const userInfo = doc(db, "users", userHash);
+  
+  try {
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data().agendaStudySessions;  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
 
 
+
+// Main Agenda component
 const Agenda = () => {
   useEffect(() => {
-      // Check if the user is stored in localStorage
-      const storedUser = localStorage.getItem("user");
-      if (!storedUser) {
-        throw new Error("Failed to load user data from localStorage");
+
+    const loadAgenda = async () => {
+      try{
+        const storedUser = localStorage.getItem("user");
+        if (!storedUser) {
+          throw new Error("Failed to load user data from localStorage");
+        }
+        const userHashID = JSON.parse(storedUser).uid;
+        const agenda = await getUserAgenda(userHashID);
       }
+      catch (error) {
+        console.error("Error fetching agenda:", error);
+      }
+
+
+    }
+    
+    
+    loadAgenda();
+
     }); 
   
   // Dummy data for study sessions

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import CalendarDay from '../CalendarDay/CalendarDay';
 import './Agenda.css';
@@ -18,8 +18,41 @@ const uploadSession = async (userHash, session) => {
   }
 }
 
+// Function to retrieve the user's agenda
+// Make sure to import import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; at top
+const getUserInfo = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash);
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data();  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
 // popup for to be able to add study sessions
 const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, userHash }) => {
+  const [buddyClasses, setBuddyClasses] = useState([]);
+  useEffect(() => {
+    
+    const fetchUserInfo = async () => {
+      const userData = await getUserInfo(userHash);
+      setBuddyClasses(userData.courses);
+      return userData;
+    };
+
+    fetchUserInfo(); 
+  }, [userHash]);
+
+
+  
   const [formData, setFormData] = useState({
     classCode: '',
     date: '',
@@ -75,7 +108,23 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
     <div className="Agenda-popup-add-sessions-container">
       <h2>Add Study Session</h2>
       <form onSubmit={handleSubmit} className='Agenda-popup-add-sessions-form'>
-        <input type="text" name="classCode" placeholder="Enter class code" value={formData.classCode} onChange={handleChange} required className='Agenda-popup-form-field'/>
+        {/* <input type="text" name="classCode" placeholder="Enter class code" value={formData.classCode} onChange={handleChange} required className='Agenda-popup-form-field'/> */}
+        <select
+        name="classCode"
+        value={formData.classCode}
+        onChange={handleChange}
+        required
+        className="Agenda-popup-form-field"
+      >
+        <option value="">Select a class code</option>
+        {buddyClasses.map((code) => (
+          <option key={code} value={code}>
+            {code}
+          </option>
+        ))}
+      </select>
+        
+        
         <input type="date" name="date" placeholder="date" value={formData.date} onChange={handleChange}required className='Agenda-popup-form-field'/>
         <input type="time" id="time" name="time" value={formData.time} onChange={handleChange} required className='Agenda-popup-form-field'/>        
         <input type="text" id="person" name="person" placeholder="Person" value={formData.person} onChange={handleChange}required className='Agenda-popup-form-field'/>

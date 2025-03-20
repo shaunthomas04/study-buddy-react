@@ -202,8 +202,17 @@ const Agenda = () => {
         const agenda = await getUserAgenda(userHashID);
         setUserHashID(userHashID);
         setAgendaSessions(agenda);
-
-
+        
+        // Listen for changes to the user's agenda
+         const userInfo = doc(db, "users", userHashID);
+         const unsubscribe = onSnapshot(userInfo, (docSnap) => {
+           if (docSnap.exists()) {
+             setAgendaSessions(docSnap.data().agendaStudySessions || []);
+           } else {
+             console.log("No such document");
+           }
+         }); 
+         return () => unsubscribe();
 
       }
       catch (error) {

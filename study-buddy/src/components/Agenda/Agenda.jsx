@@ -12,7 +12,6 @@ const uploadSession = async (userHash, session) => {
   try{
     const userInfo = doc(db, "users", userHash);
     await updateDoc(userInfo, {agendaStudySessions: arrayUnion(session)});
-    console.log("Session successfully added!");
   }
   catch (error) {
     console.error("Error uploading session:", error);
@@ -26,7 +25,7 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
     date: '',
     time: '',
     person: '',
-    status: 'In Progress',
+    status: 'pending',
     notes: '',
   });
 
@@ -48,13 +47,20 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
       date: '',
       time: '',
       person: '',
-      status: 'In Progress',
+      status: 'pending',
       notes: '',
     });
 
-    console.log("New session",newSession);
+
     // Add the new session to the user's agenda
     uploadSession(userHash, newSession)
+
+    // Add the new session to user's buddy's agenda
+    // Update the userNmame to the user's name and the buddyID to the buddy's ID that correlates to the selected buddy
+    const userName = "User's Name"
+    const buddyID = "Lk9IRfnLa7bS5dvuJvjF1JZuxR73"
+    const buddySession = { ...newSession, status: "request", person: userName };
+    uploadSession(buddyID, buddySession);
 
 
     setStudySessions(prevSessions => {
@@ -202,7 +208,7 @@ const Agenda = () => {
         const agenda = await getUserAgenda(userHashID);
         setUserHashID(userHashID);
         setAgendaSessions(agenda);
-        
+
         // Listen for changes to the user's agenda
          const userInfo = doc(db, "users", userHashID);
          const unsubscribe = onSnapshot(userInfo, (docSnap) => {
@@ -259,8 +265,7 @@ const Agenda = () => {
     setIsVisible(!isVisible);
   };
 
-  console.log("Agenda sessions", agendaSessions);
-  // console.log("User hash", userHashID);
+  
   return (
     <>
     <Navbar /> 

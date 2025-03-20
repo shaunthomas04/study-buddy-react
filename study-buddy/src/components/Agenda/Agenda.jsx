@@ -1,8 +1,8 @@
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import CalendarDay from '../CalendarDay/CalendarDay';
 import './Agenda.css';
-import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate } from "date-fns";
+import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate, set } from "date-fns";
 import { useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
@@ -22,7 +22,7 @@ const uploadSession = async (userHash, session) => {
 // Make sure to import import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; at top
 const getUserInfo = async (userHash) => {  
   try {
-    const userInfo = doc(db, "users", userHash);
+    const userInfo = doc(db, "users", userHash.trim());
     const docSnapshot = await getDoc(userInfo);  
     if (docSnapshot.exists()) {
       return docSnapshot.data();  
@@ -40,19 +40,53 @@ const getUserInfo = async (userHash) => {
 // popup for to be able to add study sessions
 const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, userHash }) => {
   const [buddyClasses, setBuddyClasses] = useState([]);
+  const [userBuddies, setUserBuddies] = useState([]);
+  const [buddiesInfoNames, setBuddiesInfoNames] = useState([]);
+  const [buddiesInfoObjects, setBuddiesInfoObjects] = useState([]);
+
+
+
+  // Effect to fetch the user's classes and buddies(hashes)
   useEffect(() => {
     
     const fetchUserInfo = async () => {
       const userData = await getUserInfo(userHash);
       setBuddyClasses(userData.courses);
+      setUserBuddies(userData.buddies);
+
       return userData;
     };
 
     fetchUserInfo(); 
+
   }, [userHash]);
 
+  // Effect to fetch the user's buddies' info
+  useEffect(() => {
+    const buddyNames = [];
+    const buddyObjects = [];
 
-  
+    const fetchBuddiesInfo = async () => {
+      userBuddies.forEach(async currentBuddy => {
+      const buddyData = await getUserInfo(currentBuddy);
+
+      const buddyObject = {
+        id: currentBuddy,
+        name: `${buddyData.firstName} ${buddyData.lastName}`
+      }
+
+      buddyNames.push(`${buddyData.firstName} ${buddyData.lastName}`);
+      buddyObjects.push(buddyObject);
+
+     });
+
+      setBuddiesInfoNames(buddyNames);
+      setBuddiesInfoObjects(buddyObjects);
+    };
+
+    fetchBuddiesInfo();
+  }, [userBuddies]); 
+
   const [formData, setFormData] = useState({
     classCode: '',
     date: '',
@@ -127,7 +161,22 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
         
         <input type="date" name="date" placeholder="date" value={formData.date} onChange={handleChange}required className='Agenda-popup-form-field'/>
         <input type="time" id="time" name="time" value={formData.time} onChange={handleChange} required className='Agenda-popup-form-field'/>        
-        <input type="text" id="person" name="person" placeholder="Person" value={formData.person} onChange={handleChange}required className='Agenda-popup-form-field'/>
+        {/* <input type="text" id="person" name="person" placeholder="Person" value={formData.person} onChange={handleChange}required className='Agenda-popup-form-field'/> */}
+        <select
+        name="person"
+        value={formData.person}
+        onChange={handleChange}
+        required
+        className="Agenda-popup-form-field"
+      >
+        <option value="">Select a buddy</option>
+        {buddiesInfoNames.map((code) => (
+          <option key={code} value={code}>
+            {code}
+          </option>
+        ))}
+      </select>
+        
         <textarea style={{marginBottom: '20px',height: "90px"}} name="notes" placeholder="Notes" value={formData.notes} onChange={handleChange} className='Agenda-popup-form-field' />
         <button type="submit">Submit</button>
 

@@ -5,12 +5,22 @@ import './Agenda.css';
 import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate } from "date-fns";
 import { useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
-import { setDoc, doc, } from "firebase/firestore"; 
-import { getDoc } from "firebase/firestore";
+import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
+// Function to upload a session to user agenda database
+const uploadSession = async (userHash, session) => {
+  try{
+    const userInfo = doc(db, "users", userHash);
+    await updateDoc(userInfo, {agendaStudySessions: arrayUnion(session)});
+    console.log("Session successfully added!");
+  }
+  catch (error) {
+    console.error("Error uploading session:", error);
+  }
+}
 
 // popup for to be able to add study sessions
-const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible }) => {
+const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, userHash }) => {
   const [formData, setFormData] = useState({
     classCode: '',
     date: '',
@@ -41,6 +51,11 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible })
       status: 'In Progress',
       notes: '',
     });
+
+    console.log("New session",newSession);
+    // Add the new session to the user's agenda
+    uploadSession(userHash, newSession)
+
 
     setStudySessions(prevSessions => {
       const updatedSessions = [...prevSessions, newSession];
@@ -151,10 +166,9 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
 }
 
 // Function to retrieve the user's agenda
-const getUserAgenda = async (userHash) => {
-  const userInfo = doc(db, "users", userHash);
-  
+const getUserAgenda = async (userHash) => {  
   try {
+    const userInfo = doc(db, "users", userHash);
     const docSnapshot = await getDoc(userInfo);  
     if (docSnapshot.exists()) {
       return docSnapshot.data().agendaStudySessions;  
@@ -173,6 +187,9 @@ const getUserAgenda = async (userHash) => {
 
 // Main Agenda component
 const Agenda = () => {
+  const [userHashID, setUserHashID] = useState(null)
+  const [agendaSessions, setAgendaSessions] = useState([]);
+
   useEffect(() => {
 
     const loadAgenda = async () => {
@@ -183,6 +200,11 @@ const Agenda = () => {
         }
         const userHashID = JSON.parse(storedUser).uid;
         const agenda = await getUserAgenda(userHashID);
+        setUserHashID(userHashID);
+        setAgendaSessions(agenda);
+
+
+
       }
       catch (error) {
         console.error("Error fetching agenda:", error);
@@ -190,31 +212,12 @@ const Agenda = () => {
 
 
     }
-    
-    
     loadAgenda();
-
-    }); 
+    }, []); 
+  
   
   // Dummy data for study sessions
-  const [studySessions, setStudySessions] = useState([
-    {
-      classCode: "MAT101",
-      date: "2025-03-31",
-      time: "14:00",
-      person: "John Doe",
-      status: "accepted",
-      notes: "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals.",
-    },
-    {
-      classCode: "CS101",
-      date: "2025-03-23",
-      time: "09:00",
-      person: "Jane Smith",
-      status: "in progress",
-      notes: "Let's go over the project draft together to discuss improvements.",
-    }
-  ]);
+  const [studySessions, setStudySessions] = useState(agendaSessions);
 
   // Get all the weekdays for the current month
   const weekdays = getNumbersForWeekdays1();
@@ -229,7 +232,7 @@ const Agenda = () => {
   const currentMonth = format(today, "MMMM");
 
   // Get the weekday for each study session and then find weekday array and then add session to sessions array in that weekday object
-  studySessions.forEach(studySession => {
+  agendaSessions.forEach(studySession => {
     const [year, month, day] = studySession.date.split('-').map(Number);
     const dateObj = new Date(year, month - 1, day);
     const weekday = format(dateObj, "EEEE");
@@ -246,6 +249,9 @@ const Agenda = () => {
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
+
+  console.log("Agenda sessions", agendaSessions);
+  // console.log("User hash", userHashID);
   return (
     <>
     <Navbar /> 
@@ -266,7 +272,7 @@ const Agenda = () => {
         <button className='Agenda-popup-add-sessions' onClick={toggleVisibility}>
           {isVisible ? 'x' : '+'}
         </button>
-        {isVisible && <AddStudySessionPopup studySessions={studySessions} setStudySessions={setStudySessions} setIsVisible={setIsVisible}/>}
+        {isVisible && <AddStudySessionPopup studySessions={studySessions} setStudySessions={setStudySessions} setIsVisible={setIsVisible} userHash={userHashID}/>}
       </div>
     </>
   );

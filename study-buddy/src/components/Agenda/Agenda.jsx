@@ -43,8 +43,7 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
   const [userBuddies, setUserBuddies] = useState([]);
   const [buddiesInfoNames, setBuddiesInfoNames] = useState([]);
   const [buddiesInfoObjects, setBuddiesInfoObjects] = useState([]);
-
-
+  const [userName, setUserName] = useState('');
 
   // Effect to fetch the user's classes and buddies(hashes)
   useEffect(() => {
@@ -53,6 +52,7 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
       const userData = await getUserInfo(userHash);
       setBuddyClasses(userData.courses);
       setUserBuddies(userData.buddies);
+      setUserName(`${userData.firstName} ${userData.lastName}`);
 
       return userData;
     };
@@ -72,7 +72,8 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
 
       const buddyObject = {
         id: currentBuddy,
-        name: `${buddyData.firstName} ${buddyData.lastName}`
+        name: `${buddyData.firstName} ${buddyData.lastName}`,
+        email: buddyData.email,
       }
 
       buddyNames.push(`${buddyData.firstName} ${buddyData.lastName}`);
@@ -94,6 +95,7 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
     person: '',
     status: 'pending',
     notes: '',
+    sessionID:crypto.randomUUID()
   });
 
   const handleChange = (e) => {
@@ -120,12 +122,11 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
 
 
     // Add the new session to the user's agenda
-    uploadSession(userHash, newSession)
 
     // Add the new session to user's buddy's agenda
-    // Update the userNmame to the user's name and the buddyID to the buddy's ID that correlates to the selected buddy
-    const userName = "User's Name"
-    const buddyID = "Lk9IRfnLa7bS5dvuJvjF1JZuxR73"
+    const buddyLookupName = newSession.person;
+    const buddyInfo = buddiesInfoObjects.find(buddy => buddy.name === buddyLookupName);
+    const buddyID = buddyInfo.id.trim();
     const buddySession = { ...newSession, status: "request", person: userName };
     uploadSession(buddyID, buddySession);
 

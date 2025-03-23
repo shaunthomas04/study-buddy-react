@@ -4,22 +4,18 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    background: white;
 }
 
 /* Sidebar Menu Button */
 .buddy-menu-button {
     position: fixed;
     top: 80px; 
-    left: 0;
     width: 40px;
-    height: 40px;
-    padding: 0;
-    margin: 0;
     background: none;
     color: black;
     border: none;
     font-size: 28px;
-    line-height: 40px;
     cursor: pointer;
     z-index: 1000;
     text-align: center;
@@ -34,14 +30,11 @@ body, html {
 /* Sidebar */
 .buddy-sidebar {
     position: fixed;
-    top: 80px; 
     left: -200px;
     width: 200px;
-    height: calc(100vh - 80px); 
     background: white;
     transition: left 0.3s ease-in-out;
-    z-index: 999;
-    padding-top: 10px;
+    padding-top: 0;
 }
 
 
@@ -262,12 +255,12 @@ body, html {
 }
 
 .send-request-btn:hover {
-    background: #2a5d74;
+    background: #2a7431;
 }
 
 .request-message {
     margin-top:10px;
     font-size: 1rem;
-    color:#2a5d74;
+    color:#2a7431;
     font-weight: bold;
 }

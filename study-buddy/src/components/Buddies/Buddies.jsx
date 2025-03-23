@@ -8,6 +8,15 @@ const Buddies = () => {
     const [sentRequests, setSentRequests] = useState({});
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
+    const preferenceIconMap = {
+        "Preffered Study Time": "/iconbuddy/StudyTime.png",
+        "Study Enviroment": "iconbuddy/studyEnvir.png",
+        "Collaboration Style": "iconbuddy/style.png",
+        "Type of Learner": "iconbuddy/TyperLearner.png",
+        "Courses to Study": "iconbuddy/study.png",
+        "School Interests": "iconbuddy/interest.png"
+    };
+
     const buddyPreferences = {
         "Jane Doe": {
             school: "California Baptist University",
@@ -133,22 +142,34 @@ const Buddies = () => {
     );
 };
 
-const PreferenceCard = ({ title, value }) => (
+const PreferenceCard = ({ title, value, icon }) => (
     <div className="preference-card">
-        <h4>{title}</h4>
-        <p>{value}</p>
+      <h4 className="preference-heading">
+        {icon && <img src={icon} alt={`${title} icon`} className="preference-icon" />}
+        {title}
+      </h4>
+      <p>{value}</p>
     </div>
-);
-
-const CourseList = ({ title, courses }) => (
-    <div className="preference-card course-list">
-        <h4>{title}</h4>
+  );
+  
+  const CourseList = ({ title, courses }) => {
+    const icon = preferenceIconMap[title]; // same logic here
+  
+    return (
+      <div className="preference-card course-list">
+        <h4 className="preference-heading">
+          {icon && <img src={icon} alt={`${title} icon`} className="preference-icon" />}
+          {title}
+        </h4>
         <ul>
-            {courses.map((course, index) => (
-                <li key={index}>{course}</li>
-            ))}
+          {courses.map((course, index) => (
+            <li key={index}>{course}</li>
+          ))}
         </ul>
-    </div>
-);
+      </div>
+    );
+  };
+  
+  
 
 export default Buddies;

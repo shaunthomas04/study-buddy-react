@@ -233,6 +233,21 @@ body, html {
     text-align: center;
 }
 
+.preference-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    color: #3f87a6;
+    margin-bottom: 10px;
+}
+
+.preference-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
 .buddy-request-section {
     display:flex;
     flex-direction: column;

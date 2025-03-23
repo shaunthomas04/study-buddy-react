@@ -2,20 +2,25 @@ import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./Buddies.css";
 
+
+
+const preferenceIconMap = {
+    "Preferred Study Time": "/iconbuddy/StudyTime.png",
+    "Study Environment": "/iconbuddy/studyEnvir.png",
+    "Collaboration Style": "/iconbuddy/style.png",
+    "Type of Learner": "/iconbuddy/TyperLearner.png",
+    "Courses to Study": "/iconbuddy/study.png",
+    "School Interests": "/iconbuddy/interest.png"
+};
+
+
 const Buddies = () => {
     const [buddies] = useState(["Jane Doe", "John Smith", "Taylor Smith", "Alice John", "Bob Anderson"]);
     const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
     const [sentRequests, setSentRequests] = useState({});
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    const preferenceIconMap = {
-        "Preffered Study Time": "/iconbuddy/StudyTime.png",
-        "Study Enviroment": "iconbuddy/studyEnvir.png",
-        "Collaboration Style": "iconbuddy/style.png",
-        "Type of Learner": "iconbuddy/TyperLearner.png",
-        "Courses to Study": "iconbuddy/study.png",
-        "School Interests": "iconbuddy/interest.png"
-    };
+
 
     const buddyPreferences = {
         "Jane Doe": {
@@ -142,18 +147,23 @@ const Buddies = () => {
     );
 };
 
-const PreferenceCard = ({ title, value, icon }) => (
-    <div className="preference-card">
-      <h4 className="preference-heading">
-        {icon && <img src={icon} alt={`${title} icon`} className="preference-icon" />}
-        {title}
-      </h4>
-      <p>{value}</p>
-    </div>
-  );
+const PreferenceCard = ({ title, value }) => {
+    const icon = preferenceIconMap[title]; 
+  
+    return (
+      <div className="preference-card">
+        <h4 className="preference-heading">
+          {icon && <img src={icon} alt={`${title} icon`} className="preference-icon" />}
+          {title}
+        </h4>
+        <p>{value}</p>
+      </div>
+    );
+  };
+  
   
   const CourseList = ({ title, courses }) => {
-    const icon = preferenceIconMap[title]; // same logic here
+    const icon = preferenceIconMap[title]; 
   
     return (
       <div className="preference-card course-list">

@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./Buddies.css";
+import StudyTimeIcon from './iconbuddy/StudyTime.png';
+import StudyEnivrIcon from "./iconbuddy/studyEnvir.png";
+import StyleIcon from './iconbuddy/style.png';
+import TypeLearnerIcon from './iconbuddy/TypeLearner.png';
+import CourseStudyIcon from './iconbuddy/CourseStudy.png';
+import InterestIcon from './iconbuddy/SchoolInterest.png';
+
 
 
 
 const preferenceIconMap = {
-    "Preferred Study Time": "/iconbuddy/StudyTime.png",
-    "Study Environment": "/iconbuddy/studyEnvir.png",
-    "Collaboration Style": "/iconbuddy/style.png",
-    "Type of Learner": "/iconbuddy/TyperLearner.png",
-    "Courses to Study": "/iconbuddy/study.png",
-    "School Interests": "/iconbuddy/interest.png"
+    "Preferred Study Time": StudyTimeIcon,
+    "Study Environment": StudyEnivrIcon,
+    "Collaboration Style": StyleIcon,
+    "Type of Learner": TypeLearnerIcon,
+    "Courses to Study": CourseStudyIcon,
+    "School Interests": InterestIcon
 };
 
 

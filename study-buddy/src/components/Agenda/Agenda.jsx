@@ -2,17 +2,100 @@ import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import CalendarDay from '../CalendarDay/CalendarDay';
 import './Agenda.css';
-import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate } from "date-fns";
+import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate, set } from "date-fns";
+import { useEffect } from 'react';
+import { auth , db } from "../../firebase.js"; 
+import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+
+// Function to upload a session to user agenda database
+const uploadSession = async (userHash, session) => {
+  try{
+    const userInfo = doc(db, "users", userHash);
+    await updateDoc(userInfo, {agendaStudySessions: arrayUnion(session)});
+  }
+  catch (error) {
+    console.error("Error uploading session:", error);
+  }
+}
+
+// Function to retrieve the user's agenda
+// Make sure to import import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; at top
+const getUserInfo = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data();  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
 
 // popup for to be able to add study sessions
-const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible }) => {
+const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, userHash }) => {
+  const [buddyClasses, setBuddyClasses] = useState([]);
+  const [userBuddies, setUserBuddies] = useState([]);
+  const [buddiesInfoNames, setBuddiesInfoNames] = useState([]);
+  const [buddiesInfoObjects, setBuddiesInfoObjects] = useState([]);
+  const [userName, setUserName] = useState('');
+
+  // Effect to fetch the user's classes and buddies(hashes)
+  useEffect(() => {
+    
+    const fetchUserInfo = async () => {
+      const userData = await getUserInfo(userHash);
+      setBuddyClasses(userData.courses);
+      setUserBuddies(userData.buddies);
+      setUserName(`${userData.firstName} ${userData.lastName}`);
+
+      return userData;
+    };
+
+    fetchUserInfo(); 
+
+  }, [userHash]);
+
+  // Effect to fetch the user's buddies' info
+  useEffect(() => {
+    const buddyNames = [];
+    const buddyObjects = [];
+
+    const fetchBuddiesInfo = async () => {
+      userBuddies.forEach(async currentBuddy => {
+      const buddyData = await getUserInfo(currentBuddy);
+
+      const buddyObject = {
+        id: currentBuddy,
+        name: `${buddyData.firstName} ${buddyData.lastName}`,
+        email: buddyData.email,
+      }
+
+      buddyNames.push(`${buddyData.firstName} ${buddyData.lastName}`);
+      buddyObjects.push(buddyObject);
+
+     });
+
+      setBuddiesInfoNames(buddyNames);
+      setBuddiesInfoObjects(buddyObjects);
+    };
+
+    fetchBuddiesInfo();
+  }, [userBuddies]); 
+
   const [formData, setFormData] = useState({
     classCode: '',
     date: '',
     time: '',
     person: '',
-    status: 'In Progress',
+    status: 'pending',
     notes: '',
+    sessionID:crypto.randomUUID()
   });
 
   const handleChange = (e) => {
@@ -33,9 +116,20 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible })
       date: '',
       time: '',
       person: '',
-      status: 'In Progress',
+      status: 'pending',
       notes: '',
     });
+
+
+    // Add the new session to the user's agenda
+
+    // Add the new session to user's buddy's agenda
+    const buddyLookupName = newSession.person;
+    const buddyInfo = buddiesInfoObjects.find(buddy => buddy.name === buddyLookupName);
+    const buddyID = buddyInfo.id.trim();
+    const buddySession = { ...newSession, status: "request", person: userName };
+    uploadSession(buddyID, buddySession);
+
 
     setStudySessions(prevSessions => {
       const updatedSessions = [...prevSessions, newSession];
@@ -49,10 +143,41 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible })
     <div className="Agenda-popup-add-sessions-container">
       <h2>Add Study Session</h2>
       <form onSubmit={handleSubmit} className='Agenda-popup-add-sessions-form'>
-        <input type="text" name="classCode" placeholder="Enter class code" value={formData.classCode} onChange={handleChange} required className='Agenda-popup-form-field'/>
+        {/* <input type="text" name="classCode" placeholder="Enter class code" value={formData.classCode} onChange={handleChange} required className='Agenda-popup-form-field'/> */}
+        <select
+        name="classCode"
+        value={formData.classCode}
+        onChange={handleChange}
+        required
+        className="Agenda-popup-form-field"
+      >
+        <option value="">Select a class code</option>
+        {buddyClasses.map((code) => (
+          <option key={code} value={code}>
+            {code}
+          </option>
+        ))}
+      </select>
+        
+        
         <input type="date" name="date" placeholder="date" value={formData.date} onChange={handleChange}required className='Agenda-popup-form-field'/>
         <input type="time" id="time" name="time" value={formData.time} onChange={handleChange} required className='Agenda-popup-form-field'/>        
-        <input type="text" id="person" name="person" placeholder="Person" value={formData.person} onChange={handleChange}required className='Agenda-popup-form-field'/>
+        {/* <input type="text" id="person" name="person" placeholder="Person" value={formData.person} onChange={handleChange}required className='Agenda-popup-form-field'/> */}
+        <select
+        name="person"
+        value={formData.person}
+        onChange={handleChange}
+        required
+        className="Agenda-popup-form-field"
+      >
+        <option value="">Select a buddy</option>
+        {buddiesInfoNames.map((code) => (
+          <option key={code} value={code}>
+            {code}
+          </option>
+        ))}
+      </select>
+        
         <textarea style={{marginBottom: '20px',height: "90px"}} name="notes" placeholder="Notes" value={formData.notes} onChange={handleChange} className='Agenda-popup-form-field' />
         <button type="submit">Submit</button>
 
@@ -145,28 +270,68 @@ const WeekdayCalendarDayContainer = ({weekday, daysInfo}) => {
   )
 }
 
-
-
-const Agenda = () => {
-  // Dummy data for study sessions
-  const [studySessions, setStudySessions] = useState([
-    {
-      classCode: "MAT101",
-      date: "2025-03-31",
-      time: "14:00",
-      person: "John Doe",
-      status: "accepted",
-      notes: "Make sure to review chapter 3 thoroughly, especially the problems on derivatives and integrals.",
-    },
-    {
-      classCode: "CS101",
-      date: "2025-03-23",
-      time: "09:00",
-      person: "Jane Smith",
-      status: "in progress",
-      notes: "Let's go over the project draft together to discuss improvements.",
+// Function to retrieve the user's agenda
+const getUserAgenda = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash);
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data().agendaStudySessions;  
+    } 
+    else {
+      console.log("No such document");
+      return null;
     }
-  ]);
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
+
+
+// Main Agenda component
+const Agenda = () => {
+  const [userHashID, setUserHashID] = useState(null)
+  const [agendaSessions, setAgendaSessions] = useState([]);
+
+  useEffect(() => {
+
+    const loadAgenda = async () => {
+      try{
+        const storedUser = localStorage.getItem("user");
+        if (!storedUser) {
+          throw new Error("Failed to load user data from localStorage");
+        }
+        const userHashID = JSON.parse(storedUser).uid;
+        const agenda = await getUserAgenda(userHashID);
+        setUserHashID(userHashID);
+        setAgendaSessions(agenda);
+
+        // Listen for changes to the user's agenda
+         const userInfo = doc(db, "users", userHashID);
+         const unsubscribe = onSnapshot(userInfo, (docSnap) => {
+           if (docSnap.exists()) {
+             setAgendaSessions(docSnap.data().agendaStudySessions || []);
+           } else {
+             console.log("No such document");
+           }
+         }); 
+         return () => unsubscribe();
+
+      }
+      catch (error) {
+        console.error("Error fetching agenda:", error);
+      }
+
+
+    }
+    loadAgenda();
+    }, []); 
+  
+  
+  // Dummy data for study sessions
+  const [studySessions, setStudySessions] = useState(agendaSessions);
 
   // Get all the weekdays for the current month
   const weekdays = getNumbersForWeekdays1();
@@ -181,7 +346,7 @@ const Agenda = () => {
   const currentMonth = format(today, "MMMM");
 
   // Get the weekday for each study session and then find weekday array and then add session to sessions array in that weekday object
-  studySessions.forEach(studySession => {
+  agendaSessions.forEach(studySession => {
     const [year, month, day] = studySession.date.split('-').map(Number);
     const dateObj = new Date(year, month - 1, day);
     const weekday = format(dateObj, "EEEE");
@@ -198,6 +363,8 @@ const Agenda = () => {
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
+
+  
   return (
     <>
     <Navbar /> 
@@ -218,7 +385,7 @@ const Agenda = () => {
         <button className='Agenda-popup-add-sessions' onClick={toggleVisibility}>
           {isVisible ? 'x' : '+'}
         </button>
-        {isVisible && <AddStudySessionPopup studySessions={studySessions} setStudySessions={setStudySessions} setIsVisible={setIsVisible}/>}
+        {isVisible && <AddStudySessionPopup studySessions={studySessions} setStudySessions={setStudySessions} setIsVisible={setIsVisible} userHash={userHashID}/>}
       </div>
     </>
   );

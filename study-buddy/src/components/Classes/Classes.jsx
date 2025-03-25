@@ -2,6 +2,10 @@ import React from 'react';
 import Navbar from '../Navbar/Navbar';
 // import ClassesSidebar from './ClassesSidebar';
 import './Classes.css';
+import { useEffect } from 'react';
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
+
 
 const dummyData = {
   "questions": [
@@ -134,6 +138,17 @@ const dummyData = {
   ]
 }
 
+const fetchQuestions = async (classCode) => {
+  try {
+    const questionsRef = collection(db, "classes", classCode, "questions");
+    const snapshot = await getDocs(questionsRef);
+    const questions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return questions;
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    return [];
+  }
+};
 
 // Button component that displays the class code
 const ClassCodeButton = ({ code }) => {
@@ -178,7 +193,7 @@ const ClassForum = ({questionsContainer, classCode}) => {
 
   return (
     <div className="Classes-class-forum">
-        <h2 className='Classes-class-forum-title'>{classCode}</h2>
+        <h2 className='Classes-class-forum-title1'>{classCode}</h2>
         {ClassQuestions.map((question, index) => (
             <ClassQuestion question={question} key={index}/>
           ))}
@@ -191,6 +206,14 @@ const ClassForum = ({questionsContainer, classCode}) => {
 
 // Main component
 const Classes = () => {
+  useEffect(() => {
+    const loadQuestions = async () => {
+      const questions = await fetchQuestions("CSC312"); // Replace with the selected class code
+      console.log(questions); // Later, we will set this to state
+    };
+    loadQuestions();
+  }, []);
+  
   return (
     <>
       <Navbar />

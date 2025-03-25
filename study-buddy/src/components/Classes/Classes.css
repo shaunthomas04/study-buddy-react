@@ -163,13 +163,16 @@
   margin-bottom: 20px;
 }
 
-.Classes-class-forum-title{
+.Classes-class-forum-title1{
   background-color: #fdddbb;
   height: 90px;
   line-height: 50px;
   width: 25%;
   margin-top: 10px;
   border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .Classes-popup-add-questions{

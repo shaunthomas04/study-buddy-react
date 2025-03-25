@@ -1,6 +1,8 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./homeIndex.css";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
 
 // Import Navbar from NavBar.jsx
 const Header = () => (
@@ -12,21 +14,25 @@ const Header = () => (
 );
 
 const Sidebar = () => (
-  <aside className="sidebar">
-    <h2>Online</h2>
-    <ul>
-      <li>John Doe</li>
-      <li>Jane Doe</li>
-      <li>John Smith</li>
-      <li>Jane Smith</li>
-    </ul>
-    <h2>You May Know</h2>
-    <ul>
-      <li>John Doe</li>
-      <li>John Doe</li>
-      <li>John Doe</li>
-    </ul>
-  </aside>
+<aside className="friends-list">
+  <h2>Online</h2>
+  <ul>
+    {["John Doe", "Jane Doe", "John Smith", "Jane Smith"].map((friend, index) => (
+      <li key={index}>
+        <button className="friend-button">{friend}</button>
+      </li>
+    ))}
+  </ul>
+
+  <h2>You May Know</h2>
+  <ul>
+    {["John Doe", "John Doe", "John Doe"].map((friend, index) => (
+      <li key={index}>
+        <button className="friend-button" onClick={() => navigate("./buddies.jsx")}>{friend}</button>
+      </li>
+    ))}
+  </ul>
+</aside>
 );
 
 const Card = ({ title, description }) => (
@@ -62,15 +68,38 @@ const Glance = () => (
   </aside>
 );
 
-const Dashboard = () => (
-  <div className="dashboard">
-    <Header />
-    <main className="main-layout">
-      <Sidebar />
-      <Content />
-      <Glance />
-    </main>
-  </div>
-);
+// const Dashboard = () => (
+//   <div className="dashboard">
+//     <Header />
+//     <main className="main-layout">
+//       <Sidebar />
+//       <Content />
+//       <Glance />
+//     </main>
+//   </div>
+// );
+
+// export default Dashboard;
+
+const Dashboard = () => {
+  useEffect(() => {
+    // Check if the user is stored in localStorage
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      throw new Error("Failed to load user data from localStorage");
+    }
+  }); 
+
+  return (
+    <div className="dashboard">
+      <Header />
+      <main className="main-layout">
+        <Sidebar />
+        <Content />
+        <Glance />
+      </main>
+    </div>
+  );
+};
 
 export default Dashboard;

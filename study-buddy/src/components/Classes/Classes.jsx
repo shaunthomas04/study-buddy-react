@@ -3,7 +3,7 @@ import Navbar from '../Navbar/Navbar';
 // import ClassesSidebar from './ClassesSidebar';
 import './Classes.css';
 import { useEffect } from 'react';
-import { db } from "../firebase";
+import { db } from "../../firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 
 

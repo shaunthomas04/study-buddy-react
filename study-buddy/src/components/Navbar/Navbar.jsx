@@ -4,26 +4,14 @@ import './Navbar.css';
 
 const Navbar = () => {
     const [activeIndex, setActiveIndex] = useState(0);
-    const [searchInput, setSearchInput] = useState("");
 
     return (
         <div className="navbar-container">
             <nav className="navbar">
-                <ul className="nav-list-left">
+                <ul className="nav-list">
                     <li className="nav-item" onClick={() => setActiveIndex(0)}>
                         <Link className={activeIndex === 0 ? "nav-link active" : "nav-link"} to="/">Home</Link>
                     </li>
-                </ul>
-                <div className="search-container">
-                    <input 
-                        type="text"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        className="search-bar"
-                        placeholder="Search..."
-                    />
-                </div>
-                <ul className="nav-list-right">
                     <li className="nav-item" onClick={() => setActiveIndex(1)}>
                         <Link className={activeIndex === 1 ? "nav-link active" : "nav-link"} to="/classes">Classes</Link>
                     </li>

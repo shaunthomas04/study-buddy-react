@@ -4,68 +4,106 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    background: white;
 }
 
-/* Layout */
-.buddy-container {
+/* Sidebar Menu Button */
+.buddy-menu-button {
+    position: fixed;
+    top: 80px; 
+    width: 40px;
+    background: none;
+    color: black;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 1000;
+    text-align: center;
     display: flex;
-    height: 90vh; 
-    background: linear-gradient(0.25turn, #3f87a6,#d5f5bc ,#ebf8e1);
+    align-items: center;
+    justify-content: center;
+
+    
+    
 }
 
 /* Sidebar */
 .buddy-sidebar {
-    width: 250px;
-    padding: 20px;
-    height: 90vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: center;
+    position: fixed;
+    left: -200px;
+    width: 200px;
+    background: white;
+    transition: left 0.3s ease-in-out;
+    padding-top: 0;
 }
 
-.buddy-sidebar ul {
-    list-style: none;
-    padding: 0;
-    flex-grow: 1;
+
+.buddy-sidebar-content {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     height: 100%;
 }
 
+/* Sidebar Header */
+.buddy-sidebar-header {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    background: white;
+    color: black;
+    
+}
+
+
+.buddy-sidebar.buddy-active {
+    left: 0;
+}
+
+/* Sidebar Items */
+.buddy-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 .buddy-sidebar ul li {
-    padding: 16px;
+    padding: 12px;
     cursor: pointer;
     font-weight: bold;
-    transition: background 0.3s;
+    transition: background 0.3s, color 0.3s;
     text-align: center;
-    border-radius: 8px;
-    margin: 8px 0;
+    border-radius: 6px;
+    margin: 6px 0;
     background: white;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: black;
+    
 }
 
 .buddy-sidebar ul li:hover {
-    background: #3f87a6;
-    color: white;
+    background: #c0e3f2;
+    color: black;
 }
 
-.buddy-active {
-    background: #fbc993 !important;
-    color: white;
+
+.buddy-selected {
+    background: #a1d8f0 !important;
+    color: white !important;
     font-weight: bold;
 }
+
+/* Main Content */
+.buddy-container {
+    transition: margin-left 0.3s ease-in-out;
+}
+
+
 
 /* Profile Section */
 .profile-section {
     width: 100%;
     height: 140px;
-    padding: 30px;
+    padding: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -79,7 +117,7 @@ body, html {
     align-items: center;
     justify-content: right;
     flex-grow: 1;
-    margin-right: 175px;
+    margin-right: 300px;
     
     
 }
@@ -152,6 +190,7 @@ body, html {
     justify-content: center;
     align-items: flex-start;
     padding-top: 20px;
+    margin: 0 auto;
 }
 
 .preference-card {
@@ -194,6 +233,21 @@ body, html {
     text-align: center;
 }
 
+.preference-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    color: #3f87a6;
+    margin-bottom: 10px;
+}
+
+.preference-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
 .buddy-request-section {
     display:flex;
     flex-direction: column;
@@ -216,12 +270,12 @@ body, html {
 }
 
 .send-request-btn:hover {
-    background: #2a5d74;
+    background: #2a7431;
 }
 
 .request-message {
     margin-top:10px;
     font-size: 1rem;
-    color:#2a5d74;
+    color:#2a7431;
     font-weight: bold;
 }

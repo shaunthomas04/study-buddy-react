@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./Buddies.css";
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 // import { auth , db } from "../../firebase.js"; 
 // import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import StudyTimeIcon from './iconbuddy/StudyTime.png';

@@ -5,7 +5,10 @@ import './Classes.css';
 import { useEffect } from 'react';
 import { db } from "../../firebase.js";
 import { collection, getDocs } from "firebase/firestore";
+import { useState } from "react";
 
+
+const [questions, setQuestions] = useState ( [] );
 
 const dummyData = {
   "questions": [
@@ -208,7 +211,7 @@ const ClassForum = ({questionsContainer, classCode}) => {
 const Classes = () => {
   useEffect(() => {
     const loadQuestions = async () => {
-      const questions = await fetchQuestions("CSC312"); // Replace with the selected class code
+      const questions = await fetchQuestions("CSC312"); 
       console.log(questions); // Later, we will set this to state
     };
     loadQuestions();

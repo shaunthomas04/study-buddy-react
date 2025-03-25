@@ -3,6 +3,8 @@ import Navbar from '../Navbar/Navbar';
 // import ClassesSidebar from './ClassesSidebar';
 import './Classes.css';
 import { useEffect } from 'react';
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 
 const dummyData = {
@@ -136,6 +138,17 @@ const dummyData = {
   ]
 }
 
+const fetchQuestions = async (classCode) => {
+  try {
+    const questionsRef = collection(db, "classes", classCode, "questions");
+    const snapshot = await getDocs(questionsRef);
+    const questions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return questions;
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    return [];
+  }
+};
 
 // Button component that displays the class code
 const ClassCodeButton = ({ code }) => {
@@ -194,12 +207,12 @@ const ClassForum = ({questionsContainer, classCode}) => {
 // Main component
 const Classes = () => {
   useEffect(() => {
-        // Check if the user is stored in localStorage
-        const storedUser = localStorage.getItem("user");
-        if (!storedUser) {
-          throw new Error("Failed to load user data from localStorage");
-        }
-      });
+    const loadQuestions = async () => {
+      const questions = await fetchQuestions("CSC312"); // Replace with the selected class code
+      console.log(questions); // Later, we will set this to state
+    };
+    loadQuestions();
+  }, []);
   
   return (
     <>

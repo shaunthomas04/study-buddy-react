@@ -5,7 +5,8 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(0.1turn, #3f87a6, #ebf8e1);
+    background-color: white;
+    /* background: linear-gradient(0.1turn, #3f87a6, #ebf8e1); */
   }
   
   
@@ -54,6 +55,7 @@ body {
     background-color: red;
     color: white;
     border-color: white;
+    width: 100%;
     border-radius: 5em;
     border-width: 2px;
     padding: 10px 20px;
@@ -96,4 +98,63 @@ body {
   .configuration-settings-button:hover {
     background: #4b4141;
   }
+  
+
+  .configuration-settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .configuration-settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 600px; /* Adjust this width if needed */
+    margin: auto; /* Centering */
+  }
+  
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .save-button {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #00ff4c;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 80%;
+    min-width: 120px; /* Ensures buttons have the same width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .save-button:hover {
+    background-color: #00cc3a;
+  }
+  
   

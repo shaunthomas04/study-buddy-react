@@ -10,7 +10,15 @@ const Classes = () => {
 
   const handlePost = () => {
     if (question.trim() === '') return;
-    setPosts([...posts, { id: Date.now(), text: question, replies: [] }]);
+    setPosts([
+      ...posts,
+      {
+        id: Date.now(),
+        text: question,
+        timestamp: new Date(),
+        replies: [],
+      },
+    ]);
     setQuestion('');
   };
 
@@ -36,7 +44,12 @@ const Classes = () => {
             ...item,
             replies: [
               ...item.replies,
-              { id: Date.now(), text: replyText, replies: [] },
+              {
+                id: Date.now(),
+                text: replyText,
+                timestamp: new Date(),
+                replies: [],
+              },
             ],
           };
         } else if (item.replies.length > 0) {
@@ -54,10 +67,23 @@ const Classes = () => {
     setShowReplyInput((prev) => ({ ...prev, [parentId]: false }));
   };
 
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
   const renderReplies = (replies, depth = 1) => {
     return replies.map((reply) => (
       <div key={reply.id} className="reply" style={{ marginLeft: depth * 20 }}>
-        <div className="reply-text">→ {reply.text}</div>
+        <div className="reply-header">
+          <span className="reply-text">→ {reply.text}</span>
+          <span className="timestamp">{formatTimestamp(reply.timestamp)}</span>
+        </div>
         <button className="reply-button" onClick={() => toggleReplyInput(reply.id)}>
           Reply
         </button>
@@ -100,34 +126,36 @@ const Classes = () => {
           </div>
 
           <div className="discussion-posts">
-  {[...posts].reverse().map((post) => (
-    <div key={post.id} className="post">
-      <div className="post-text">
-        <p>{post.text}</p>
-        <button className="reply-button" onClick={() => toggleReplyInput(post.id)}>
-          Reply
-        </button>
+            {[...posts].reverse().map((post) => (
+              <div key={post.id} className="post">
+                <div className="post-text">
+                  <div className="post-header">
+                    <p>{post.text}</p>
+                    <span className="timestamp">{formatTimestamp(post.timestamp)}</span>
+                  </div>
+                  <button className="reply-button" onClick={() => toggleReplyInput(post.id)}>
+                    Reply
+                  </button>
 
-        {showReplyInput[post.id] && (
-          <div className="reply-section-row">
-            <input
-              type="text"
-              placeholder="Write a reply..."
-              value={replyInputs[post.id] || ''}
-              onChange={(e) => handleReplyChange(post.id, e.target.value)}
-            />
-            <button className="submit-reply" onClick={() => handleReplySubmit(post.id)}>
-              Post
-            </button>
+                  {showReplyInput[post.id] && (
+                    <div className="reply-section-row">
+                      <input
+                        type="text"
+                        placeholder="Write a reply..."
+                        value={replyInputs[post.id] || ''}
+                        onChange={(e) => handleReplyChange(post.id, e.target.value)}
+                      />
+                      <button className="submit-reply" onClick={() => handleReplySubmit(post.id)}>
+                        Post
+                      </button>
+                    </div>
+                  )}
+
+                  {renderReplies(post.replies)}
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-
-        {renderReplies(post.replies)}
-      </div>
-    </div>
-  ))}
-</div>
-
         </div>
       </div>
     </>

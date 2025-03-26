@@ -148,3 +148,25 @@
     background-color: #218838;
   }
   
+  .timestamp {
+    font-size: 0.75rem;
+    color: gray;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .reply-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  

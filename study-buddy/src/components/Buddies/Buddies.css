@@ -1,3 +1,4 @@
+/* Full Page Background */
 body, html {
     height: 100%;
     margin: 0;
@@ -5,20 +6,6 @@ body, html {
     font-family: Arial, sans-serif;
     background: white;
 }
-
-/* Sidebar Menu Button */
-/* .buddy-menu-button {
-    position: fixed;
-    top: 80px; 
-    width: 40px;
-    background: none;
-    color: black;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    z-index: 1000;
-    text-align: center;
-} */
 
 /* Sidebar Menu Button */
 .buddy-menu-button {
@@ -35,7 +22,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-  
+    
 }
 
 /* Sidebar */
@@ -57,39 +44,11 @@ body, html {
 
 /* Sidebar Header */
 .buddy-sidebar-header {
-/* Sidebar Header */
-.buddy-sidebar-header {
-/* Sidebar Header */
-.buddy-sidebar-header {
     text-align: center;
     font-size: 18px;
     font-weight: bold;
     padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px;
     background: white;
-    color: black;
-    
-}
-
-
-.buddy-sidebar.buddy-active {
-    left: 0;
-}
-
-/* Sidebar Items */
-.buddy-sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.buddy-sidebar ul li {
-    padding: 12px;
     color: black;
     
 }
@@ -111,30 +70,14 @@ body, html {
     cursor: pointer;
     font-weight: bold;
     transition: background 0.3s, color 0.3s;
-    font-weight: bold;
-    transition: background 0.3s, color 0.3s;
     text-align: center;
     border-radius: 6px;
     margin: 6px 0;
     background: white;
     color: black;
     
-    border-radius: 6px;
-    margin: 6px 0;
-    background: white;
-    color: black;
-    
 }
 
-.buddy-sidebar ul li:hover {
-    background: #c0e3f2;
-    color: black;
-}
-
-
-.buddy-selected {
-    background: #a1d8f0 !important;
-    color: white !important;
 .buddy-sidebar ul li:hover {
     background: #c0e3f2;
     color: black;
@@ -150,19 +93,7 @@ body, html {
 /* Main Content */
 .buddy-container {
     transition: margin-left 0.3s ease-in-out;
-    transform: scale(1.05);
-    background: #f2c18d;
 }
-
-/* Main Content */
-.buddy-container {
-    transition: margin-left 0.3s ease-in-out;
-.buddies-container .buddy-item:hover {
-    transform: scale(1.05);
-    background: #dfe9df;
-}
-
-
 
 
 
@@ -171,14 +102,7 @@ body, html {
     width: 100%;
     height: 140px;
     padding: 40px;
-.profile-section {
-    width: 100%;
-    height: 140px;
-    padding: 40px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
     justify-content: space-between;
     align-items: center;
     
@@ -186,9 +110,7 @@ body, html {
 
 /* Avatar & Name */
 .profile-header {
-.profile-header {
     display: flex;
-    flex-direction: row;
     flex-direction: row;
     align-items: center;
     justify-content: right;
@@ -196,14 +118,8 @@ body, html {
     margin-right: 300px;
     
     
-    justify-content: right;
-    flex-grow: 1;
-    margin-right: 300px;
-    
-    
 }
 
-.profile-avatar {
 .profile-avatar {
     width: 80px;
     height: 80px;
@@ -219,28 +135,11 @@ body, html {
     gap: 20px;
     margin-bottom: 5px;
     font-size: 25px;
-    margin-bottom: 10px;
-    margin-right: 10px
-}
-
-.profile-name {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 5px;
-    font-size: 25px;
     font-weight: bold;
     color: #333;
 
-
 }
 
-.profile-school {
-    font-size: 18px;
-    color: #555;
-}
-
-.profile-major {
 .profile-school {
     font-size: 18px;
     color: #555;
@@ -255,30 +154,7 @@ body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
-.profile-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     text-align: center;
-}
-
-/* Main Content */
-.buddy-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 90vh;
-}
-
-/* Study Preferences Section */
-.buddy-profile-content {
-    flex: 1;
-    padding: 30px;
-    border-radius: 10px;
-    overflow-y: auto;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
 }
 
 /* Main Content */
@@ -313,20 +189,6 @@ body, html {
     align-items: flex-start;
     padding-top: 20px;
     margin: 0 auto;
-    padding-bottom: 50px;
-}
-
-/* Preference Cards */
-.preference-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    max-width: 1000px;
-    width: 100%;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 20px;
-    margin: 0 auto;
 }
 
 .preference-card {
@@ -342,66 +204,9 @@ body, html {
 }
 
 .course-list, .school-interests {
-.preference-card {
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-    background: white;  
-    min-height: 200px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.course-list, .school-interests {
-    display: flex;
-    flex-direction: column;
     flex-direction: column;
     justify-content: space-between;
-    flex-grow: 1;
-}
-
-.preference-card h4 {
-    font-size: 1.1rem;
-    color: #3f87a6;
-    margin-bottom: 10px;
-} 
-
-.preference-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-}
-
-.preference-card ul li {
-    background: rgba(255, 255, 255, 0.5);
-    padding: 5px;
-    margin: 5px 0;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.preference-heading {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1.1rem;
-    color: #3f87a6;
-    margin-bottom: 10px;
-}
-
-.preference-icon {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-}
-
-.buddy-request-section {
-    display:flex;
-    flex-direction: column;
-    align-items: center;
     flex-grow: 1;
 }
 
@@ -454,22 +259,7 @@ body, html {
     border: none;
     padding: 12px 18px;
     border: 8px;
-.send-request-btn {
-    background: green;
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    border: 8px;
     cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    transform: background 0.3s;
-    width: 100%;
-    max-width: 250px;
-}
-
-.send-request-btn:hover {
-    background: #2a7431;
     font-size: 1rem;
     font-weight: bold;
     transform: background 0.3s;

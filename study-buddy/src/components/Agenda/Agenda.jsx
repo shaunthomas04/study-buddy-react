@@ -128,6 +128,12 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
     const buddyInfo = buddiesInfoObjects.find(buddy => buddy.name === buddyLookupName);
     const buddyID = buddyInfo.id.trim();
     const buddySession = { ...newSession, status: "request", person: userName };
+
+    const localUserInfo = localStorage.getItem("user");
+    const localUserInfoJson = JSON.parse(localUserInfo);
+    const userId = localUserInfoJson.uid;
+
+    uploadSession(userId, newSession);
     uploadSession(buddyID, buddySession);
 
 

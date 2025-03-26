@@ -25,6 +25,20 @@ const getUserInfo = async (userId) => {
     return docSnapshot.exists ? docSnapshot.data() : null;
 }
 
+// Function to update buddySuggestions field for user in Firestore
+const updateBuddySuggestions = async (userId, buddySuggestions) => {
+    const userRef = db.collection("users").doc(userId.trim());
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+        console.log(`User ${userId} not found in Firestore.`);
+        return;
+    }
+
+    await userRef.update({ buddySuggestions });
+}
+
+
 // Function to get all users from Firestore
 const getAllUsers = async () => {
     try {
@@ -98,6 +112,23 @@ const reccomendBuddies = async (userId) => {
     return Array.from(potentialBuddies);
 }
 
+// Function to reccomend buddies to a user that can be used in either the HTTP function or the Firestore function
+const reccomendBuddiesAlgorithm = async (userHash) => {
+  const userData = await getUserInfo(userHash);
+    if (!userData) {
+        console.error(`User ${userHash} not found in Firestore.`);
+        return;
+    }
+
+    // const reccomendations = await reccomendBuddies(userHash);
+    const buddiesReccomendations = await reccomendBuddies(userHash);
+    if (buddiesReccomendations.length > 10){
+        buddiesReccomendations = buddiesReccomendations.slice(0, 10);
+    }
+
+    await updateBuddySuggestions(userHash, buddiesReccomendations);
+}
+
 
 
 
@@ -105,19 +136,8 @@ const reccomendBuddies = async (userId) => {
 exports.getUserInfoHTTP = onRequest({ timeoutSeconds: 120 }, async (req, res) => {
 try {
     const userHash = "L6OWogOvbBV5ywI9B9JgMcRPOSx1";
-
-    const userData = await getUserInfo(userHash);
-    if (!userData) {
-        console.error(`User ${userHash} not found in Firestore.`);
-        res.status(404).json({ error: "User not found" });
-        return;
-    }
-
-    // const reccomendations = await reccomendBuddies(userHash);
-    const buddies = await reccomendBuddies(userHash);
-    
-
-    res.status(200).json(buddies);
+    await reccomendBuddiesAlgorithm(userHash);
+    res.status(200).json({ message: "User info fetched successfully." });
 } 
 catch (error) {
     console.error("Error fetching user:", error);
@@ -127,39 +147,16 @@ catch (error) {
 
 
 
-
-
-
-
-
-
+// Function to update user's buddy suggestions when user document is updated
 exports.updateUserOnFirestoreChange = onDocumentUpdated(
   "users/{userId}",
   async (event) => {
     try {
-      const previousValue = event.data.before.data();
-      const newValue = event.data.after.data();
       const userId = event.params.userId;
-
-      logger.log(`User ${userId} document found.`);
-
-      const userInfo = await getUserInfo(userId); 
-        if (!userInfo) {
-            logger.error(`User ${userId} not found in Firestore.`);
-            return;
-        }
-        else{
-            console.log("User info: ", userInfo);
-        }
-        
-    //   const courses = userInfo.courses;
-    //   const buddies = userInfo.buddies;  
-
-      logger.log(`User ${userId} courses: ${courses} and buddies: ${buddies}`);
-
-
-      // Add more logic here to update other parts of your data or trigger other actions.
-    } catch (error) {
+      await reccomendBuddiesAlgorithm(userId);  
+      logger.log(`Buddy suggestions updated for user ${userId}`);
+    } 
+    catch (error) {
       logger.error("Error updating user on Firestore change:", error);
     }
   }

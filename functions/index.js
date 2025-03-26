@@ -20,7 +20,7 @@ const db = admin.firestore();
  
 // Function to get user info from Firestore
 const getUserInfo = async (userId) => {
-    const userRef = db.collection("users").doc(userId);
+    const userRef = db.collection("users").doc(userId.trim());  
     const docSnapshot = await userRef.get();
     return docSnapshot.exists ? docSnapshot.data() : null;
 }
@@ -55,13 +55,13 @@ const reccomendBuddies = async (userId) => {
         logger.error(`User ${userId} not found in Firestore.`);
         return;
     }
-    const courses = userInfo.courses;
+    const userCourses = userInfo.courses; // Array of course codes
     const userBuddies = userInfo.buddies;
 
     // Look for potential buddies based on user's courses and current buddies
     const potentialBuddies = new Set();
 
-    // Look through buddys' buddies
+    // Look through buddys' buddies (working)
     for (let buddy of userBuddies){
         const buddyInfo = await getUserInfo(buddy);
         if (!buddyInfo) {
@@ -70,27 +70,30 @@ const reccomendBuddies = async (userId) => {
 
         // Add buddy's buddies to potential buddies list if they are not already buddies and not the user
         const buddyBuddies = buddyInfo.buddies;
-        for (let buddyBuddy of buddyBuddies){
-
-            if (!userBuddies.includes(buddyBuddy.id) && buddyBuddy.id !== userId){
-                potentialBuddies.add(buddyBuddy.id);
+        for (let buddyID of buddyBuddies){
+            if (!userBuddies.includes(buddyID) && buddyID !== userId){
+                potentialBuddies.add(buddyID);
             }            
         }
     }
 
     // Add potential buddies who have the same classes
+
+    // Gets all users with similar courses, and adds them to the potential buddies
+    // Need to figure out how to prevent current buddies from being added
     const allUsers = await getAllUsers();
+
     for (let buddy of allUsers){
-        const buddyCourses = buddy.courses;
-        const similarCourses = courses.some(course => buddyCourses.includes(course));
+      const buddyCourses = buddy.courses;
+      const similarCourses = userCourses.some(course => buddyCourses.includes(course));
+      const isCurrentlyBuddy = userBuddies.includes(` ${buddy.id}`);
 
-        if (similarCourses){
-            potentialBuddies.add(buddy.id);
+        if (similarCourses && buddy.id.trim() !== userId.trim() && !isCurrentlyBuddy){
+            potentialBuddies.add(buddy.id.trim()); 
         }
-
-
     }
 
+   
 
     return Array.from(potentialBuddies);
 }
@@ -99,7 +102,7 @@ const reccomendBuddies = async (userId) => {
 
 
 // Test function to build algorithm until it works then move it into the updateUserOnFirestoreChange function
-exports.getUserInfoHTTP = onRequest(async (req, res) => {
+exports.getUserInfoHTTP = onRequest({ timeoutSeconds: 120 }, async (req, res) => {
 try {
     const userHash = "L6OWogOvbBV5ywI9B9JgMcRPOSx1";
 
@@ -110,9 +113,11 @@ try {
         return;
     }
 
-    const reccomendations = await reccomendBuddies(userHash);
+    // const reccomendations = await reccomendBuddies(userHash);
+    const buddies = await reccomendBuddies(userHash);
     
-    res.status(200).json(reccomendations);
+
+    res.status(200).json(buddies);
 } 
 catch (error) {
     console.error("Error fetching user:", error);

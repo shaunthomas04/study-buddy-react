@@ -74,7 +74,8 @@ const userSignup = async (email, password, firstName, lastName) => {
       studyTimes: [],
       agendaStudySessions: [],
       profilePicture: "default",
-      school: schoolsMap[emailDomain]
+      school: schoolsMap[emailDomain],
+      id : user.uid
     });
 
     localStorage.setItem("user", JSON.stringify(userCredential.user));

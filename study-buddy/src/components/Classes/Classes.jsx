@@ -1,222 +1,215 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
-// import ClassesSidebar from './ClassesSidebar';
 import './Classes.css';
-import { useEffect } from 'react';
 
-
-const dummyData = {
-  "questions": [
-    {
-      "title": "What's the deadline for the project?",
-      "author": "Alice Johnson",
-      "description": "Can someone clarify the deadline for the project? I missed the announcement.",
-      "replies": [
-        {
-          "author": "Bob Adams",
-          "message": "The project is due next Friday at 5 PM.",
-          "replies": [
-            {
-              "author": "Alice Johnson",
-              "message": "Thanks for the info, Bob!",
-              "replies": [
-                {
-                  "author": "Charlie Green",
-                  "message": "Actually, it was extended to next Monday."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "author": "Dave Lee",
-          "message": "Don't forget about the group presentation as well, which is right after the project deadline.",
-          "replies": [
-            {
-              "author": "Alice Johnson",
-              "message": "Got it! Thanks for the heads-up."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Can I submit my homework late?",
-      "author": "Eva Mitchell",
-      "description": "I missed the homework submission. Is there a possibility of submitting it late?",
-      "replies": [
-        {
-          "author": "George White",
-          "message": "You can submit it up to 2 days late with a 10% penalty.",
-          "replies": [
-            {
-              "author": "Eva Mitchell",
-              "message": "Thanks for the info! Do I need to inform the professor?",
-              "replies": [
-                {
-                  "author": "Hannah Brown",
-                  "message": "Yes, make sure to send them an email explaining the situation."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "author": "James Black",
-          "message": "I think there’s also an automatic 5% deduction for late submissions, even without the 10% penalty.",
-          "replies": [
-            {
-              "author": "Eva Mitchell",
-              "message": "I'll keep that in mind. Thanks!"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "When is the next class session?",
-      "author": "Michael Turner",
-      "description": "I need to confirm the timing for the next class. Can anyone help?",
-      "replies": [
-        {
-          "author": "Sarah Lewis",
-          "message": "It’s scheduled for Monday at 2 PM.",
-          "replies": [
-            {
-              "author": "Michael Turner",
-              "message": "Thanks, Sarah! Is it in the same room as last time?",
-              "replies": [
-                {
-                  "author": "Robert Scott",
-                  "message": "Yes, same room, 101."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "author": "Daniel Wilson",
-          "message": "Don't forget, there’s also a guest lecture next week, and it starts at 3:30 PM.",
-          "replies": [
-            {
-              "author": "Michael Turner",
-              "message": "I almost forgot about that! Thanks for the reminder."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "Can we review for the final exam in class?",
-      "author": "Samantha Clark",
-      "description": "Will we be reviewing for the final exam in class before it starts?",
-      "replies": [
-        {
-          "author": "Olivia Harris",
-          "message": "Yes, there will be a review session this Friday in class.",
-          "replies": [
-            {
-              "author": "Samantha Clark",
-              "message": "Perfect, I’ll make sure to attend."
-            }
-          ]
-        },
-        {
-          "author": "Liam Martinez",
-          "message": "There’s also an online review session available if you can’t make it to class.",
-          "replies": [
-            {
-              "author": "Samantha Clark",
-              "message": "That sounds great, thanks for the info!"
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-
-
-// Button component that displays the class code
-const ClassCodeButton = ({ code }) => {
-  return (
-      <button className="Classes-class-code-button">{code}</button>
-  );
-}
-
-// Reply component that contains a reply and all replies to that reply
-const Reply = ({ reply, level = 0 }) => {
-  return (
-    <div style={{ marginLeft: `${level * 20}px`, borderLeft: "3px solid black", paddingLeft: "10px", marginTop: "10px" }}>
-      <p style={{fontSize:"20px"}}><h5>{reply.author}:</h5> {reply.message}</p>
-      {reply.replies && reply.replies.length > 0 && (
-        <div>
-          {reply.replies.map((nestedReply, index) => (
-            <Reply key={index} reply={nestedReply} level={level + 1} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Question component that contains a question and all replies to that question
-const ClassQuestion = ({ question }) => {
-  return (
-    <div className="Classes-question">
-      <h2 className="Classes-question-title">{question.author}: {question.description}</h2>
-      <div className='Classes-reply-container'>
-        {question.replies.map((reply, index) => (
-          <Reply key={index} reply={reply} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Forum container for each class that maps all questions from a class into this forum container
-const ClassForum = ({questionsContainer, classCode}) => {
-  const ClassQuestions = questionsContainer.questions;
-
-  return (
-    <div className="Classes-class-forum">
-        <h2 className='Classes-class-forum-title1'>{classCode}</h2>
-        {ClassQuestions.map((question, index) => (
-            <ClassQuestion question={question} key={index}/>
-          ))}
-
-    </div>
-  )
-
-
-}
-
-// Main component
 const Classes = () => {
-  useEffect(() => {
-        // Check if the user is stored in localStorage
-        const storedUser = localStorage.getItem("user");
-        if (!storedUser) {
-          throw new Error("Failed to load user data from localStorage");
+  const [activeClass, setActiveClass] = useState('CSC313');
+  const [posts, setPosts] = useState({
+    CSC313: [],
+    EGR302: [],
+    EGR304: [],
+  });
+  const [subject, setSubject] = useState('');
+  const [details, setDetails] = useState('');
+  const [replyInputs, setReplyInputs] = useState({});
+  const [showReplyInput, setShowReplyInput] = useState({});
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handlePost = () => {
+    if (subject.trim() === '' || details.trim() === '') return;
+
+    const newPost = {
+      id: Date.now(),
+      subject,
+      text: details,
+      timestamp: new Date(),
+      replies: [],
+    };
+
+    setPosts((prev) => ({
+      ...prev,
+      [activeClass]: [...prev[activeClass], newPost],
+    }));
+
+    setSubject('');
+    setDetails('');
+  };
+
+  const toggleReplyInput = (id) => {
+    setShowReplyInput((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const handleReplyChange = (id, value) => {
+    setReplyInputs((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleReplySubmit = (parentId) => {
+    const replyText = replyInputs[parentId]?.trim();
+    if (!replyText) return;
+
+    const addReply = (items) => {
+      return items.map((item) => {
+        if (item.id === parentId) {
+          return {
+            ...item,
+            replies: [
+              ...item.replies,
+              {
+                id: Date.now(),
+                text: replyText,
+                timestamp: new Date(),
+                replies: [],
+              },
+            ],
+          };
+        } else if (item.replies.length > 0) {
+          return {
+            ...item,
+            replies: addReply(item.replies),
+          };
         }
+        return item;
       });
-  
+    };
+
+    setPosts((prev) => ({
+      ...prev,
+      [activeClass]: addReply(prev[activeClass]),
+    }));
+
+    setReplyInputs((prev) => ({ ...prev, [parentId]: '' }));
+    setShowReplyInput((prev) => ({ ...prev, [parentId]: false }));
+  };
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
+  const renderReplies = (replies, depth = 1) => {
+    return replies.map((reply) => (
+      <div key={reply.id} className="reply" style={{ marginLeft: depth * 20 }}>
+        <div className="reply-header">
+          <span className="reply-text">→ {reply.text}</span>
+          <span className="timestamp">{formatTimestamp(reply.timestamp)}</span>
+        </div>
+        <button className="reply-button" onClick={() => toggleReplyInput(reply.id)}>
+          Reply
+        </button>
+        {showReplyInput[reply.id] && (
+          <div className="reply-section-row">
+            <input
+              type="text"
+              placeholder="Write a reply..."
+              value={replyInputs[reply.id] || ''}
+              onChange={(e) => handleReplyChange(reply.id, e.target.value)}
+            />
+            <button className="submit-reply" onClick={() => handleReplySubmit(reply.id)}>
+              Post
+            </button>
+          </div>
+        )}
+        {renderReplies(reply.replies, depth + 1)}
+      </div>
+    ));
+  };
+
+  const classOptions = ['CSC313', 'EGR302', 'EGR304'];
+
   return (
     <>
-      <Navbar />
-      <div className="Classes-outer-container">
-        <div className='Classes-inner-container'>
-          <div className="Classes-class-codes-container">
-            <ClassCodeButton code="CSC 101" />
-            <ClassCodeButton code="CSC 102" />
-            
-          </div>
-          <div className="Classes-questions-container">
-            <ClassForum questionsContainer={dummyData} classCode={"CSC 101"}/>
-          </div>
-          {/* Button to add additional classes */}
-          <button className='Classes-popup-add-questions' > x </button>
+      <div className="hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        ☰
+      </div>
+      <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <h2>Classes</h2>
+        <ul>
+          {classOptions.map((cls) => (
+            <li
+              key={cls}
+              className={`sidebar-item ${activeClass === cls ? 'active' : ''}`}
+              onClick={() => {
+                setActiveClass(cls);
+                setSidebarOpen(false);
+              }}
+            >
+              {cls}
+            </li>
+          ))}
+        </ul>
+      </div>
 
+      <Navbar />
+      <div className="classes-container">
+        <div className="scrollable-box">
+          <h1>{activeClass}</h1>
+          <p className="welcome-text">
+            Hello! Welcome to the {activeClass} Discussion Post. <br />
+            Feel free to post any questions you have for the class.
+          </p>
+
+          <div className="post-input">
+            <input
+              type="text"
+              className="post-subject-input"
+              placeholder="Enter subject..."
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            />
+            <textarea
+              className="post-details-textarea"
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              placeholder="Type your question details here..."
+            />
+            <button onClick={handlePost} disabled={!subject.trim() || !details.trim()}>
+              Post
+            </button>
+          </div>
+
+          <div className="discussion-posts">
+            {[...posts[activeClass]].reverse().map((post) => (
+              <div key={post.id} className="post">
+                <div className="post-text">
+                  <div className="post-header">
+                    <div className="post-subject">{post.subject}</div>
+                    <span className="timestamp">{formatTimestamp(post.timestamp)}</span>
+                  </div>
+                  <p>{post.text}</p>
+                  <button className="reply-button" onClick={() => toggleReplyInput(post.id)}>
+                    Reply
+                  </button>
+
+                  {showReplyInput[post.id] && (
+                    <div className="reply-section-row">
+                      <input
+                        type="text"
+                        placeholder="Write a reply..."
+                        value={replyInputs[post.id] || ''}
+                        onChange={(e) => handleReplyChange(post.id, e.target.value)}
+                      />
+                      <button
+                        className="submit-reply"
+                        onClick={() => handleReplySubmit(post.id)}
+                      >
+                        Post
+                      </button>
+                    </div>
+                  )}
+
+                  {renderReplies(post.replies)}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>

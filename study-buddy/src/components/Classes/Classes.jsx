@@ -3,23 +3,36 @@ import Navbar from '../Navbar/Navbar';
 import './Classes.css';
 
 const Classes = () => {
-  const [posts, setPosts] = useState([]);
-  const [question, setQuestion] = useState('');
+  const [activeClass, setActiveClass] = useState('CSC313');
+  const [posts, setPosts] = useState({
+    CSC313: [],
+    EGR302: [],
+    EGR304: [],
+  });
+  const [subject, setSubject] = useState('');
+  const [details, setDetails] = useState('');
   const [replyInputs, setReplyInputs] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handlePost = () => {
-    if (question.trim() === '') return;
-    setPosts([
-      ...posts,
-      {
-        id: Date.now(),
-        text: question,
-        timestamp: new Date(),
-        replies: [],
-      },
-    ]);
-    setQuestion('');
+    if (subject.trim() === '' || details.trim() === '') return;
+
+    const newPost = {
+      id: Date.now(),
+      subject,
+      text: details,
+      timestamp: new Date(),
+      replies: [],
+    };
+
+    setPosts((prev) => ({
+      ...prev,
+      [activeClass]: [...prev[activeClass], newPost],
+    }));
+
+    setSubject('');
+    setDetails('');
   };
 
   const toggleReplyInput = (id) => {
@@ -62,7 +75,11 @@ const Classes = () => {
       });
     };
 
-    setPosts((prevPosts) => addReply(prevPosts));
+    setPosts((prev) => ({
+      ...prev,
+      [activeClass]: addReply(prev[activeClass]),
+    }));
+
     setReplyInputs((prev) => ({ ...prev, [parentId]: '' }));
     setShowReplyInput((prev) => ({ ...prev, [parentId]: false }));
   };
@@ -105,34 +122,68 @@ const Classes = () => {
     ));
   };
 
+  const classOptions = ['CSC313', 'EGR302', 'EGR304'];
+
   return (
     <>
+      <div className="hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        ☰
+      </div>
+      <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <h2>Classes</h2>
+        <ul>
+          {classOptions.map((cls) => (
+            <li
+              key={cls}
+              className={`sidebar-item ${activeClass === cls ? 'active' : ''}`}
+              onClick={() => {
+                setActiveClass(cls);
+                setSidebarOpen(false);
+              }}
+            >
+              {cls}
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <Navbar />
       <div className="classes-container">
         <div className="scrollable-box">
-          <h1>CSC313</h1>
+          <h1>{activeClass}</h1>
           <p className="welcome-text">
-            Hello! Welcome to the CSC313 Discussion Post. <br />
+            Hello! Welcome to the {activeClass} Discussion Post. <br />
             Feel free to post any questions you have for the class.
           </p>
 
           <div className="post-input">
-            <textarea
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Type your question here..."
+            <input
+              type="text"
+              className="post-subject-input"
+              placeholder="Enter subject..."
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
             />
-            <button onClick={handlePost}>Post</button>
+            <textarea
+              className="post-details-textarea"
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              placeholder="Type your question details here..."
+            />
+            <button onClick={handlePost} disabled={!subject.trim() || !details.trim()}>
+              Post
+            </button>
           </div>
 
           <div className="discussion-posts">
-            {[...posts].reverse().map((post) => (
+            {[...posts[activeClass]].reverse().map((post) => (
               <div key={post.id} className="post">
                 <div className="post-text">
                   <div className="post-header">
-                    <p>{post.text}</p>
+                    <div className="post-subject">{post.subject}</div>
                     <span className="timestamp">{formatTimestamp(post.timestamp)}</span>
                   </div>
+                  <p>{post.text}</p>
                   <button className="reply-button" onClick={() => toggleReplyInput(post.id)}>
                     Reply
                   </button>
@@ -145,7 +196,10 @@ const Classes = () => {
                         value={replyInputs[post.id] || ''}
                         onChange={(e) => handleReplyChange(post.id, e.target.value)}
                       />
-                      <button className="submit-reply" onClick={() => handleReplySubmit(post.id)}>
+                      <button
+                        className="submit-reply"
+                        onClick={() => handleReplySubmit(post.id)}
+                      >
                         Post
                       </button>
                     </div>

@@ -119,7 +119,7 @@ const reccomendBuddiesAlgorithm = async (userHash) => {
     }
 
     // const reccomendations = await reccomendBuddies(userHash);
-    const buddiesReccomendations = await reccomendBuddies(userHash);
+    let buddiesReccomendations = await reccomendBuddies(userHash);
     if (buddiesReccomendations.length > 10){
         buddiesReccomendations = buddiesReccomendations.slice(0, 10);
     }
@@ -131,7 +131,7 @@ const reccomendBuddiesAlgorithm = async (userHash) => {
 // Test function to build algorithm until it works then move it into the updateUserOnFirestoreChange function
 exports.getUserInfoHTTP = onRequest({ timeoutSeconds: 120 }, async (req, res) => {
 try {
-    const userHash = "L6OWogOvbBV5ywI9B9JgMcRPOSx1";
+    const userHash = "Lk9IRfnLa7bS5dvuJvjF1JZuxR73";
     await reccomendBuddiesAlgorithm(userHash);
     res.status(200).json({ message: "User info fetched successfully." });
 } 
@@ -140,6 +140,7 @@ catch (error) {
     res.status(500).json({ error: "Error fetching user: " + error.message });
 }
 });
+
 
 
 // Function to update user's buddy suggestions when user document is updated

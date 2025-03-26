@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
-import "./Buddies.css"; 
-
+import "./Buddies.css";
 import StudyTimeIcon from './iconbuddy/StudyTime.png';
 import StudyEnivrIcon from "./iconbuddy/studyEnvir.png";
 import StyleIcon from './iconbuddy/style.png';
 import TypeLearnerIcon from './iconbuddy/TypeLearner.png';
 import CourseStudyIcon from './iconbuddy/CourseStudy.png';
 import InterestIcon from './iconbuddy/SchoolInterest.png';
-
-
 
 
 
@@ -24,16 +21,7 @@ const preferenceIconMap = {
 };
 
 
-
 const Buddies = () => {
-    useEffect(() => {
-          // Check if the user is stored in localStorage
-          const storedUser = localStorage.getItem("user");
-          if (!storedUser) {
-            throw new Error("Failed to load user data from localStorage");
-          }
-        });
-    
     const [buddies] = useState(["Jane Doe", "John Smith", "Taylor Smith", "Alice John", "Bob Anderson"]);
     const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
     const [sentRequests, setSentRequests] = useState({});

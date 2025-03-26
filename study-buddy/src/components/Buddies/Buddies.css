@@ -1,10 +1,3 @@
-/* Full Page Background */
-body, html {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-/* Full Page Background */
 body, html {
     height: 100%;
     margin: 0;
@@ -14,7 +7,7 @@ body, html {
 }
 
 /* Sidebar Menu Button */
-.buddy-menu-button {
+/* .buddy-menu-button {
     position: fixed;
     top: 80px; 
     width: 40px;
@@ -25,7 +18,7 @@ body, html {
     cursor: pointer;
     z-index: 1000;
     text-align: center;
-}
+} */
 
 /* Sidebar Menu Button */
 .buddy-menu-button {
@@ -42,14 +35,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    
-    
-    align-items: center;
-    justify-content: center;
-
-    
-    
+  
 }
 
 /* Sidebar */
@@ -67,27 +53,18 @@ body, html {
     display: flex;
     flex-direction: column;
     height: 100%;
-.buddy-sidebar {
-    position: fixed;
-    left: -200px;
-    width: 200px;
-    background: white;
-    transition: left 0.3s ease-in-out;
-    padding-top: 0;
 }
 
-
-.buddy-sidebar-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
+/* Sidebar Header */
+.buddy-sidebar-header {
 /* Sidebar Header */
 .buddy-sidebar-header {
 /* Sidebar Header */
 .buddy-sidebar-header {
     text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
     font-size: 18px;
     font-weight: bold;
     padding: 10px;
@@ -504,12 +481,6 @@ body, html {
     background: #2a7431;
 }
 
-.request-message {
-    margin-top:10px;
-    font-size: 1rem;
-    color:#2a7431;
-    font-weight: bold;
-}
 .request-message {
     margin-top:10px;
     font-size: 1rem;

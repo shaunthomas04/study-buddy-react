@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import "./Configuration.css";
 
@@ -7,6 +7,7 @@ const SettingsPage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [password, setPassword] = useState("");
+  const [descriptions, setDescriptions] = useState({}); // Fix for editable grid
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -17,80 +18,84 @@ const SettingsPage = () => {
 
   return (
     <div className="configuration-settings-page">
+      {/* Header */}
       <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
-        <div className="logo"></div>
         <Navbar />
       </header>
 
       <div className="configuration-settings-container">
-        <div className="configuration-profile-description">
-          <div className="configuration-profile-image"></div>
-          <h2>[firstName], [lastName]</h2>
-          <p className="description">
-            <strong>Desc:</strong> Current student at XYZ EDU <br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
-          </p>
-
-        </div>
-
-        <div className="configuration-settings-options">
-  
-        {/* Change Name */}
-        <div className="input-row">
-          <div className="input-group">
-            <label>Change Name</label>
-            <input
-              type="text"
-              placeholder="Enter new name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+        {/* Profile Section (Moved to the Right) */}
+        <div className="profile-header">
+          <div className="profile-info">
+            <h2>Student Name</h2>
+            <p>California Baptist University</p>
+            <p><em>Description</em></p>
           </div>
-          <button className="save-button">Save</button>
         </div>
 
-        {/* Change Description */}
-        <div className="input-row">
-          <div className="input-group">
-            <label>Change Description</label>
-            <input
-              type="text"
-              placeholder="Update your description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-          <button className="save-button">Save</button>
+        {/* Editable Grid (Fixed State Issue) */}
+        <div className="editable-grid">
+          {[
+            { title: "Preferred Study Time", key: "studyTime" },
+            { title: "Study Environment", key: "environment" },
+            { title: "Collaboration Style", key: "collaboration" },
+            { title: "Type of Learner", key: "learnerType" },
+            { title: "Courses to Study", key: "courses" },
+            { title: "School Interests", key: "interests" },
+          ].map((item) => (
+            <div className="grid-box" key={item.key}>
+              <h3>{item.title}</h3>
+              <input
+                type="text"
+                placeholder={`Edit ${item.title}`}
+                value={descriptions[item.key] || ""}
+                onChange={(e) =>
+                  setDescriptions({ ...descriptions, [item.key]: e.target.value })
+                }
+              />
+            </div>
+          ))}
         </div>
 
+        {/* Settings Options */}
         <div className="configuration-settings-options">
-            <button className="configuration-settings-button">Button1</button>
-            <button className="configuration-settings-button">Button2</button>
-            {/* <button className="configuration-settings-button">Button3</button>
-            <button className="configuration-settings-button">Button 4</button> */}
+          {/* Change Name */}
+          <div className="input-row">
+            <div className="input-group">
+              <label>Change Name</label>
+              <input
+                type="text"
+                placeholder="Enter new name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Change Description */}
+          <div className="input-row">
+            <div className="input-group">
+              <label>Change Description</label>
+              <input
+                type="text"
+                placeholder="Update your description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </div>
 
-        {/* Change Password */}
-        <div className="input-row">
-          <div className="input-group">
-            <label>Change Password</label>
-            <input
-              type="password"
-              placeholder="Enter new password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
           </div>
-          <button className="save-button">Update Password</button>
-        </div>
 
+          {/* Additional Buttons - More customization needed*/}
+          {/* <div className="button-group">
+            <button className="configuration-settings-button">Button1</button>
+            <button className="configuration-settings-button">Button2</button>
+          </div> */}
 
+          {/* Logout Button */}
+          <button className="save-button">Save</button>
           <button className="configuration-logout-button">Logout</button>
-          <ul className="configuration-logout-button">
-                    <li className="nav-item" onClick={() => setActiveIndex(0)}>
-                        <Link className={activeIndex === 0 ? "nav-link active" : "nav-link"} to="/home">Home</Link>
-                    </li>
-                </ul>
+
         </div>
       </div>
     </div>

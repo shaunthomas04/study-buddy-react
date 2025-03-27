@@ -36,7 +36,12 @@ const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }
 
 //This component is used to show the study sessions for a day in a popup when the pipup is open
 const CalendarPopupSessions = ({studySession}) => {
-  const color = studySession.status === "accepted" ? "green" : studySession.status === "pending" ? "yellow" : studySession.status === "request" ? "blue": "red";
+    const green = "#71FF65";
+    const yellow = "#FFFD62";
+    const blue = "#6E6FFF";
+    const red = "#FF5B57";
+
+  const color = studySession.status === "accepted" ? green : studySession.status === "pending" ? yellow : studySession.status === "request" ? blue: red;
   const studySessionText = studySession.status === "accepted" ? `Study session with ${studySession.person} at ${studySession.time}`
    : studySession.status === "pending" ? `Study session with ${studySession.person} at ${studySession.time} is pending` 
    : studySession.status === "request" ? `Study session with ${studySession.person} at ${studySession.time} is requested`
@@ -65,7 +70,12 @@ const CalendarPopupSessions = ({studySession}) => {
 
 // This component is used to show the study sessions for a specific day in the acutal calendar day component in the agenda page
 const CalendarDaySession = ({studySession}) => {
-    const color = studySession.status === "accepted" ? "green" : studySession.status === "pending" ? "yellow" : studySession.status === "request" ? "blue": "red";
+    const green = "#71FF65";
+    const yellow = "#FFFD62";
+    const blue = "#6E6FFF";
+    const red = "#FF5B57";
+    
+    const color = studySession.status === "accepted" ? green : studySession.status === "pending" ? yellow : studySession.status === "request" ? blue: red;
     return(
         <div className="CalendarDay-study-session-outer-container" style={{backgroundColor: color}}> 
             <div className="CalendarDay-study-session-text"> {studySession.time} with {studySession.person}</div>

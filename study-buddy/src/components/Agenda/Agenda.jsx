@@ -185,7 +185,7 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
       </select>
         
         <textarea style={{marginBottom: '20px',height: "90px"}} name="notes" placeholder="Notes" value={formData.notes} onChange={handleChange} className='Agenda-popup-form-field' />
-        <button type="submit">Submit</button>
+        <button style={{backgroundColor: "#0b90c9"}} type="submit">Submit</button>
 
       </form>
 

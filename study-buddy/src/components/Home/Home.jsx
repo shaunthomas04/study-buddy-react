@@ -1,38 +1,27 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./homeIndex.css";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 
-// Import Navbar from NavBar.jsx
 const Header = () => (
   <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
     <div className="logo"></div>
-    {/* <input type="text" placeholder="Search" className="p-2 rounded" /> */}
-  <Navbar />
+    <Navbar />
   </header>
 );
 
-const Sidebar = () => (
-<aside className="friends-list">
-  <h2>Online</h2>
-  <ul>
-    {["John Doe", "Jane Doe", "John Smith", "Jane Smith"].map((friend, index) => (
-      <li key={index}>
-        <button className="friend-button">{friend}</button>
-      </li>
-    ))}
-  </ul>
 
-  <h2>You May Know</h2>
-  <ul>
-    {["John Doe", "John Doe", "John Doe"].map((friend, index) => (
-      <li key={index}>
-        <button className="friend-button" onClick={() => navigate("./buddies.jsx")}>{friend}</button>
-      </li>
-    ))}
-  </ul>
-</aside>
+const Sidebar = () => (
+  <aside className="friends-list">
+    <h2>Online</h2>
+    <ul>
+      {["John Doe", "Jane Doe", "John Smith", "Jane Smith","Find New Buddies"].map((friend, index) => (
+        <li key={index}>
+          <button className="friend-button">{friend}</button>
+        </li>
+      ))}
+    </ul>
+  </aside>
 );
 
 const Card = ({ title, description }) => (
@@ -42,48 +31,38 @@ const Card = ({ title, description }) => (
   </div>
 );
 
-const Content = () => (
-  <section className="content">
-    <h2>Good Evening, [Name]</h2>
-    <h3>Upcoming</h3>
-    <Card title="Assignment Due 2/15" description="Algorithms" />
-    <Card title="Assignment Due 2/27" description="Leadership Cohort" />
-    <h3>Popular Discussions</h3>
-    <Card title="John Doe" description="[Course] [Subject]" />
-    <Card title="John Doe" description="[Course] [Subject]" />
-    <Card title="[Name]" description="[Course] [Subject]" />
-    <Card title="John Doe" description="[Course] [Subject]" />
+const ForumGrid = () => (
+  <section className="forum-grid">
+    {[...Array(6)].map((_, index) => (
+      <Card key={index} title={`Forum ${index + 1}`} description="Forum details here" />
+    ))}
   </section>
 );
 
-// Feature temporaily relocated
-const Glance = () => (
-  <aside className="glance">
-    {/* <h2>At a Glance</h2>
-    <div className="event">Request Buddy XYZ</div>
-    <div className="event">Tue, Jan 4 - Study Session with XYZ</div>
-    <div className="event">Wed, Jan 5 - Study Session with XYZ</div>
-    <div className="event">Thur, Jan 6 - Study Session with XYZ</div>
-    <div className="event">Fri, Jan 7 - Study Session with XYZ</div> */}
-  </aside>
+const Content = () => (
+  <section className="content">
+      <h2>Welcome,</h2>
+      <h2>[Name]</h2>
+      <h2></h2>
+      <h3>At a glance</h3>
+      <section className="upcoming-section">
+    <div className="upcoming-card">
+      <h4>Upcoming Event: [Date]</h4>
+      <p>[Event]</p>
+    </div>
+    <div className="upcoming-card">
+      <h4>Upcoming Event:  [Date]</h4>
+      <p>[Event]</p>
+  </div>
+</section>
+
+    <h3>Forums</h3>
+    <ForumGrid />
+  </section>
 );
-
-// const Dashboard = () => (
-//   <div className="dashboard">
-//     <Header />
-//     <main className="main-layout">
-//       <Sidebar />
-//       <Content />
-//       <Glance />
-//     </main>
-//   </div>
-// );
-
-// export default Dashboard;
 
 const Dashboard = () => {
   useEffect(() => {
-    // Check if the user is stored in localStorage
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
       throw new Error("Failed to load user data from localStorage");
@@ -96,7 +75,6 @@ const Dashboard = () => {
       <main className="main-layout">
         <Sidebar />
         <Content />
-        <Glance />
       </main>
     </div>
   );

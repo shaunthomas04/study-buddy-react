@@ -1,42 +1,105 @@
-import React from 'react';
-import Navbar from '../Navbar/Navbar';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
 import "./Configuration.css";
 
 const SettingsPage = () => {
-    return (
-      <div className="configuration-settings-page">
-        <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
-            <div className="logo"></div>
-            {/* <input type="text" placeholder="Search" className="p-2 rounded" /> */}
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [password, setPassword] = useState("");
+  const [descriptions, setDescriptions] = useState({}); // Fix for editable grid
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      throw new Error("Failed to load user data from localStorage");
+    }
+  }, []);
+
+  return (
+    <div className="configuration-settings-page">
+      {/* Header */}
+      <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
         <Navbar />
-        </header>
-  
-        <div className="configuration-settings-container">
-          <div className="configuration-profile-description">
-            <div className="configuration-profile-image"></div>
-            <h2>[firstName], [lastName]</h2>
-            <p className="description">
-              <strong>Desc:</strong> Current student at XYZ EDU <br />
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-               ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                 sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <button className="configuration-logout-button">Logout</button>
-          </div>
-  
-          <div className="configuration-settings-options">
-            <button className="configuration-settings-button">Change Image</button>
-            <button className="configuration-settings-button">Change Description</button>
-            <button className="configuration-settings-button">Email Preferences</button>
-            <button className="configuration-settings-button">Accessibility Options</button>
-            <button className="configuration-settings-button">Change Password</button>
-            <button className="configuration-settings-button">Your Preferences</button>
+      </header>
+
+      <div className="configuration-settings-container">
+        {/* Profile Section (Moved to the Right) */}
+        <div className="profile-header">
+          <div className="profile-info">
+            <h2>Student Name</h2>
+            <p>California Baptist University</p>
+            <p><em>Description</em></p>
           </div>
         </div>
-      </div>
-    );
-  };
-  
-  export default SettingsPage;
 
+        {/* Editable Grid (Fixed State Issue) */}
+        <div className="editable-grid">
+          {[
+            { title: "Preferred Study Time", key: "studyTime" },
+            { title: "Study Environment", key: "environment" },
+            { title: "Collaboration Style", key: "collaboration" },
+            { title: "Type of Learner", key: "learnerType" },
+            { title: "Courses to Study", key: "courses" },
+            { title: "School Interests", key: "interests" },
+          ].map((item) => (
+            <div className="grid-box" key={item.key}>
+              <h3>{item.title}</h3>
+              <input
+                type="text"
+                placeholder={`Edit ${item.title}`}
+                value={descriptions[item.key] || ""}
+                onChange={(e) =>
+                  setDescriptions({ ...descriptions, [item.key]: e.target.value })
+                }
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Settings Options */}
+        <div className="configuration-settings-options">
+          {/* Change Name */}
+          <div className="input-row">
+            <div className="input-group">
+              <label>Change Name</label>
+              <input
+                type="text"
+                placeholder="Enter new name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Change Description */}
+          <div className="input-row">
+            <div className="input-group">
+              <label>Change Description</label>
+              <input
+                type="text"
+                placeholder="Update your description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+
+          </div>
+
+          {/* Additional Buttons - More customization needed*/}
+          {/* <div className="button-group">
+            <button className="configuration-settings-button">Button1</button>
+            <button className="configuration-settings-button">Button2</button>
+          </div> */}
+
+          {/* Logout Button */}
+          <button className="save-button">Save</button>
+          <button className="configuration-logout-button">Logout</button>
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SettingsPage;

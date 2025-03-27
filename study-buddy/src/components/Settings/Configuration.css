@@ -1,99 +1,217 @@
-/* settings.css */
-
-/* General Styling */
+a/* General Styling */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(0.1turn, #3f87a6, #ebf8e1);
-  }
-  
-  
-  /* Settings Page Layout */
-  .configuration-settings-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    text-align: center;
-    height: 100vh;
-  }
-  
-  /* Profile Description */
-  .configuration-profile-description {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .configuration-profile-image {
-    width: 100px;
-    height: 100px;
-    background-color: black;
-    border-radius: 50%;
-    margin-bottom: 10px;
-  }
-  
-  .configuration-description {
-    font-size: 16px;
-    margin: 10px 0;
-  }
-  
-  .configuration-settings-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 100vh; /* Ensures vertical centering */
-  }
-  
-  /* Logout button styling */
-  .configuration-logout-button {
-    background-color: red;
-    color: white;
-    border-color: white;
-    border-radius: 5em;
-    border-width: 2px;
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 18px;
-    cursor: pointer;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
 
-    margin-bottom: 20px; /* Space below logout button */
-  }
-  
-  .configuration-logout-button:hover {
-    background-color: darkred;
-  }
+/* Settings Page Layout */
+.configuration-settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  text-align: center;
+}
 
-  /* Buttons container */
-  .configuration-settings-options {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    width: 50%;
-    max-width: 500px;
-    margin-top: 20px;
-  }
-  
-  /* Individual buttons */
-  .configuration-settings-button {
-    background: #5c5252;
-    color: white;
-    border: none;
-    padding: 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    text-align: center;
-    text-overflow: clip;
-    width: 100%; /* Ensures buttons take full width in grid */
-    height: 75px;
-  }
-  
-  .configuration-settings-button:hover {
-    background: #4b4141;
-  }
-  
+/* Editable Grid */
+.editable-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  padding-bottom: 20px;
+}
+
+.grid-box {
+  background: #f0f0f0; 
+  padding: 20px;
+  border-radius: 12px; 
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.grid-box:hover {
+  transform: translateY(-4px); 
+  box-shadow: 6px 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.grid-box h3 {
+  margin-bottom: 10px;
+  font-size: 18px; 
+  font-weight: bold;
+  color: #585858;
+}
+
+.grid-box input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #4c4c4c;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+}
+
+/* Profile Description */
+.configuration-profile-description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.configuration-profile-image {
+  width: 100px;
+  height: 100px;
+  background-color: black;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.configuration-description {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+/* Logout Button */
+.configuration-logout-button {
+  background-color: rgb(255, 86, 86);
+  color: white;
+  width: 100%;
+  border-radius: 5em;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.configuration-logout-button:hover {
+  background-color: darkred;
+}
+
+/* Buttons Container */
+.configuration-settings-button {
+  width: 100%; 
+  padding: 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center; 
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.profile-header h1 {
+  font-size: 24px;
+  color: #222; 
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-header h2 {
+  font-size: 18px;
+  font-weight: normal;
+  color: #444; 
+}
+
+.profile-description {
+  font-size: 16px;
+  color: #666; 
+}
+
+/* Save Button */
+.save-button {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Profile Info */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+}
+
+.profile-info h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.profile-info p {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+/* Individual Settings Buttons */
+.configuration-settings-options {
+  display: flex;
+  flex-direction: column; 
+  gap: 15px; 
+  width: 100%;
+  max-width: 300px; 
+  margin: auto; 
+  align-items: center; 
+}
+
+.configuration-settings-button:hover {
+  background: #4b4141;
+}
+
+/* Input Row & Groups */
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Remove extra Save buttons */
+.save-button {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.save-button:hover {
+  background-color: #00cc3a;
+}

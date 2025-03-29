@@ -68,7 +68,37 @@ const acceptStudySession = async (senderID, recieverID, studySessionHash) => {
       }
   }
 
+  const declineStudySession = async (senderID, recieverID, studySessionHash) => {
+    try {
+        const reciever = doc(db, "users", recieverID.trim());
+        const recieverDocSnapshot = await getDoc(reciever);  
+        const sender = doc(db, "users", senderID.trim());
+        const senderDocSnapshot = await getDoc(sender);
 
+        if (!recieverDocSnapshot.exists() || !senderDocSnapshot.exists()) {
+            console.log("Error accepting study session");
+            return null;
+        }
+
+        const recieverStudySessions = recieverDocSnapshot.data().agendaStudySessions;
+        const senderStudySessions = senderDocSnapshot.data().agendaStudySessions;
+
+        const updatedReceiverSessions = recieverStudySessions.filter(session => 
+            session.sessionID !== studySessionHash 
+        );
+        const updatedSenderSessions = senderStudySessions.filter(session => 
+            session.sessionID !== studySessionHash
+        );
+
+        await updateDoc(reciever, { agendaStudySessions: updatedReceiverSessions });
+        await updateDoc(sender, { agendaStudySessions: updatedSenderSessions });
+
+      } 
+      catch (error) {
+        console.error("Error getting document:", error);
+        return null;
+      }
+  }
 
 
 //This component is used to show the study sessions for a day in a popup when the pipup is open
@@ -105,7 +135,7 @@ const CalendarPopupSessions = ({studySession}) => {
                     {studySession.status === "request" && (
                         <div>
                             <button onClick={async () => await acceptStudySession(senderID, receiverID, studySessionID)} className="CalendarDay-popup-session-buttons" style={{"backgroundColor": "green"}}>✓</button>
-                            <button className="CalendarDay-popup-session-buttons" style={{"backgroundColor": "red"}}>x</button>
+                            <button onClick={async () => await declineStudySession(senderID, receiverID, studySessionID)} className="CalendarDay-popup-session-buttons" style={{"backgroundColor": "red"}}>x</button>
                         </div>
                     )}
 

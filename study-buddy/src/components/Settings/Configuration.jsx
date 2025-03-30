@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import "./Configuration.css";
 import { app } from "../../firebase"; 
-import { getDownloadURL, getStorage, listAll, ref } from "firebase/storage";
+import { getDownloadURL, getStorage, listAll, ref , uploadBytes} from "firebase/storage";
 
 const getUserImage = async (userImage) => {
   try {
@@ -11,7 +11,6 @@ const getUserImage = async (userImage) => {
     const fileRef = ref(storage, userImage); 
 
     const url = await getDownloadURL(fileRef); 
-    console.log("File URL:", url); // Log the URL for debugging
     return url;
 
   } catch (error) {
@@ -19,6 +18,28 @@ const getUserImage = async (userImage) => {
     return null; 
   }
 }
+
+const setUserImage = async (event, userID) => {
+  const file = event.target.files[0];
+  if (file) {
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    const userImage = `${userID}.${fileExtension}`; 
+    const storage = getStorage(app); 
+    const fileRef = ref(storage, userImage)
+    
+    try{
+      await uploadBytes(fileRef, file);
+      console.log("File uploaded successfully!");
+    }
+    catch(error){
+      console.error("Error uploading file:", error);
+    }
+  }
+  else {
+    alert('Please select an image file.');
+  }
+  
+};
 
 
 const SettingsPage = () => {
@@ -113,7 +134,11 @@ const SettingsPage = () => {
           {/* Logout Button */}
           <button className="save-button">Save</button>
           <button className="configuration-logout-button">Logout</button>
-          <button>Test</button>
+
+          {/* Testing Image upload and read */}
+          <button onClick={() => getUserImage("default.jpg")}> Test</button>
+          <input type="file" accept="image/*" onChange={(event) => setUserImage(event, "userNameGoesHere")} />
+
         </div>
       </div>
     </div>

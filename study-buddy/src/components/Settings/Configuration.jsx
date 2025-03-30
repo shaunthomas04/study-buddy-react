@@ -2,9 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import "./Configuration.css";
-import { app } from "../../firebase"; 
+import { app, auth , db } from "../../firebase"; 
 import { getDownloadURL, getStorage, listAll, ref , uploadBytes} from "firebase/storage";
+import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
+const updateImagePath = async (userHash, newUserImage) => {
+  try{
+    const userInfo = doc(db, "users", userHash);
+    await updateDoc(userInfo, {profilePicture: newUserImage});
+  }
+  catch (error) {
+    console.error("Error uploading session:", error);
+  }
+}
+
+// Function to get the image URL from Firebase Storage
 const getUserImage = async (userImage) => {
   try {
     const storage = getStorage(app);
@@ -19,6 +31,7 @@ const getUserImage = async (userImage) => {
   }
 }
 
+// Function to set the image in Firebase Storage
 const setUserImage = async (event, userID) => {
   const file = event.target.files[0];
   if (file) {
@@ -30,6 +43,10 @@ const setUserImage = async (event, userID) => {
     try{
       await uploadBytes(fileRef, file);
       console.log("File uploaded successfully!");
+
+      await updateImagePath(userID, userImage);
+
+
     }
     catch(error){
       console.error("Error uploading file:", error);
@@ -137,7 +154,8 @@ const SettingsPage = () => {
 
           {/* Testing Image upload and read */}
           <button onClick={() => getUserImage("default.jpg")}> Test</button>
-          <input type="file" accept="image/*" onChange={(event) => setUserImage(event, "userNameGoesHere")} />
+          {/* Input for users profile picture, currently using my id here */}
+          <input type="file" accept="image/*" onChange={(event) => setUserImage(event, "L6OWogOvbBV5ywI9B9JgMcRPOSx1")} />
 
         </div>
       </div>

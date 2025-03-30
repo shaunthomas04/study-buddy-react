@@ -7,6 +7,8 @@ import StyleIcon from './iconbuddy/style.png';
 import TypeLearnerIcon from './iconbuddy/TypeLearner.png';
 import CourseStudyIcon from './iconbuddy/CourseStudy.png';
 import InterestIcon from './iconbuddy/SchoolInterest.png';
+import { auth , db } from "../../firebase.js"; 
+import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
 const preferenceIconMap = {
     "Preferred Study Time": StudyTimeIcon,
@@ -17,23 +19,91 @@ const preferenceIconMap = {
     "School Interests": InterestIcon
 };
 
-
-
+// Function to get user information from Firestore
+const getUserInfo = async (userHash) => {  
+    try {
+      const userInfo = doc(db, "users", userHash.trim());
+      const docSnapshot = await getDoc(userInfo);  
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();  
+      } 
+      else {
+        console.log("No such document");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error getting document:", error);
+      return null;
+    }
+  }
+  
+  const generateBuddyPreferences = (suggestedUsers) => {
+    const buddyPreferences = suggestedUsers.reduce((acc, user) => {
+      const fullName = `${user.firstName} ${user.lastName}`;
+  
+      // Create the preference structure for each user dynamically
+      acc[fullName] = {
+        school: user.school || "Unknown School",
+        major: user.major || "Undeclared", 
+        studyTime: user.studyTimes?.[0] || "Anytime",
+        environment: user.studyEnvironment?.[0] || "Any",
+        collaboration: user.collaborationStyles?.[0] || "Group Study",
+        typeLearner: user.learnTypes?.[0] || "Visual Learner", 
+        preferredCourses: user.courses || [],
+        schoolInterests: user.interests || []
+      };
+  
+      return acc;
+    }, {});
+  
+    return buddyPreferences;
+  };
+    
 const Buddies = () => {
+
+    const [suggestedUsers, setSuggestedUsers] = useState([]);
+    // Check if the user is logged in and redirect if not
     useEffect(() => {
           // Check if the user is stored in localStorage
           const storedUser = localStorage.getItem("user");
           if (!storedUser) {
             throw new Error("Failed to load user data from localStorage");
           }
-        });
+
+          const user = JSON.parse(storedUser);
+          const userId = user.uid;
+          const suggestedUsersInfo = []
+
+        //   Fetch all suggested buddies for the logged-in user
+          const fetchUserInfo = async () => {
+            const userInfo = await getUserInfo(userId);
+            const buddySuggestions = userInfo.buddySuggestions || [];
+
+            const buddyPromises = buddySuggestions.map(async (buddyId) => {
+                const buddyInfo = await getUserInfo(buddyId);
+                if (buddyInfo) {
+                    suggestedUsersInfo.push(buddyInfo);
+                }
+            });
+            await Promise.all(buddyPromises);
+            setSuggestedUsers(suggestedUsersInfo);
+
+          }
+            fetchUserInfo();
+        
+
+        },[]);
     
-    const [buddies] = useState(["Jane Doe", "John Smith", "Taylor Smith", "Alice John", "Bob Anderson"]);
-    const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
+    // const [buddies] = useState(["Jane Doe", "John Smith", "Taylor Smith", "Alice John", "Bob Anderson"]);
+    const buddies = suggestedUsers.map(user => `${user.firstName} ${user.lastName}`);
+
+
+    // const [activeBuddy, setActiveBuddy] = useState(buddies[0] || ""); // Default to the first buddy or empty string if none
+    const [activeBuddy, setActiveBuddy] = useState("Jane Doe" )
     const [sentRequests, setSentRequests] = useState({});
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
+    const buddyPreferences1 = generateBuddyPreferences(suggestedUsers);
 
     const buddyPreferences = {
         "Jane Doe": {
@@ -87,6 +157,9 @@ const Buddies = () => {
             schoolInterests: ["Disney Club", "Lacrosse Club"]
         }
     };
+
+    // console.log(buddyPreferences1);
+    // console.log(buddyPreferences);
 
     const buddyPref = buddyPreferences[activeBuddy];
 

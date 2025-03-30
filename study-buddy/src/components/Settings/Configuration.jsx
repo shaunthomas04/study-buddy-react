@@ -2,6 +2,24 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import "./Configuration.css";
+import { app } from "../../firebase"; 
+import { getDownloadURL, getStorage, listAll, ref } from "firebase/storage";
+
+const getUserImage = async (userImage) => {
+  try {
+    const storage = getStorage(app);
+    const fileRef = ref(storage, userImage); 
+
+    const url = await getDownloadURL(fileRef); 
+    console.log("File URL:", url); // Log the URL for debugging
+    return url;
+
+  } catch (error) {
+    console.error("Error fetching file:", error);
+    return null; 
+  }
+}
+
 
 const SettingsPage = () => {
   const [name, setName] = useState("");
@@ -95,7 +113,7 @@ const SettingsPage = () => {
           {/* Logout Button */}
           <button className="save-button">Save</button>
           <button className="configuration-logout-button">Logout</button>
-
+          <button>Test</button>
         </div>
       </div>
     </div>

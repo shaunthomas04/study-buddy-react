@@ -9,6 +9,7 @@ import CourseStudyIcon from './iconbuddy/CourseStudy.png';
 import InterestIcon from './iconbuddy/SchoolInterest.png';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import { getDownloadURL, getStorage, listAll, ref , uploadBytes} from "firebase/storage";
 
 const preferenceIconMap = {
     "Preferred Study Time": StudyTimeIcon,
@@ -21,89 +22,80 @@ const preferenceIconMap = {
 
 // Function to get user information from Firestore
 const getUserInfo = async (userHash) => {  
-    try {
-      const userInfo = doc(db, "users", userHash.trim());
-      const docSnapshot = await getDoc(userInfo);  
-      if (docSnapshot.exists()) {
-        return docSnapshot.data();  
-      } 
-      else {
-        console.log("No such document");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error getting document:", error);
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data();  
+    } 
+    else {
+      console.log("No such document");
       return null;
     }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
   }
-  
-  const generateBuddyPreferences = (suggestedUsers) => {
-    const buddyPreferences = suggestedUsers.reduce((acc, user) => {
-      const fullName = `${user.firstName} ${user.lastName}`;
-  
-      // Create the preference structure for each user dynamically
-      acc[fullName] = {
-        school: user.school || "Unknown School",
-        major: user.major || "Undeclared", 
-        studyTime: user.studyTimes?.[0] || "Anytime",
-        environment: user.studyEnvironment?.[0] || "Any",
-        collaboration: user.collaborationStyles?.[0] || "Group Study",
-        typeLearner: user.learnTypes?.[0] || "Visual Learner", 
-        preferredCourses: user.courses || [],
-        schoolInterests: user.interests || []
-      };
-  
-      return acc;
-    }, {});
-  
-    return buddyPreferences;
-  };
-    
-const Buddies = () => {
+}
 
-    const [suggestedUsers, setSuggestedUsers] = useState([]);
-    // Check if the user is logged in and redirect if not
-    useEffect(() => {
+// Function to get user buddies from Firestore
+const getUserRecommendations = async (userHash) => {  
+  try {
+      const userInfo = await getUserInfo(userHash);
+      const buddySuggestions = userInfo.buddySuggestions || [];
+
+      const buddySuggestionsPromises = []
+      const buddyPromises = buddySuggestions.map(async (buddyId) => {
+          const buddyInfo = await getUserInfo(buddyId);
+          return buddyInfo;
+      });
+      const suggestions = await Promise.all(buddyPromises);
+      return suggestions;
+    } 
+    
+   catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
+const Buddies = () => {
+  const [buddies, setBuddies] = useState([]);
+  const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
+  const [sentRequests, setSentRequests] = useState({});
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userRecommendations, setUserRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
           // Check if the user is stored in localStorage
           const storedUser = localStorage.getItem("user");
           if (!storedUser) {
             throw new Error("Failed to load user data from localStorage");
           }
 
+
           const user = JSON.parse(storedUser);
           const userId = user.uid;
-          const suggestedUsersInfo = []
 
-        //   Fetch all suggested buddies for the logged-in user
-          const fetchUserInfo = async () => {
-            const userInfo = await getUserInfo(userId);
-            const buddySuggestions = userInfo.buddySuggestions || [];
+          const callGetUserRecommendations = async () => {
+            try {
+              const recommendations = await getUserRecommendations(userId);
+              setUserRecommendations(recommendations);
+              setLoading(false);
 
-            const buddyPromises = buddySuggestions.map(async (buddyId) => {
-                const buddyInfo = await getUserInfo(buddyId);
-                if (buddyInfo) {
-                    suggestedUsersInfo.push(buddyInfo);
-                }
-            });
-            await Promise.all(buddyPromises);
-            setSuggestedUsers(suggestedUsersInfo);
+              const buddies = recommendations.map((buddy) => `${buddy.firstName} ${buddy.lastName}`);
+              setBuddies(buddies);
 
+            } catch (error) {
+              console.error("Error fetching recommendations:", error);
+            }
           }
-            fetchUserInfo();
-        
-
-        },[]);
+          callGetUserRecommendations();
+        }, []);
     
-    // const [buddies] = useState(["Jane Doe", "John Smith", "Taylor Smith", "Alice John", "Bob Anderson"]);
-    const buddies = suggestedUsers.map(user => `${user.firstName} ${user.lastName}`);
 
 
-    // const [activeBuddy, setActiveBuddy] = useState(buddies[0] || ""); // Default to the first buddy or empty string if none
-    const [activeBuddy, setActiveBuddy] = useState("Jane Doe" )
-    const [sentRequests, setSentRequests] = useState({});
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-
-    const buddyPreferences1 = generateBuddyPreferences(suggestedUsers);
 
     const buddyPreferences = {
         "Jane Doe": {
@@ -158,9 +150,6 @@ const Buddies = () => {
         }
     };
 
-    // console.log(buddyPreferences1);
-    // console.log(buddyPreferences);
-
     const buddyPref = buddyPreferences[activeBuddy];
 
     const handleSendRequest = () => {
@@ -173,6 +162,10 @@ const Buddies = () => {
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
+
+    if (loading) {
+      return <div>Loading...</div>;
+  }
 
     return (
         <>
@@ -206,8 +199,8 @@ const Buddies = () => {
                         <div className="profile-avatar"></div>
                         <div className="profile-info">
                             <h1 className="profile-name">{activeBuddy}</h1>
-                            <h3 className="profile-school">{buddyPref.school}</h3>
-                            <h4 className="profile-major">{buddyPref.major}</h4>
+                            <h3 className="profile-school">{"testing"}</h3>
+                            <h4 className="profile-major">{"testing"}</h4>
                         </div>
                     </div>
 
@@ -220,12 +213,12 @@ const Buddies = () => {
                 {/* Study Preferences Section */}
                 <main className="buddy-profile-content">
                     <div className="preference-grid">
-                        <PreferenceCard title="Preferred Study Time" value={buddyPref.studyTime} />
-                        <PreferenceCard title="Study Environment" value={buddyPref.environment} />
-                        <PreferenceCard title="Collaboration Style" value={buddyPref.collaboration} />
-                        <PreferenceCard title="Type of Learner" value={buddyPref.typeLearner} />
-                        <CourseList title="Courses to Study" courses={buddyPref.preferredCourses} />
-                        <CourseList title="School Interests" courses={buddyPref.schoolInterests} />
+                        <PreferenceCard title="Preferred Study Time" value={"testing"} />
+                        <PreferenceCard title="Study Environment" value={"testing"} />
+                        <PreferenceCard title="Collaboration Style" value={"testing"} />
+                        <PreferenceCard title="Type of Learner" value={"testing"} />
+                        <CourseList title="Courses to Study" courses={["testing", "testing"]} />
+                        <CourseList title="School Interests" courses={["testing", "testing"]} />
                     </div>
                 </main>
             </div>

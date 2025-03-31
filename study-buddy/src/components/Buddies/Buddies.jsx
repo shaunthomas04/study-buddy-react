@@ -59,9 +59,33 @@ const getUserRecommendations = async (userHash) => {
   }
 }
 
+// Function to generate buddy preferences dynamically
+const generateBuddyPreferences = (suggestedUsers) => {
+  const buddyPreferences = suggestedUsers.reduce((acc, user) => {
+    const fullName = `${user.firstName} ${user.lastName}`;
+
+    // Create the preference structure for each user dynamically
+    acc[fullName] = {
+      school: user.school || "Unknown School",
+      major: user.major || "Undeclared", 
+      studyTime: user.studyTimes?.[0] || "Anytime",
+      environment: user.studyEnvironment?.[0] || "Any",
+      collaboration: user.collaborationStyles?.[0] || "Group Study",
+      typeLearner: user.learnTypes?.[0] || "Visual Learner", 
+      preferredCourses: user.courses || ["Science", "Math", "Literature", "History"],
+      schoolInterests: user.interests || ["Studying"]
+    };
+
+    return acc;
+  }, {});
+
+  return buddyPreferences;
+};
+
+
 const Buddies = () => {
   const [buddies, setBuddies] = useState([]);
-  const [activeBuddy, setActiveBuddy] = useState("Jane Doe");
+  const [activeBuddy, setActiveBuddy] = useState("Joshua Rivera");
   const [sentRequests, setSentRequests] = useState({});
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userRecommendations, setUserRecommendations] = useState([]);
@@ -81,12 +105,13 @@ const Buddies = () => {
           const callGetUserRecommendations = async () => {
             try {
               const recommendations = await getUserRecommendations(userId);
-              setUserRecommendations(recommendations);
+              const buddyPreferences12 = generateBuddyPreferences(recommendations);
+              setUserRecommendations(buddyPreferences12);
               setLoading(false);
 
               const buddies = recommendations.map((buddy) => `${buddy.firstName} ${buddy.lastName}`);
               setBuddies(buddies);
-
+             
             } catch (error) {
               console.error("Error fetching recommendations:", error);
             }
@@ -96,61 +121,7 @@ const Buddies = () => {
     
 
 
-
-    const buddyPreferences = {
-        "Jane Doe": {
-            school: "California Baptist University",
-            major: "Mechanical Engineering",
-            studyTime: "Morning",
-            environment: "Coffee Shop",
-            collaboration: "One-on-One Study",
-            typeLearner: "Auditory Learner",
-            preferredCourses: ["Circuits II", "Fluid Mechanics"],
-            schoolInterests: ["ASME", "Intramural Sports"]
-        },
-        "John Smith": {
-            school: "California Baptist University",
-            major: "Computer Science",
-            studyTime: "Evening",
-            environment: "Library",
-            collaboration: "Group Study",
-            typeLearner: "Visual Learner",
-            preferredCourses: ["Algorithms", "Artificial Intelligence"],
-            schoolInterests: ["ACM", "Game Design and Video Games"]
-        },
-        "Taylor Smith": {
-            school: "California Baptist University",
-            major: "Biomedical Engineering",
-            studyTime: "Afternoon",
-            environment: "Empty Classroom",
-            collaboration: "Group Discussion",
-            typeLearner: "Kinesthetic Learner",
-            preferredCourses: ["Biomaterials I", "Machine Learning", "Strength of Materials"],
-            schoolInterests: ["BMES", "Basketball Games", "Crochet Club"]
-        },
-        "Alice John": {
-            school: "California Baptist University",
-            major: "Software Engineering",
-            studyTime: "Night",
-            environment: "Dorm Room",
-            collaboration: "Group Study",
-            typeLearner: "Pair Programming",
-            preferredCourses: ["Machine Learning", "Information Security"],
-            schoolInterests: ["SWE", "Cruize at CBU", "Competitive Soccer"]
-        },
-        "Bob Anderson": {
-            school: "California Baptist University",
-            major: "Civil Engineering",
-            studyTime: "Morning",
-            environment: "Library",
-            collaboration: "Group Study",
-            typeLearner: "Visual Learner",
-            preferredCourses: ["Fluid Mechanics", "Hydrology", "Structural Design II"],
-            schoolInterests: ["Disney Club", "Lacrosse Club"]
-        }
-    };
-
-    const buddyPref = buddyPreferences[activeBuddy];
+    const buddyPref = userRecommendations[activeBuddy];
 
     const handleSendRequest = () => {
         setSentRequests(prev => ({
@@ -166,6 +137,8 @@ const Buddies = () => {
     if (loading) {
       return <div>Loading...</div>;
   }
+
+  console.log(buddyPref)
 
     return (
         <>
@@ -199,8 +172,8 @@ const Buddies = () => {
                         <div className="profile-avatar"></div>
                         <div className="profile-info">
                             <h1 className="profile-name">{activeBuddy}</h1>
-                            <h3 className="profile-school">{"testing"}</h3>
-                            <h4 className="profile-major">{"testing"}</h4>
+                            <h3 className="profile-school">{buddyPref.school}</h3>
+                            <h4 className="profile-major">{buddyPref.major}</h4>
                         </div>
                     </div>
 
@@ -213,12 +186,13 @@ const Buddies = () => {
                 {/* Study Preferences Section */}
                 <main className="buddy-profile-content">
                     <div className="preference-grid">
-                        <PreferenceCard title="Preferred Study Time" value={"testing"} />
-                        <PreferenceCard title="Study Environment" value={"testing"} />
-                        <PreferenceCard title="Collaboration Style" value={"testing"} />
-                        <PreferenceCard title="Type of Learner" value={"testing"} />
-                        <CourseList title="Courses to Study" courses={["testing", "testing"]} />
-                        <CourseList title="School Interests" courses={["testing", "testing"]} />
+                        <PreferenceCard title="Preferred Study Time" value={buddyPref.studyTime} />
+                        <PreferenceCard title="Study Environment" value={buddyPref.environment} />
+                        <PreferenceCard title="Collaboration Style" value={buddyPref.collaboration} />
+                        <PreferenceCard title="Type of Learner" value={buddyPref.typeLearner} />
+                        <CourseList title="Courses to Study" courses={buddyPref.preferredCourses} />
+                        <CourseList title="School Interests" courses={buddyPref.schoolInterests} />
+
                     </div>
                 </main>
             </div>

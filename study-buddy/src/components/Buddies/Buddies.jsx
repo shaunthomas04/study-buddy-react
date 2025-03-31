@@ -85,7 +85,7 @@ const generateBuddyPreferences = (suggestedUsers) => {
 
 const Buddies = () => {
   const [buddies, setBuddies] = useState([]);
-  const [activeBuddy, setActiveBuddy] = useState("Joshua Rivera");
+  const [activeBuddy, setActiveBuddy] = useState("");
   const [sentRequests, setSentRequests] = useState({});
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userRecommendations, setUserRecommendations] = useState([]);
@@ -111,6 +111,10 @@ const Buddies = () => {
 
               const buddies = recommendations.map((buddy) => `${buddy.firstName} ${buddy.lastName}`);
               setBuddies(buddies);
+              if (buddies.length > 0) {
+                console.log(buddies[0])
+                setActiveBuddy(buddies[0]); // Set the first buddy as the active one
+              }
              
             } catch (error) {
               console.error("Error fetching recommendations:", error);
@@ -121,7 +125,6 @@ const Buddies = () => {
     
 
 
-    const buddyPref = userRecommendations[activeBuddy];
 
     const handleSendRequest = () => {
         setSentRequests(prev => ({
@@ -137,8 +140,16 @@ const Buddies = () => {
     if (loading) {
       return <div>Loading...</div>;
   }
+  if (!buddies.length) {
+    return (
+      <>
+        <Navbar />
+        <div className="no-buddies-message">Add some courses in your profile to get started!</div>
+      </>
+    )
+  }
 
-  console.log(buddyPref)
+  const buddyPref = userRecommendations[activeBuddy];
 
     return (
         <>

@@ -55,7 +55,6 @@ const setUserImage = async (event, userID) => {
   
 };
 
-
 // Function to get the user data from localStorage
 const getUserInfo = async (userHash) => {  
   try {
@@ -74,12 +73,21 @@ const getUserInfo = async (userHash) => {
   }
 }
 
+// Function to upload a session to user agenda database
+const updateField = async (userHash, field, updatedInformation) => {
+  try{
+    
+    if (!Array.isArray(updatedInformation)) {
+      updatedInformation = [updatedInformation];
+    }
 
-
-
-
-
-
+    const userInfo = doc(db, "users", userHash);
+    await updateDoc(userInfo, {[field]: updatedInformation});
+  }
+  catch (error) {
+    console.error("Error uploading session:", error);
+  }
+}
 
 const SettingsPage = () => {
   const [name, setName] = useState("");
@@ -96,7 +104,6 @@ const SettingsPage = () => {
     }
 
     const userHash = JSON.parse(storedUser).uid;
-    console.log("User Hash:", userHash); 
 
 
     const fetchUserInfo = async () => {
@@ -117,12 +124,9 @@ const SettingsPage = () => {
 
 
   return (
+    <>
+    <Navbar/>
     <div className="configuration-settings-page">
-      {/* Header */}
-      <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
-        <Navbar />
-      </header>
-
       <div className="configuration-settings-container">
         {/* Profile Section (Moved to the Right) */}
         <div className="profile-header">
@@ -156,14 +160,20 @@ const SettingsPage = () => {
                   <h4>{fieldValue}</h4>
                 )}
 
-                <input
-                  type="text"
-                  placeholder={`Edit ${item.title}`}
-                  value={descriptions[item.key] || ""}
-                  onChange={(e) =>
-                    setDescriptions({ ...descriptions, [item.key]: e.target.value })
-                  }
-                />
+                  <input
+                    type="text"
+                    placeholder={`Edit ${item.title}`}
+                    value={descriptions[item.key] || ""}
+                    onChange={(e) =>
+                      setDescriptions({ ...descriptions, [item.key]: e.target.value })
+                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        updateField(userInfoDb.id, item.field, descriptions[item.key]);
+                        setDescriptions({ ...descriptions, [item.key]: "" });
+                      }
+                    }}
+                  />
               </div>
             );
           })}
@@ -214,6 +224,7 @@ const SettingsPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

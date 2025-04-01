@@ -73,7 +73,8 @@ const generateBuddyPreferences = (suggestedUsers) => {
       collaboration: user.collaborationStyles?.[0] || "Group Study",
       typeLearner: user.learnTypes?.[0] || "Visual Learner", 
       preferredCourses: user.courses || ["Science", "Math", "Literature", "History"],
-      schoolInterests: user.interests || ["Studying"]
+      schoolInterests: user.interests || ["Studying"],
+      profilePicture: user.profilePicture || "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791"
     };
 
     return acc;
@@ -180,7 +181,9 @@ const Buddies = () => {
                 {/* Profile Header */}
                 <div className="profile-section">
                     <div className="profile-header">
-                        <div className="profile-avatar"></div>
+                        <div className="profile-avatar">
+                          <img src={buddyPref.profilePicture}/>
+                        </div>
                         <div className="profile-info">
                             <h1 className="profile-name">{activeBuddy}</h1>
                             <h3 className="profile-school">{buddyPref.school}</h3>

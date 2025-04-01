@@ -20,6 +20,46 @@ const preferenceIconMap = {
     "School Interests": InterestIcon
 };
 
+// Function to send a buddy request
+const sendBuddyRequest = async (userId, suggestedBuddyId) => {
+  try{
+    const userInfo = doc(db, "users", userId);
+    const suggestedBuddyInfo = doc(db, "users", suggestedBuddyId);
+
+    const userDocSnapshot = await getDoc(userInfo);  
+    const suggestedBuddyDocSnapshot = await getDoc(suggestedBuddyInfo);
+
+    if (!userDocSnapshot.exists() || !suggestedBuddyDocSnapshot.exists()) {
+      console.log("No such document");
+      return;
+    }
+
+    if (userDocSnapshot.data().buddyRequestsSent.includes(suggestedBuddyId) || suggestedBuddyDocSnapshot.data().buddyRequests.includes(userId)) {
+      console.log("Request already sent to this user.");
+      return;
+    }
+    await updateDoc(userInfo, {buddyRequestsSent: arrayUnion(suggestedBuddyId)});
+    await updateDoc(suggestedBuddyInfo, {buddyRequests: arrayUnion(userId)});
+    console.log("Buddy request sent successfully!");
+
+  }
+  catch (error) {
+    console.error("Error sending request:", error);
+  }
+
+}
+
+const testFunction = (userId, suggestedBuddyId) => {
+  console.log(`User ID:${userId}`);
+  console.log(`Suggested Buddy ID:${suggestedBuddyId}`);
+}
+
+
+
+
+
+
+
 // Function to get user information from Firestore
 const getUserInfo = async (userHash) => {  
   try {
@@ -73,7 +113,9 @@ const generateBuddyPreferences = (suggestedUsers) => {
       collaboration: user.collaborationStyles?.[0] || "Group Study",
       typeLearner: user.learnTypes?.[0] || "Visual Learner", 
       preferredCourses: user.courses || ["Science", "Math", "Literature", "History"],
-      schoolInterests: user.interests || ["Studying"]
+      schoolInterests: user.interests || ["Studying"],
+      userId: user.id || "Unknown",
+      profilePicture: user.profilePicture || "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791"
     };
 
     return acc;
@@ -90,6 +132,7 @@ const Buddies = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userRecommendations, setUserRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState(null);
   
   useEffect(() => {
           // Check if the user is stored in localStorage
@@ -101,6 +144,7 @@ const Buddies = () => {
 
           const user = JSON.parse(storedUser);
           const userId = user.uid;
+          setCurrentUserId(userId);
 
           const callGetUserRecommendations = async () => {
             try {
@@ -112,7 +156,6 @@ const Buddies = () => {
               const buddies = recommendations.map((buddy) => `${buddy.firstName} ${buddy.lastName}`);
               setBuddies(buddies);
               if (buddies.length > 0) {
-                console.log(buddies[0])
                 setActiveBuddy(buddies[0]); // Set the first buddy as the active one
               }
              
@@ -180,7 +223,9 @@ const Buddies = () => {
                 {/* Profile Header */}
                 <div className="profile-section">
                     <div className="profile-header">
-                        <div className="profile-avatar"></div>
+                        <div className="profile-avatar">
+                          <img src={buddyPref.profilePicture}/>
+                        </div>
                         <div className="profile-info">
                             <h1 className="profile-name">{activeBuddy}</h1>
                             <h3 className="profile-school">{buddyPref.school}</h3>
@@ -189,7 +234,7 @@ const Buddies = () => {
                     </div>
 
                     {/* Send Buddy Request Button */}
-                    <button className="send-request-btn" onClick={handleSendRequest}>
+                    <button className="send-request-btn" onClick={() => sendBuddyRequest(currentUserId, buddyPref.userId)}>
                         {sentRequests[activeBuddy] ? "Request Sent" : "Send Buddy Request"}
                     </button>
                 </div>

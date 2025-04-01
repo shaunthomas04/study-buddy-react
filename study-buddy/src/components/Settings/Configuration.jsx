@@ -56,18 +56,65 @@ const setUserImage = async (event, userID) => {
 };
 
 
+// Function to get the user data from localStorage
+const getUserInfo = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data();  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
+
+
+
+
+
+
+
 const SettingsPage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [password, setPassword] = useState("");
   const [descriptions, setDescriptions] = useState({}); // Fix for editable grid
+  const [loading, setLoading] = useState(true);
+  const [userInfoDb, setUserInfoDb] = useState(null); 
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
       throw new Error("Failed to load user data from localStorage");
     }
+
+    const userHash = JSON.parse(storedUser).uid;
+    console.log("User Hash:", userHash); 
+
+
+    const fetchUserInfo = async () => {
+      const userInfo = await getUserInfo(userHash);  
+      if (userInfo) {
+        setUserInfoDb(userInfo); 
+      } else {
+        console.error("No user information found in Firestore");
+      }
+      setLoading(false);
+    }
+    fetchUserInfo();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading state while fetching data
+  }
+
 
   return (
     <div className="configuration-settings-page">
@@ -80,8 +127,8 @@ const SettingsPage = () => {
         {/* Profile Section (Moved to the Right) */}
         <div className="profile-header">
           <div className="profile-info">
-            <h2>Student Name</h2>
-            <p>California Baptist University</p>
+            <h2>{`${userInfoDb.firstName} ${userInfoDb.lastName}`}</h2>
+            <p>{`${userInfoDb.school}`}</p>
             <p><em>Description</em></p>
           </div>
         </div>
@@ -89,31 +136,43 @@ const SettingsPage = () => {
         {/* Editable Grid (Fixed State Issue) */}
         <div className="editable-grid">
           {[
-            { title: "Preferred Study Time", key: "studyTime" },
-            { title: "Study Environment", key: "environment" },
-            { title: "Collaboration Style", key: "collaboration" },
-            { title: "Type of Learner", key: "learnerType" },
-            { title: "Courses to Study", key: "courses" },
-            { title: "School Interests", key: "interests" },
-          ].map((item) => (
-            <div className="grid-box" key={item.key}>
-              <h3>{item.title}</h3>
-              <input
-                type="text"
-                placeholder={`Edit ${item.title}`}
-                value={descriptions[item.key] || ""}
-                onChange={(e) =>
-                  setDescriptions({ ...descriptions, [item.key]: e.target.value })
-                }
-              />
-            </div>
-          ))}
+            { title: "Preferred Study Time", key: "studyTime", field: "studyTimes" },
+            { title: "Study Environment", key: "environment", field: "studyEnvironment" },
+            { title: "Collaboration Style", key: "collaboration", field: "collaborationStyle" },
+            { title: "Type of Learner", key: "learnerType", field: "learnTypes" },
+            { title: "Courses to Study", key: "courses", field: "courses" },
+            { title: "School Interests", key: "interests", field: "interests" }
+          ].map((item) => {
+            const fieldValue = userInfoDb[item.field];
+
+            return (
+              <div className="grid-box" key={item.key}>
+                <h3>{item.title}</h3>
+                {Array.isArray(fieldValue) ? (
+                  fieldValue.map((value, index) => (
+                    <h4 key={index}>{value}</h4>
+                  ))
+                ) : (
+                  <h4>{fieldValue}</h4>
+                )}
+
+                <input
+                  type="text"
+                  placeholder={`Edit ${item.title}`}
+                  value={descriptions[item.key] || ""}
+                  onChange={(e) =>
+                    setDescriptions({ ...descriptions, [item.key]: e.target.value })
+                  }
+                />
+              </div>
+            );
+          })}
         </div>
 
         {/* Settings Options */}
         <div className="configuration-settings-options">
           {/* Change Name */}
-          <div className="input-row">
+          {/* <div className="input-row">
             <div className="input-group">
               <label>Change Name</label>
               <input
@@ -123,10 +182,10 @@ const SettingsPage = () => {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Change Description */}
-          <div className="input-row">
+          {/* <div className="input-row">
             <div className="input-group">
               <label>Change Description</label>
               <input
@@ -137,7 +196,7 @@ const SettingsPage = () => {
               />
             </div>
 
-          </div>
+          </div> */}
 
           {/* Additional Buttons - More customization needed*/}
           {/* <div className="button-group">
@@ -149,8 +208,6 @@ const SettingsPage = () => {
           <button className="save-button">Save</button>
           <button className="configuration-logout-button">Logout</button>
 
-          {/* Testing Image upload and read */}
-          <button onClick={() => getUserImage("default.jpg")}> Test</button>
           {/* Input for users profile picture, currently using my id here */}
           <input type="file" accept="image/*" onChange={(event) => setUserImage(event, "L6OWogOvbBV5ywI9B9JgMcRPOSx1")} />
 

@@ -42,11 +42,8 @@ const setUserImage = async (event, userID) => {
     
     try{
       await uploadBytes(fileRef, file);
-      console.log("File uploaded successfully!");
-
-      await updateImagePath(userID, userImage);
-
-
+      const userUrl = await getUserImage(userImage);
+      await updateImagePath(userID, userUrl);
     }
     catch(error){
       console.error("Error uploading file:", error);

@@ -136,11 +136,17 @@
     align-items: center;    
   }
   
-  .CalendarDay-popup-session-notes {
+.CalendarDay-popup-session-notes {
     padding-left: 12px;
     padding-right: 12px;
     padding-bottom: 12px;
     font-size: 20px;                    
     line-height: 1.2;
-  }
+}
   
+.CalendarDay-popup-session-buttons {
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+}

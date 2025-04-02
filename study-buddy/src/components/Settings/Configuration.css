@@ -232,3 +232,12 @@ body {
   background-color: #00cc3a;
 }
 
+.configuration-dropdown {
+  max-width: 80px;          /* Adjust width as needed */
+  height: 20px;         /* Set a fixed height for the dropdown */
+  font-size: 12px;      /* Adjust the font size */
+  border: 1px solid #ccc; /* Add a border */
+  border-radius: 4px;   /* Rounded corners for the dropdown */
+  background-color: #fff; /* White background */
+
+}

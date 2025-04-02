@@ -128,7 +128,7 @@ const deleteItem = async (userHash, field, item) => {
     const userData = docSnapshot.data();
     const existingField = userData[field] || []; 
     const updatedField = existingField.filter((i) => i !== item); 
-    
+
     await updateDoc(userInfo, {[field]: updatedField});
   }
   catch (error) {
@@ -221,18 +221,23 @@ const SettingsPage = () => {
             <p>{`${userInfoDb.school}`}</p>
             <p><em>Description</em></p>
           </div>
+
+          <div>
+            <h3>Major: {userInfoDb.major}</h3>
+          </div>
         </div>
 
         {/* Editable Grid (Fixed State Issue) */}
         <div className="editable-grid">
           {[
-            { title: "Preferred Study Time", key: "studyTime", field: "studyTimes" },
-            { title: "Study Environment", key: "environment", field: "studyEnvironment" },
-            { title: "Collaboration Style", key: "collaboration", field: "collaborationStyle" },
-            { title: "Type of Learner", key: "learnerType", field: "learnTypes" },
-            { title: "Courses to Study", key: "courses", field: "courses" },
-            { title: "School Interests", key: "interests", field: "interests" }
-          ].map((item) => {
+  { title: "Preferred Study Time", key: "studyTime", field: "studyTimes", options: ["Morning", "Afternoon", "Evening", "Late Night", "Early Morning", "Midday", "Weekdays", "Weekends", "Flexible", "After Classes"] },
+  { title: "Study Environment", key: "environment", field: "studyEnvironment", options: ["Library (Yeager Center)", "The Walk", "Innovation Lab", "Coffee Shop (The Hut)", "Residential Hall Lounge", "Outdoor Areas (Quad)", "Classroom", "CBU Campus Green", "Private Study Room", "At Home"] },
+  { title: "Collaboration Style", key: "collaboration", field: "collaborationStyle", options: ["Independent", "Small Group", "Large Group", "Partner Work", "Team Projects", "Peer Review", "Online Collaboration", "One-on-One Mentoring", "Discussion-Based", "Brainstorming Sessions"] },
+  { title: "Type of Learner", key: "learnerType", field: "learnTypes", options: ["Visual", "Auditory", "Kinesthetic", "Reading/Writing", "Logical/Mathematical", "Social", "Solitary", "Interactive", "Reflective", "Practical"] },
+  { title: "Courses to Study", key: "courses", field: "courses", options: ["Business Administration", "Computer Science", "Nursing", "Engineering", "Psychology", "Education", "Theology", "Social Work", "Graphic Design", "Health Science"] },
+  { title: "School Interests", key: "interests", field: "interests", options: ["STEM (Science, Technology, Engineering, Math)", "Arts & Media", "Athletics", "Faith & Spirituality", "Business", "Healthcare", "Education", "Social Justice", "Community Service", "International Studies"] }
+]
+.map((item) => {
             const fieldValue = userInfoDb[item.field];
 
             return (
@@ -246,20 +251,29 @@ const SettingsPage = () => {
                   <h4>{fieldValue}</h4>
                 )}
 
-                  <input
-                    type="text"
-                    placeholder={`Edit ${item.title}`}
+                  <select
                     value={descriptions[item.key] || ""}
-                    onChange={(e) =>
-                      setDescriptions({ ...descriptions, [item.key]: e.target.value })
-                    }
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        updateField(userInfoDb.id, item.field, descriptions[item.key]);
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      setDescriptions({ ...descriptions, [item.key]: newValue });
+                      updateField(userInfoDb.id, item.field, newValue);  
+                      setTimeout(() => {
                         setDescriptions({ ...descriptions, [item.key]: "" });
-                      }
+                      }, 500); 
                     }}
-                  />
+                    className="configuration-dropdown"
+                  >
+                    <option value="" disabled>
+                      Add Tags
+                    </option>
+                    {item.options.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+
+
               </div>
             );
           })}

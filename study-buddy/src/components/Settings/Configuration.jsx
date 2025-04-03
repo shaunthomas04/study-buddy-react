@@ -5,6 +5,8 @@ import "./Configuration.css";
 import { app, auth , db } from "../../firebase"; 
 import { getDownloadURL, getStorage, listAll, ref , uploadBytes} from "firebase/storage";
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import { useNavigate } from 'react-router-dom';
+
 
 // Function to update the image path in Firestore
 const updateImagePath = async (userHash, newUserImage) => {
@@ -182,8 +184,11 @@ const SettingsPage = () => {
   const [userInfoDb, setUserInfoDb] = useState(null); 
   const [schoolInformation, setSchoolInformation] = useState({});
 
-
-  const majors = ["Computer Science", "Business Administration", "Nursing", "Engineering", "Psychology", "Education", "Theology", "Social Work", "Graphic Design", "Health Science"];
+  const navigate = useNavigate();
+  const logoutUser = () => {
+    localStorage.removeItem('user');
+    navigate('/');
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -330,7 +335,7 @@ const SettingsPage = () => {
         {/* Settings Options */}
         <div className="configuration-settings-options">
         
-          <button className="configuration-logout-button">Logout</button>
+          <button className="configuration-logout-button" onClick={logoutUser}>Logout</button>
 
           {/* Input for users profile picture, currently using my id here */}
           <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />

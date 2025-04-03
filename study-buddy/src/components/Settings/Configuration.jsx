@@ -94,12 +94,7 @@ const getUserInfo = async (userHash) => {
 
 // Function to updateField a field of user's database
 const updateField = async (userHash, field, updatedInformation) => {
-  try{
-    
-    if (!Array.isArray(updatedInformation)) {
-      updatedInformation = [updatedInformation];
-    }
-
+  try {
     const userInfo = doc(db, "users", userHash);
     const docSnapshot = await getDoc(userInfo);
     if (!docSnapshot.exists()) {
@@ -107,15 +102,18 @@ const updateField = async (userHash, field, updatedInformation) => {
       return;
     }
     const userData = docSnapshot.data();
-    const existingField = userData[field] || []; 
-    const updatedField = [...existingField, ...updatedInformation];
+    const existingField = userData[field] || [];
 
+    if (existingField.includes(updatedInformation)) {
+      console.log("Item already exists in the field:", updatedInformation);
+      return 
+    }
+    const updatedField = [...existingField, updatedInformation];
     await updateDoc(userInfo, {[field]: updatedField});
+  } catch (error) {
+    console.error("Error updating field:", error);
   }
-  catch (error) {
-    console.error("Error uploading session:", error);
-  }
-}
+};
 
 // Function to replace a field of user's database
 const replaceField = async (userHash, field, updatedInformation) => {
@@ -238,8 +236,6 @@ const SettingsPage = () => {
       </>
     )
   }
-
-console.log(schoolInformation)
 
   return (
     <>

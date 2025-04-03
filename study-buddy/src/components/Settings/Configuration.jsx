@@ -20,10 +20,10 @@ const updateImagePath = async (userHash, newUserImage) => {
 // Function to get schoolClasses from firebase
 const getAvailableClasses = async (schoolClassId) => {  
   try {
-    const schoolInfo = doc(db, "users", schoolClassId.trim());
+    const schoolInfo = doc(db, "schoolClasses", schoolClassId.trim());
     const docSnapshot = await getDoc(schoolInfo);  
     if (docSnapshot.exists()) {
-      return docSnapshot.data().courseCodes;  
+      return docSnapshot.data();  
     } 
     else {
       console.log("No such document");
@@ -117,6 +117,24 @@ const updateField = async (userHash, field, updatedInformation) => {
   }
 }
 
+// Function to replace a field of user's database
+const replaceField = async (userHash, field, updatedInformation) => {
+  try{
+
+    const userInfo = doc(db, "users", userHash);
+    const docSnapshot = await getDoc(userInfo);
+    if (!docSnapshot.exists()) {
+      console.log("No such document");
+      return;
+    }
+    await updateDoc(userInfo, {[field]: updatedInformation});
+  }
+  catch (error) {
+    console.error("Error uploading session:", error);
+  }
+}
+
+// Function to delete an item from a field in user's database
 const deleteItem = async (userHash, field, item) => {
   try{
     const userInfo = doc(db, "users", userHash);
@@ -156,44 +174,61 @@ const FieldItem = ({fieldItemName, filed, userHashId}) => {
   )
 }
 
-
 const SettingsPage = () => {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState("afawefa");
   const [password, setPassword] = useState("");
   const [descriptions, setDescriptions] = useState({}); // Fix for editable grid
-  const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(true);
+  const [loading, setLoading] = useState(true); 
   const [userInfoDb, setUserInfoDb] = useState(null); 
-  const [schoolClasses, setSchoolClasses] = useState([]);
+  const [schoolInformation, setSchoolInformation] = useState({});
+
+
+  const majors = ["Computer Science", "Business Administration", "Nursing", "Engineering", "Psychology", "Education", "Theology", "Social Work", "Graphic Design", "Health Science"];
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
       throw new Error("Failed to load user data from localStorage");
     }
-
+  
     const userHash = JSON.parse(storedUser).uid;
-
-
-    // const fetchUserInfo = async () => {
-    //   const userInfo = await getUserInfo(userHash);  
-    //   if (userInfo) {
-    //     setUserInfoDb(userInfo); 
-    //   } else {
-    //     console.error("No user information found in Firestore");
-    //   }
-    //   setLoading(false);
-    // }
-    // fetchUserInfo();
+  
+    const getSchoolInfo = async (userId) => {
+      const userInfo = await getUserInfo(userId);
+      const schoolInfo = await getAvailableClasses(userInfo.school);
+      return { userInfo, schoolInfo }; 
+    };
+  
+    // Start both async operations
+    const fetchData = async () => {
+      setLoading(true); 
+      try {
+        const { userInfo, schoolInfo } = await getSchoolInfo(userHash);
+  
+        setUserInfoDb(userInfo);
+        setSchoolInformation(schoolInfo);
+          setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);  
+      }
+    };
+  
+    fetchData();
+  
+    // Setting up the Firestore listener
     const unsubscribe = onSnapshot(doc(db, "users", userHash), (docSnapshot) => {
       if (docSnapshot.exists()) {
         setUserInfoDb(docSnapshot.data());
-  
-        setLoading(false);
       }
     });
+  
     return () => unsubscribe();
-
   }, []);
+  
+
 
   if (loading) {
     return(
@@ -204,6 +239,7 @@ const SettingsPage = () => {
     )
   }
 
+console.log(schoolInformation)
 
   return (
     <>
@@ -219,23 +255,39 @@ const SettingsPage = () => {
           <div className="profile-info">
             <h2>{`${userInfoDb.firstName} ${userInfoDb.lastName}`}</h2>
             <p>{`${userInfoDb.school}`}</p>
-            <p><em>Description</em></p>
           </div>
 
-          <div>
+          <div style={{display:"flex"}}>
             <h3>Major: {userInfoDb.major}</h3>
+              <select value={""}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                replaceField(userInfoDb.id, "major", newValue);  
+                setTimeout(() => {
+                  setDescriptions({ ...descriptions, [item.key]: "" });
+                }, 500); 
+              }}>
+                <option value="" disabled>Select Major</option>
+                {schoolInformation.majors.map((major, index) => (
+                  <option key={index} value={major}>
+                    {major}
+                  </option>
+                ))}
+              </select>
+
+
           </div>
         </div>
 
         {/* Editable Grid (Fixed State Issue) */}
         <div className="editable-grid">
           {[
-  { title: "Preferred Study Time", key: "studyTime", field: "studyTimes", options: ["Morning", "Afternoon", "Evening", "Late Night", "Early Morning", "Midday", "Weekdays", "Weekends", "Flexible", "After Classes"] },
-  { title: "Study Environment", key: "environment", field: "studyEnvironment", options: ["Library (Yeager Center)", "The Walk", "Innovation Lab", "Coffee Shop (The Hut)", "Residential Hall Lounge", "Outdoor Areas (Quad)", "Classroom", "CBU Campus Green", "Private Study Room", "At Home"] },
-  { title: "Collaboration Style", key: "collaboration", field: "collaborationStyle", options: ["Independent", "Small Group", "Large Group", "Partner Work", "Team Projects", "Peer Review", "Online Collaboration", "One-on-One Mentoring", "Discussion-Based", "Brainstorming Sessions"] },
-  { title: "Type of Learner", key: "learnerType", field: "learnTypes", options: ["Visual", "Auditory", "Kinesthetic", "Reading/Writing", "Logical/Mathematical", "Social", "Solitary", "Interactive", "Reflective", "Practical"] },
-  { title: "Courses to Study", key: "courses", field: "courses", options: ["Business Administration", "Computer Science", "Nursing", "Engineering", "Psychology", "Education", "Theology", "Social Work", "Graphic Design", "Health Science"] },
-  { title: "School Interests", key: "interests", field: "interests", options: ["STEM (Science, Technology, Engineering, Math)", "Arts & Media", "Athletics", "Faith & Spirituality", "Business", "Healthcare", "Education", "Social Justice", "Community Service", "International Studies"] }
+  { title: "Preferred Study Time", key: "studyTime", field: "studyTimes", options: schoolInformation.studyTime },
+  { title: "Study Environment", key: "environment", field: "studyEnvironment", options: schoolInformation.studyEnvironment },
+  { title: "Collaboration Style", key: "collaboration", field: "collaborationStyle", options: schoolInformation.collaborationStyle },
+  { title: "Type of Learner", key: "learnerType", field: "learnTypes", options: schoolInformation.learnerType },
+  { title: "Courses to Study", key: "courses", field: "courses", options: schoolInformation.courseCodes },
+  { title: "School Interests", key: "interests", field: "interests", options: schoolInformation.schoolInterests }
 ]
 .map((item) => {
             const fieldValue = userInfoDb[item.field];

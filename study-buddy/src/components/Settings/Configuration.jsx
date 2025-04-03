@@ -5,6 +5,8 @@ import "./Configuration.css";
 import { app, auth , db } from "../../firebase"; 
 import { getDownloadURL, getStorage, listAll, ref , uploadBytes} from "firebase/storage";
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import { useNavigate } from 'react-router-dom';
+
 
 // Function to update the image path in Firestore
 const updateImagePath = async (userHash, newUserImage) => {
@@ -94,12 +96,7 @@ const getUserInfo = async (userHash) => {
 
 // Function to updateField a field of user's database
 const updateField = async (userHash, field, updatedInformation) => {
-  try{
-    
-    if (!Array.isArray(updatedInformation)) {
-      updatedInformation = [updatedInformation];
-    }
-
+  try {
     const userInfo = doc(db, "users", userHash);
     const docSnapshot = await getDoc(userInfo);
     if (!docSnapshot.exists()) {
@@ -107,15 +104,18 @@ const updateField = async (userHash, field, updatedInformation) => {
       return;
     }
     const userData = docSnapshot.data();
-    const existingField = userData[field] || []; 
-    const updatedField = [...existingField, ...updatedInformation];
+    const existingField = userData[field] || [];
 
+    if (existingField.includes(updatedInformation)) {
+      console.log("Item already exists in the field:", updatedInformation);
+      return 
+    }
+    const updatedField = [...existingField, updatedInformation];
     await updateDoc(userInfo, {[field]: updatedField});
+  } catch (error) {
+    console.error("Error updating field:", error);
   }
-  catch (error) {
-    console.error("Error uploading session:", error);
-  }
-}
+};
 
 // Function to replace a field of user's database
 const replaceField = async (userHash, field, updatedInformation) => {
@@ -184,8 +184,11 @@ const SettingsPage = () => {
   const [userInfoDb, setUserInfoDb] = useState(null); 
   const [schoolInformation, setSchoolInformation] = useState({});
 
-
-  const majors = ["Computer Science", "Business Administration", "Nursing", "Engineering", "Psychology", "Education", "Theology", "Social Work", "Graphic Design", "Health Science"];
+  const navigate = useNavigate();
+  const logoutUser = () => {
+    localStorage.removeItem('user');
+    navigate('/');
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -238,8 +241,6 @@ const SettingsPage = () => {
       </>
     )
   }
-
-console.log(schoolInformation)
 
   return (
     <>
@@ -334,7 +335,7 @@ console.log(schoolInformation)
         {/* Settings Options */}
         <div className="configuration-settings-options">
         
-          <button className="configuration-logout-button">Logout</button>
+          <button className="configuration-logout-button" onClick={logoutUser}>Logout</button>
 
           {/* Input for users profile picture, currently using my id here */}
           <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />

@@ -181,7 +181,13 @@ const Buddies = () => {
     };
 
     if (loading) {
-      return <div>Loading...</div>;
+      return (
+        <>
+          <Navbar />
+          <div>Loading...</div>;
+        </>
+      )
+      
   }
   if (!buddies.length) {
     return (

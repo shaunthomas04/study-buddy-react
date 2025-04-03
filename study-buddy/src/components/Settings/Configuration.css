@@ -1,3 +1,10 @@
+/* DO NOT DELETE THIS */
+.configuration-settings-page{
+  height: 90vh;
+  overflow: hidden;
+}
+
+
 a/* General Styling */
 body {
   font-family: Arial, sans-serif;
@@ -32,6 +39,15 @@ body {
   border-radius: 12px; 
   box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1); 
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  height: 160px;
+  overflow: scroll;
+
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer & Edge */
+}
+
+.grid-box::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 .grid-box:hover {
@@ -214,4 +230,14 @@ body {
 
 .save-button:hover {
   background-color: #00cc3a;
+}
+
+.configuration-dropdown {
+  max-width: 80px;          /* Adjust width as needed */
+  height: 20px;         /* Set a fixed height for the dropdown */
+  font-size: 12px;      /* Adjust the font size */
+  border: 1px solid #ccc; /* Add a border */
+  border-radius: 4px;   /* Rounded corners for the dropdown */
+  background-color: #fff; /* White background */
+
 }

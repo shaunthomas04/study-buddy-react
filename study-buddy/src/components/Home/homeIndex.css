@@ -142,6 +142,7 @@ body {
   .main-layout {
     display: flex;
     flex-grow: 1;
+    height: 90vh; /* Adjusted to fit the sidebar */
   }
   
   /* Content */
@@ -182,14 +183,6 @@ body {
   transform: scale(1.02); /* Slight pop effect */
 }
 
-/* Spacing for "Upcoming" Section */
-.upcoming-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Adds space between each item */
-  padding: 10px 0;
-}
-
 /* Button Styling for Consistency */
 .button {
   padding: 12px 20px;
@@ -207,9 +200,25 @@ body {
 
 .upcoming-section {
   display: flex;
-  flex-direction: column;
   gap: 5px; /* Adds a 5-pixel gap between each card */
-  padding: 10px 0;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: red;
+  height: 200px;
+  max-width: 1200px;
+  overflow-x: scroll;
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+.upcoming-section::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Firefox-specific */
+.upcoming-section  {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
 }
 
 /* Upcoming Cards - Improve Layout */
@@ -220,6 +229,9 @@ body {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   text-align: left;
   transition: transform 0.2s ease-in-out;
+  margin-left: 5px;
+  margin-right: 5px;
+  min-width: 230px;
 }
 
 .upcoming-card h4 {
@@ -237,7 +249,7 @@ body {
   .dashboard {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 90vh;
     width: 100%;                   
     background: whitesmoke;
 

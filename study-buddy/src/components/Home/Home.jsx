@@ -42,6 +42,36 @@ const getUserBuddies = async (userHash) => {
   }
 }
 
+// Function to get the user's current agenda sessions within the next 7 days
+const getUserAgenda = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      const agendaSessions = docSnapshot.data().agendaStudySessions || []; 
+      
+      
+
+
+
+
+
+
+
+
+
+
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
 
 const Header = () => (
   <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
@@ -91,22 +121,20 @@ const ForumGrid = () => (
   </section>
 );
 
-const Content = () => (
+const Content = ({ agendaStudySessions }) => (
   <section className="content">
-      <h2>Welcome,</h2>
-      <h2>[Name]</h2>
-      <h2></h2>
-      <h3>At a glance</h3>
-      <section className="upcoming-section">
-    <div className="upcoming-card">
-      <h4>Upcoming Event: [Date]</h4>
-      <p>[Event]</p>
-    </div>
-    <div className="upcoming-card">
-      <h4>Upcoming Event:  [Date]</h4>
-      <p>[Event]</p>
-  </div>
-</section>
+    <h2>Welcome,</h2>
+    <h2>[Name]</h2>
+    <h2></h2>
+    <h3>At a glance</h3>
+    <section className="upcoming-section">
+      {agendaStudySessions.map((session, index) => (
+        <div key={index} className="upcoming-card">
+          <h4>Upcoming Event: {session.date}</h4>
+          <p>{session.notes}</p>
+        </div>
+      ))}
+    </section>
 
     <h3>Forums</h3>
     <ForumGrid />
@@ -116,6 +144,66 @@ const Content = () => (
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [buddies, setBuddies] = useState([]);
+  const dummyData = [
+    {
+      classCode: "CSC312",
+      date: "2025-04-11",
+      notes: "Testing data object 1 afbfaskdhbfakbfkadfkahsd bfkahbfkaf fhbakbfkhdbsfkadbhakdbshfkah fh dfa dfbadsbfakdfhb ak fadfhak dsfbadkhfbakdsf dfhad fhbakdfh adfakhdfbk adshbf akdshfb akdf afh",
+      person: "Alice Johnson",
+      recieverID: "Lk9IRfnLa7bS5dvuJvjF1JZuxR73",
+      senderID: "L6OWogOvbBV5ywI9B9JgMcRPOSx1",
+      sessionID: "79519c6a-63f5-43aa-8325-a7ecb8c73afc",
+      status: "pending",
+      time: "10:30"
+    },
+    {
+      classCode: "CSC312",
+      date: "2025-04-12",
+      notes: "Dummy data for session 2",
+      person: "John Doe",
+      recieverID: "Vw8E4s9bY0rK8sw2t9JH2Tdu3JtR45",
+      senderID: "R9LOu4Poj7b0H5ZoZ3b2K8m0Kw1",
+      sessionID: "c8f5196e-8904-4b97-bfc6-f41f8c7c3cd3",
+      status: "completed",
+      time: "14:00"
+    },
+    {
+      classCode: "CSC312",
+      date: "2025-04-13",
+      notes: "Final test session",
+      person: "Jane Smith",
+      recieverID: "Yn5F6bK1Pp8lXmvxX5W6T8Zm7ThK9",
+      senderID: "Q3N1r8uVsJ3M0aLp1NQG7Z2z8yW",
+      sessionID: "a3483f42-1e61-4c7b-96f8-2ad1b1f5b697",
+      status: "pending",
+      time: "16:45"
+    },
+    {
+      classCode: "CSC312",
+      date: "2025-04-14",
+      notes: "Backup data for session 4",
+      person: "Bob Bot",
+      recieverID: "Lk9IRfnLa7bS5dvuJvjF1JZuxR73",
+      senderID: "L6OWogOvbBV5ywI9B9JgMcRPOSx1",
+      sessionID: "79519c6a-63f5-43aa-8325-a7ecb8c73afc",
+      status: "in-progress",
+      time: "09:15"
+    },
+    {
+      classCode: "CSC312",
+      date: "2025-04-15",
+      notes: "Test session with no specific notes",
+      person: "Charlie Green",
+      recieverID: "d6Nz6U8lI7kZ8tH0o5V7X1TqY2W3",
+      senderID: "A2D3JbV0K1uK5Kz2vT9M3Q4P1o9",
+      sessionID: "b9fe41a7-dfa3-4cf0-b91a-d47375a93e34",
+      status: "pending",
+      time: "11:00"
+    }
+  ];
+  
+  console.log(dummyData);
+
   
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -140,6 +228,7 @@ const Dashboard = () => {
 
   }, []); 
 
+
   if (loading) {
     return (
       <div className="loading-screen">
@@ -152,13 +241,16 @@ const Dashboard = () => {
 
 
   return (
+    <>
+    <Header />
+
     <div className="dashboard">
-      <Header />
       <main className="main-layout">
         <Sidebar friendsList={buddies}/> 
-        <Content />
+        <Content agendaStudySessions={dummyData}/>
       </main>
     </div>
+  </>
   );
 };
 

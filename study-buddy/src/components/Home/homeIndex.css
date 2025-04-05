@@ -98,8 +98,19 @@ body {
     background: transparent; /* Removes the stark white background */
     padding: 10px;
     width: 20%; /* Adjust as needed to fit your layout */
+    overflow-y: scroll;
+    height: 90vh;
+
   }
-  
+  .friends-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Firefox-specific */
+.friends-list {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
   .friends-list h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
@@ -123,13 +134,8 @@ body {
     border-radius: 8px;
     font-size: 1rem;
     color: white;
-    cursor: pointer;
-    transition: background 0.3s ease;
   }
   
-  .friend-button:hover {
-    background: rgba(255, 255, 255, 0.4);
-  }
 
 
   /* Main Layout */
@@ -236,4 +242,11 @@ body {
     background: whitesmoke;
 
 }
-  
+
+.friend-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 10px;
+    background-color: black;
+}

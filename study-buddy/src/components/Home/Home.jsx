@@ -5,6 +5,11 @@ import { auth , db } from "../../firebase.js";
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-fns";
 
+// Popup that shows a buddy's tags when clicked
+// allow user to accept or reject buddy requests
+// placeholders to tell user to add a buddy or agenda session when none
+
+
 
 // Function to get the user's current buddies
 const getUserBuddies = async (userHash) => {  
@@ -141,45 +146,144 @@ const Header = () => (
 );
 
 
-const Sidebar = ({friendsList, requestsList}) => {
+const Sidebar = ({ friendsList, requestsList }) => {
+  const [selectedFriend, setSelectedFriend] = useState(null);
+
+  const handleClick = (friend) => {
+    setSelectedFriend(friend);
+  };
+
+  const closeModal = () => {
+    setSelectedFriend(null);
+  };
+
+  const FriendCard = ({ friend }) => (
+    <div
+      onClick={() => handleClick(friend)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: "gray",
+        padding: "8px",
+        borderRadius: "8px",
+        marginBottom: "8px",
+        cursor: "pointer",
+      }}
+      className="friend-card"
+    >
+      <img
+        src={friend.profilePicture}
+        alt={`${friend.firstName} ${friend.lastName}`}
+        style={{
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%",
+          marginRight: "10px",
+        }}
+      />
+      <div>{friend.firstName} {friend.lastName}</div>
+    </div>
+  );
+
   return (
     <aside className="friends-list">
       <h2>Buddies</h2>
       <ul>
         {friendsList.map((friend) => (
           <li key={friend.id}>
-            <div style={{ display: "flex", alignItems: "center", backgroundColor: "gray", padding: "8px", borderRadius: "8px", marginBottom: "8px" }}>
-              <img
-                src={friend.profilePicture}
-                alt={`${friend.firstName} ${friend.lastName}`}
-                className="friend-avatar"
-                style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "10px" }}
-              />
-              <div className="friend-button">
-                {friend.firstName} {friend.lastName}
-              </div>
-            </div>
+            <FriendCard friend={friend} />
           </li>
         ))}
       </ul>
+
       <h2>Buddy Requests</h2>
       <ul>
         {requestsList.map((friend) => (
           <li key={friend.id}>
-            <div style={{ display: "flex", alignItems: "center", backgroundColor: "gray", padding: "8px", borderRadius: "8px", marginBottom: "8px" }}>
-              <img
-                src={friend.profilePicture}
-                alt={`${friend.firstName} ${friend.lastName}`}
-                className="friend-avatar"
-                style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "10px" }}
-              />
-              <div className="friend-button">
-                {friend.firstName} {friend.lastName}
-              </div>
-            </div>
+            <FriendCard friend={friend} />
           </li>
         ))}
       </ul>
+
+      {/* Popup Modal */}
+      {selectedFriend && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+          onClick={closeModal}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "12px",
+              width: "600px",
+              height: "600px",
+              textAlign: "center",
+            }}
+          >
+            <img
+              src={selectedFriend.profilePicture}
+              alt={`${selectedFriend.firstName} ${selectedFriend.lastName}`}
+              style={{
+                width: "100px",
+                height: "100px",
+                borderRadius: "50%",
+                marginBottom: "10px",
+              }}
+            />
+            <h1>{selectedFriend.firstName} {selectedFriend.lastName}</h1>
+            {selectedFriend.major 
+             ? <h3>{selectedFriend.major} student at {selectedFriend.school}</h3>
+             : <h3>Student at {selectedFriend.school}</h3>}
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "20px",
+            marginTop: "30px",
+            textAlign: "left"
+          }}
+          >
+        {[
+          { title: "Preferred Study Time", items: selectedFriend.studyTimes },
+          { title: "Study Environment", items: selectedFriend.studyEnvironment },
+          { title: "Collaboration Style", items: selectedFriend.collaborationStyles },
+          { title: "Type of Learner", items: selectedFriend.learnTypes },
+          { title: "Courses to Study", items: selectedFriend.courses },
+          { title: "School Interests", items: selectedFriend.interests },
+        ].map((category, index) => (
+          <div
+            key={index}
+            className="category-box"
+          >
+            <h5 style={{ marginBottom: "10px", fontSize: "14px" }}>{category.title}</h5>
+            <ul style={{ paddingLeft: "20px", margin: 0 }}>
+              {category.items && category.items.length > 0 ? (
+                category.items.map((item, i) => <li key={i} style={{ fontSize: "13px" }} >{item}</li>)
+              ) : (
+                <li style={{ fontStyle: "italic", color: "gray" }}>None listed</li>
+              )}
+            </ul>
+          </div>
+        ))}
+      </div>
+           
+          </div>
+        </div>
+      )}
     </aside>
   );
 };

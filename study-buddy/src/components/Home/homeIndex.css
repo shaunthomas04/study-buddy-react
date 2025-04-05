@@ -205,11 +205,11 @@ body {
   padding-right: 5px;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: red;
   height: 200px;
   max-width: 1200px;
   overflow-x: scroll;
   scroll-behavior: smooth; /* Smooth scrolling */
+  align-items: center;
 }
 
 .upcoming-section::-webkit-scrollbar {
@@ -222,8 +222,8 @@ body {
 }
 
 /* Upcoming Cards - Improve Layout */
+/* Upcoming Cards - Improve Layout */
 .upcoming-card {
-  background: white;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
@@ -232,6 +232,18 @@ body {
   margin-left: 5px;
   margin-right: 5px;
   min-width: 230px;
+  height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.upcoming-card::-webkit-scrollbar {
+  display: none;
 }
 
 .upcoming-card h4 {
@@ -243,7 +255,15 @@ body {
 .upcoming-card:hover {
   transform: scale(1.02); /* Slight pop effect on hover */
 }
-  
+
+.upcoming-card p {
+  word-wrap: break-word;
+  /* overflow-wrap: break-word; */
+  white-space: normal;
+  text-align: center;
+  margin: 0;
+}
+
   
   /* Overall Dashboard Layout */
   .dashboard {

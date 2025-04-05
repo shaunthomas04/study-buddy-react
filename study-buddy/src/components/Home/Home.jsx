@@ -3,6 +3,8 @@ import "./homeIndex.css";
 import React, { useState, useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import { parseISO, isWithinInterval, addDays, compareAsc } from "date-fns";
+
 
 // Function to get the user's current buddies
 const getUserBuddies = async (userHash) => {  
@@ -42,6 +44,62 @@ const getUserBuddies = async (userHash) => {
   }
 }
 
+// Function to get the user's current buddies
+const getUserRequests = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (!docSnapshot.exists()) {
+      console.log("No such document!");
+      return  
+    } 
+    
+    const data = docSnapshot.data();
+    const requested = data.buddyRequests || [];
+
+    if (requested.length === 0){
+      return null;
+    }
+
+    const buddyRequests = await Promise.all(requested.map(async (buddyID) => {
+      const buddyDoc = doc(db, "users", buddyID.trim());
+      const buddySnapshot = await getDoc(buddyDoc);
+      if (buddySnapshot.exists()) {
+        return buddySnapshot.data();
+      } else {
+        console.log("No such document!", buddyID);
+        return null;
+      }
+    }
+
+    ));
+    return buddyRequests.filter(buddy => buddy !== null);
+
+
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
+// Function to get the user's name and profile picture
+const getUserInfo = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data();  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
 // Function to get the user's current agenda sessions within the next 7 days
 const getUserAgenda = async (userHash) => {  
   try {
@@ -49,17 +107,19 @@ const getUserAgenda = async (userHash) => {
     const docSnapshot = await getDoc(userInfo);  
     if (docSnapshot.exists()) {
       const agendaSessions = docSnapshot.data().agendaStudySessions || []; 
+      const today = new Date();
+      const nextWeek = addDays(today, 7);
+
+      const agendaSessionsCurrentWeek = agendaSessions.filter((session) => {
+        const sessionDate = parseISO(session.date); 
+        return isWithinInterval(sessionDate, { start: today, end: nextWeek });
+      });
+
+      const sortedSessions = agendaSessionsCurrentWeek.sort((a, b) => {
+        return compareAsc(parseISO(a.date), parseISO(b.date));
+      });
       
-      
-
-
-
-
-
-
-
-
-
+      return sortedSessions
 
     } 
     else {
@@ -81,12 +141,30 @@ const Header = () => (
 );
 
 
-const Sidebar = ({friendsList}) => {
+const Sidebar = ({friendsList, requestsList}) => {
   return (
     <aside className="friends-list">
       <h2>Buddies</h2>
       <ul>
         {friendsList.map((friend) => (
+          <li key={friend.id}>
+            <div style={{ display: "flex", alignItems: "center", backgroundColor: "gray", padding: "8px", borderRadius: "8px", marginBottom: "8px" }}>
+              <img
+                src={friend.profilePicture}
+                alt={`${friend.firstName} ${friend.lastName}`}
+                className="friend-avatar"
+                style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "10px" }}
+              />
+              <div className="friend-button">
+                {friend.firstName} {friend.lastName}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <h2>Buddy Requests</h2>
+      <ul>
+        {requestsList.map((friend) => (
           <li key={friend.id}>
             <div style={{ display: "flex", alignItems: "center", backgroundColor: "gray", padding: "8px", borderRadius: "8px", marginBottom: "8px" }}>
               <img
@@ -121,34 +199,62 @@ const ForumGrid = () => (
   </section>
 );
 
-const Content = ({ agendaStudySessions }) => (
+const Content = ({ agendaStudySessions, userInfo }) => (
   <section className="content">
-    <h2>Welcome,</h2>
-    <h2>[Name]</h2>
-    <h2></h2>
+    <h2>Welcome back {userInfo.firstName} {userInfo.lastName}!</h2>
     <h3>At a glance</h3>
+
     <section className="upcoming-section">
-      {agendaStudySessions.map((session, index) => (
-        <div key={index} className="upcoming-card">
-          <h4>Upcoming Event: {session.date}</h4>
-          <p>{session.notes}</p>
+  {agendaStudySessions.length === 0 ? (
+    <div className="empty-message">
+      <h1>You have no upcoming agenda sessions. Add one to get started!</h1>
+    </div>
+  ) : (
+    agendaStudySessions.map((session, index) => {
+      const backgroundColor =
+        session.status === "accepted"
+          ? "#71FF65"
+          : session.status === "pending"
+          ? "#FFFD62"
+          : session.status === "request"
+          ? "#6E6FFF"
+          : "#FF5B57";
+
+      return (
+        <div
+          key={index}
+          className="upcoming-card"
+          style={{ backgroundColor }}
+        >
+          <h4>{session.date}</h4>
+          <h6 style={{ marginBottom: "7px" }}>
+            Meeting with {session.person} at {session.time}
+          </h6>
+          <p style={{ wordWrap: "break-word" }}>{session.notes}</p>
         </div>
-      ))}
-    </section>
+      );
+    })
+  )}
+</section>
+
 
     <h3>Forums</h3>
     <ForumGrid />
   </section>
 );
 
+
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [buddies, setBuddies] = useState([]);
+  const [agenda, setAgenda] = useState([]);
+  const [userInformation, setUserInfo] = useState(null);
+  const [userRequests, setUserRequests] = useState(null);
   const dummyData = [
     {
       classCode: "CSC312",
       date: "2025-04-11",
-      notes: "Testing data object 1 afbfaskdhbfakbfkadfkahsd bfkahbfkaf fhbakbfkhdbsfkadbhakdbshfkah fh dfa dfbadsbfakdfhb ak fadfhak dsfbadkhfbakdsf dfhad fhbakdfh adfakhdfbk adshbf akdshfb akdf afh",
+      notes: "Testing data object 1 afbfaskdhb fakbfkadfkahsd bfkahbfkaf fhbakbfkhdbsfk adbhakdbshfkah fh dfa dfbadsbf akdfhb ak fadfhak dsfbadkhfbakdsf dfhad fhbakdfh adfakhdfbk adshbf akdshfb akdf afh",
       person: "Alice Johnson",
       recieverID: "Lk9IRfnLa7bS5dvuJvjF1JZuxR73",
       senderID: "L6OWogOvbBV5ywI9B9JgMcRPOSx1",
@@ -164,7 +270,7 @@ const Dashboard = () => {
       recieverID: "Vw8E4s9bY0rK8sw2t9JH2Tdu3JtR45",
       senderID: "R9LOu4Poj7b0H5ZoZ3b2K8m0Kw1",
       sessionID: "c8f5196e-8904-4b97-bfc6-f41f8c7c3cd3",
-      status: "completed",
+      status: "request",
       time: "14:00"
     },
     {
@@ -175,7 +281,7 @@ const Dashboard = () => {
       recieverID: "Yn5F6bK1Pp8lXmvxX5W6T8Zm7ThK9",
       senderID: "Q3N1r8uVsJ3M0aLp1NQG7Z2z8yW",
       sessionID: "a3483f42-1e61-4c7b-96f8-2ad1b1f5b697",
-      status: "pending",
+      status: "accepted",
       time: "16:45"
     },
     {
@@ -186,7 +292,7 @@ const Dashboard = () => {
       recieverID: "Lk9IRfnLa7bS5dvuJvjF1JZuxR73",
       senderID: "L6OWogOvbBV5ywI9B9JgMcRPOSx1",
       sessionID: "79519c6a-63f5-43aa-8325-a7ecb8c73afc",
-      status: "in-progress",
+      status: "pending",
       time: "09:15"
     },
     {
@@ -202,8 +308,6 @@ const Dashboard = () => {
     }
   ];
   
-  console.log(dummyData);
-
   
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -212,19 +316,25 @@ const Dashboard = () => {
     }
     const user = JSON.parse(storedUser);
     const userID = user.uid;
-    console.log(user)
 
-
-    const getBuddiesInfo = async (userID) => {
+    const getBuddiesInfoAndAgenda = async (userID) => {
       const buddiesInfo = await getUserBuddies(userID);
-      if (!buddiesInfo) {
-        console.log("No buddies found for this user.");
+      const agendaInfo = await getUserAgenda(userID);
+      const userInfo = await getUserInfo(userID);
+      const userRequests = await getUserRequests(userID);
+
+      if (!buddiesInfo || !agendaInfo) {
+        console.log("Some data is missing");
       } else {
-        setLoading(false);
         setBuddies(buddiesInfo);
+        setAgenda(agendaInfo);
+        setUserInfo(userInfo);
+        setUserRequests(userRequests);
+        setLoading(false);
+
       }
     }
-    getBuddiesInfo(userID);
+    getBuddiesInfoAndAgenda(userID);
 
   }, []); 
 
@@ -237,8 +347,6 @@ const Dashboard = () => {
     );
   }
 
-  console.log(buddies)
-
 
   return (
     <>
@@ -246,8 +354,8 @@ const Dashboard = () => {
 
     <div className="dashboard">
       <main className="main-layout">
-        <Sidebar friendsList={buddies}/> 
-        <Content agendaStudySessions={dummyData}/>
+        <Sidebar friendsList={buddies} requestsList={userRequests}/> 
+        <Content agendaStudySessions={agenda} userInfo={userInformation}/>
       </main>
     </div>
   </>

@@ -107,7 +107,7 @@ const getUserRequests = async (userHash) => {
     const requested = data.buddyRequests || [];
 
     if (requested.length === 0){
-      return null;
+      return [];
     }
 
     const buddyRequests = await Promise.all(requested.map(async (buddyID) => {
@@ -122,6 +122,7 @@ const getUserRequests = async (userHash) => {
     }
 
     ));
+
     return buddyRequests.filter(buddy => buddy !== null);
 
 
@@ -191,6 +192,7 @@ const Header = () => (
 
 
 const Sidebar = ({ friendsList, requestsList, userHash }) => {
+
   const [selectedFriend, setSelectedFriend] = useState(null);
 
   const handleClick = (friend) => {
@@ -228,8 +230,25 @@ const Sidebar = ({ friendsList, requestsList, userHash }) => {
       <div>{friend.firstName} {friend.lastName}</div>
       {isRequest && (
         <div style={{ marginLeft: "auto", display: "flex", gap: "7px", alignItems: "center" }}>
-          <button style={{width:"25px", height:"25px", borderRadius:"50px", backgroundColor: "green"}} onClick={() => handleBuddyRequest(friend.id, userID, true)}>✓</button>
-          <button style={{width:"25px", height:"25px", borderRadius:"50px", backgroundColor: "red"}} onClick={() => handleBuddyRequest(friend.id, userID, false)}>x</button>
+          <button 
+            style={{ width: "25px", height: "25px", borderRadius: "50px", backgroundColor: "green" }} 
+            onClick={(e) => { 
+              e.stopPropagation(); // Prevent the modal from closing when button is clicked
+              handleBuddyRequest(friend.id, userID, true);
+            }}
+          >
+            ✓
+          </button>
+          <button 
+            style={{ width: "25px", height: "25px", borderRadius: "50px", backgroundColor: "red" }} 
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              handleBuddyRequest(friend.id, userID, false);
+            }}
+          >
+            x
+          </button>
+          
         </div>
       )}
     </div>
@@ -409,65 +428,7 @@ const Dashboard = () => {
   const [buddies, setBuddies] = useState([]);
   const [agenda, setAgenda] = useState([]);
   const [userInformation, setUserInfo] = useState(null);
-  const [userRequests, setUserRequests] = useState(null);
-  const dummyData = [
-    {
-      classCode: "CSC312",
-      date: "2025-04-11",
-      notes: "Testing data object 1 afbfaskdhb fakbfkadfkahsd bfkahbfkaf fhbakbfkhdbsfk adbhakdbshfkah fh dfa dfbadsbf akdfhb ak fadfhak dsfbadkhfbakdsf dfhad fhbakdfh adfakhdfbk adshbf akdshfb akdf afh",
-      person: "Alice Johnson",
-      recieverID: "Lk9IRfnLa7bS5dvuJvjF1JZuxR73",
-      senderID: "L6OWogOvbBV5ywI9B9JgMcRPOSx1",
-      sessionID: "79519c6a-63f5-43aa-8325-a7ecb8c73afc",
-      status: "pending",
-      time: "10:30"
-    },
-    {
-      classCode: "CSC312",
-      date: "2025-04-12",
-      notes: "Dummy data for session 2",
-      person: "John Doe",
-      recieverID: "Vw8E4s9bY0rK8sw2t9JH2Tdu3JtR45",
-      senderID: "R9LOu4Poj7b0H5ZoZ3b2K8m0Kw1",
-      sessionID: "c8f5196e-8904-4b97-bfc6-f41f8c7c3cd3",
-      status: "request",
-      time: "14:00"
-    },
-    {
-      classCode: "CSC312",
-      date: "2025-04-13",
-      notes: "Final test session",
-      person: "Jane Smith",
-      recieverID: "Yn5F6bK1Pp8lXmvxX5W6T8Zm7ThK9",
-      senderID: "Q3N1r8uVsJ3M0aLp1NQG7Z2z8yW",
-      sessionID: "a3483f42-1e61-4c7b-96f8-2ad1b1f5b697",
-      status: "accepted",
-      time: "16:45"
-    },
-    {
-      classCode: "CSC312",
-      date: "2025-04-14",
-      notes: "Backup data for session 4",
-      person: "Bob Bot",
-      recieverID: "Lk9IRfnLa7bS5dvuJvjF1JZuxR73",
-      senderID: "L6OWogOvbBV5ywI9B9JgMcRPOSx1",
-      sessionID: "79519c6a-63f5-43aa-8325-a7ecb8c73afc",
-      status: "pending",
-      time: "09:15"
-    },
-    {
-      classCode: "CSC312",
-      date: "2025-04-15",
-      notes: "Test session with no specific notes",
-      person: "Charlie Green",
-      recieverID: "d6Nz6U8lI7kZ8tH0o5V7X1TqY2W3",
-      senderID: "A2D3JbV0K1uK5Kz2vT9M3Q4P1o9",
-      sessionID: "b9fe41a7-dfa3-4cf0-b91a-d47375a93e34",
-      status: "pending",
-      time: "11:00"
-    }
-  ];
-  
+  const [userRequests, setUserRequests] = useState([]);
   
   useEffect(() => {
     const storedUser = localStorage.getItem("user");

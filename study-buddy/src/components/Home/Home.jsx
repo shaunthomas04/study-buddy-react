@@ -9,6 +9,50 @@ import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-f
 // allow user to accept or reject buddy requests
 // placeholders to tell user to add a buddy or agenda session when none
 
+// Function to handle buddy requests (accept or reject)
+const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
+  try {
+      const userInfo = doc(db, "users", userID.trim());
+      const userInfoSnapshot = await getDoc(userInfo);  
+      const buddyInfo = doc(db, "users", buddyID.trim());
+      const buddyInfoSnapshot = await getDoc(buddyInfo);
+
+      if (!userInfoSnapshot.exists() || !buddyInfoSnapshot.exists()) {
+          console.log("Error accepting buddy request");
+          return null;
+      }
+
+      const userBuddyRequests = userInfoSnapshot.data().buddyRequests;
+      const userRequestsSent = userInfoSnapshot.data().buddyRequestsSent;
+      const userBuddies = userInfoSnapshot.data().buddies;
+      const buddyBuddyRequests = buddyInfoSnapshot.data().buddyRequests;
+      const buddyRequestsSent = buddyInfoSnapshot.data().buddyRequestsSent;
+      const buddyBuddies = buddyInfoSnapshot.data().buddies;
+
+      const updatedUserBuddyRequests = userBuddyRequests.filter(request => request !== buddyID.trim());
+      const updatedBuddyRequestsSent = buddyRequestsSent.filter(request => request !== userID.trim());
+
+      userBuddies.push(buddyID.trim())
+      buddyBuddies.push(userID.trim())
+    
+
+      if (isAccepted) {
+        const updatedUserRequestsSent = userRequestsSent.filter(request => request !== buddyID.trim());
+        const updatedBuddyRequests = buddyBuddyRequests.filter(request => request !== userID.trim());
+        await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests, buddies: userBuddies, buddyRequestsSent: updatedUserRequestsSent });
+        await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent, buddies: buddyBuddies, buddyRequests: updatedBuddyRequests });
+      }
+      else {
+        await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests });
+        await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent });
+      }
+
+    } 
+    catch (error) {
+      console.error("Error getting document:", error);
+      return null;
+    }
+}
 
 
 // Function to get the user's current buddies
@@ -146,7 +190,7 @@ const Header = () => (
 );
 
 
-const Sidebar = ({ friendsList, requestsList }) => {
+const Sidebar = ({ friendsList, requestsList, userHash }) => {
   const [selectedFriend, setSelectedFriend] = useState(null);
 
   const handleClick = (friend) => {
@@ -157,7 +201,7 @@ const Sidebar = ({ friendsList, requestsList }) => {
     setSelectedFriend(null);
   };
 
-  const FriendCard = ({ friend }) => (
+  const FriendCard = ({ friend, isRequest, userID }) => (
     <div
       onClick={() => handleClick(friend)}
       style={{
@@ -182,6 +226,12 @@ const Sidebar = ({ friendsList, requestsList }) => {
         }}
       />
       <div>{friend.firstName} {friend.lastName}</div>
+      {isRequest && (
+        <div style={{ marginLeft: "auto", display: "flex", gap: "7px", alignItems: "center" }}>
+          <button style={{width:"25px", height:"25px", borderRadius:"50px", backgroundColor: "green"}} onClick={() => handleBuddyRequest(friend.id, userID, true)}>✓</button>
+          <button style={{width:"25px", height:"25px", borderRadius:"50px", backgroundColor: "red"}} onClick={() => handleBuddyRequest(friend.id, userID, false)}>x</button>
+        </div>
+      )}
     </div>
   );
 
@@ -191,7 +241,7 @@ const Sidebar = ({ friendsList, requestsList }) => {
       <ul>
         {friendsList.map((friend) => (
           <li key={friend.id}>
-            <FriendCard friend={friend} />
+            <FriendCard friend={friend} isRequest={false} />
           </li>
         ))}
       </ul>
@@ -200,7 +250,7 @@ const Sidebar = ({ friendsList, requestsList }) => {
       <ul>
         {requestsList.map((friend) => (
           <li key={friend.id}>
-            <FriendCard friend={friend} />
+            <FriendCard friend={friend} isRequest={true} userID={userHash}/>
           </li>
         ))}
       </ul>
@@ -464,7 +514,7 @@ const Dashboard = () => {
 
     <div className="dashboard">
       <main className="main-layout">
-        <Sidebar friendsList={buddies} requestsList={userRequests}/> 
+        <Sidebar friendsList={buddies} requestsList={userRequests} userHash={userInformation.id}/> 
         <Content agendaStudySessions={agenda} userInfo={userInformation}/>
       </main>
     </div>

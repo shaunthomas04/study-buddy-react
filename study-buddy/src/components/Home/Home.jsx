@@ -3,7 +3,7 @@ import "./homeIndex.css";
 import React, { useState, useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
-import { parseISO, isWithinInterval, addDays, compareAsc } from "date-fns";
+import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-fns";
 
 
 // Function to get the user's current buddies
@@ -44,7 +44,7 @@ const getUserBuddies = async (userHash) => {
   }
 }
 
-// Function to get the user's current buddies
+// Function to get the user's current buddiesme
 const getUserRequests = async (userHash) => {  
   try {
     const userInfo = doc(db, "users", userHash.trim());
@@ -220,15 +220,21 @@ const Content = ({ agendaStudySessions, userInfo }) => (
           ? "#6E6FFF"
           : "#FF5B57";
 
+          const formattedDate = format(parseISO(session.date), "MMMM dd");         
+          const formattedTime = format(
+           new Date(`1970-01-01T${session.time}:00`),
+           "hh:mm a"
+         );
+
       return (
         <div
           key={index}
           className="upcoming-card"
           style={{ backgroundColor }}
         >
-          <h4>{session.date}</h4>
+          <h4>{formattedDate}</h4>
           <h6 style={{ marginBottom: "7px" }}>
-            Meeting with {session.person} at {session.time}
+            Meeting with {session.person} at {formattedTime}
           </h6>
           <p style={{ wordWrap: "break-word" }}>{session.notes}</p>
         </div>

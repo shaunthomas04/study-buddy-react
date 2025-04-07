@@ -5,12 +5,10 @@ import { auth , db } from "../../firebase.js";
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-fns";
 import agendaIcon from "./images/agendaPlaceholder.png";
+import buddiesIcon from "./images/buddiesPlaceholder.png";
 
 // placeholders to tell user to add a buddy or agenda session when none
-// Feature to higlight similar interests between buddies
 // Feature to automatically update ui when a buddy is added or removed
-
-
 
 // Function to handle buddy requests (accept or reject)
 const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
@@ -44,10 +42,12 @@ const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
         const updatedBuddyRequests = buddyBuddyRequests.filter(request => request !== userID.trim());
         await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests, buddies: userBuddies, buddyRequestsSent: updatedUserRequestsSent });
         await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent, buddies: buddyBuddies, buddyRequests: updatedBuddyRequests });
+        window.location.reload();
       }
       else {
         await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests });
         await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent });
+        window.location.reload();
       }
 
     } 
@@ -277,7 +277,7 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
       <h2>Buddies</h2>
       {friendsList.length === 0 && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50%" }}>
-          <img></img>  
+          {/* <img style={{height: "900px", width:"200px"}} src={buddiesIcon}></img>   */}
           <h3>Head to the Buddies Page to add some Buddies!</h3>
         </div>
       )}
@@ -484,15 +484,24 @@ const Dashboard = () => {
       } else {
         setBuddies(buddiesInfo);
         setAgenda(agendaInfo);
-        setUserInfo(userInfo);
         setUserRequests(userRequests);
         setLoading(false);
-
       }
-    }
+    };
     getBuddiesInfoAndAgenda(userID);
 
+    // Firestore real-time listener for user info
+    const unsubscribe = onSnapshot(doc(db, "users", userID), (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        console.log("Data changed:", docSnapshot.data());
+        setUserInfo(docSnapshot.data());  // Update state with Firestore data
+      }
+    });
+
+    return () => unsubscribe();
+
   }, []); 
+
 
 
   if (loading) {
@@ -510,8 +519,7 @@ const Dashboard = () => {
 
     <div className="dashboard">
       <main className="main-layout">
-        {/* <Sidebar friendsList={buddies} requestsList={userRequests} userInfo={userInformation}/>  */}
-        <Sidebar friendsList={[]} requestsList={userRequests} userInfo={userInformation}/> 
+        <Sidebar friendsList={buddies} requestsList={userRequests} userInfo={userInformation}/> 
         <Content agendaStudySessions={agenda} userInfo={userInformation}/>
       </main>
     </div>

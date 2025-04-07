@@ -312,3 +312,14 @@ body {
 .friend-card:hover {
   transform: scale(1.05); /* Slightly enlarge the card on hover */
 }
+
+.request-button {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.request-button:hover {
+  transform: scale(1.2); /* Slight zoom effect */
+}

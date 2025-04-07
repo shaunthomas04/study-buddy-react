@@ -4,10 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-fns";
+import agendaIcon from "./images/agendaPlaceholder.png";
 
-// Popup that shows a buddy's tags when clicked
-// allow user to accept or reject buddy requests
 // placeholders to tell user to add a buddy or agenda session when none
+// Feature to higlight similar interests between buddies
+// Feature to automatically update ui when a buddy is added or removed
+
+
 
 // Function to handle buddy requests (accept or reject)
 const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
@@ -231,7 +234,8 @@ const Sidebar = ({ friendsList, requestsList, userHash }) => {
       {isRequest && (
         <div style={{ marginLeft: "auto", display: "flex", gap: "7px", alignItems: "center" }}>
           <button 
-            style={{ width: "25px", height: "25px", borderRadius: "50px", backgroundColor: "green" }} 
+            style={{ backgroundColor: "green" }} 
+            class="request-button"
             onClick={(e) => { 
               e.stopPropagation(); // Prevent the modal from closing when button is clicked
               handleBuddyRequest(friend.id, userID, true);
@@ -240,7 +244,8 @@ const Sidebar = ({ friendsList, requestsList, userHash }) => {
             ✓
           </button>
           <button 
-            style={{ width: "25px", height: "25px", borderRadius: "50px", backgroundColor: "red" }} 
+            style={{backgroundColor: "red" }} 
+            class="request-button"
             onClick={(e) => { 
               e.stopPropagation(); 
               handleBuddyRequest(friend.id, userID, false);
@@ -256,20 +261,24 @@ const Sidebar = ({ friendsList, requestsList, userHash }) => {
 
   return (
     <aside className="friends-list">
+      {requestsList.length !== 0 && (
+        <>
+          <h2>Buddy Requests</h2>
+          <ul>
+            {requestsList.map((friend) => (
+              <li key={friend.id}>
+                <FriendCard friend={friend} isRequest={true} userID={userHash} />
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
       <h2>Buddies</h2>
       <ul>
         {friendsList.map((friend) => (
           <li key={friend.id}>
             <FriendCard friend={friend} isRequest={false} />
-          </li>
-        ))}
-      </ul>
-
-      <h2>Buddy Requests</h2>
-      <ul>
-        {requestsList.map((friend) => (
-          <li key={friend.id}>
-            <FriendCard friend={friend} isRequest={true} userID={userHash}/>
           </li>
         ))}
       </ul>
@@ -377,10 +386,20 @@ const Content = ({ agendaStudySessions, userInfo }) => (
     <h2>Welcome back {userInfo.firstName} {userInfo.lastName}!</h2>
     <h3>At a glance</h3>
 
-    <section className="upcoming-section">
+    <section className="upcoming-section"  style={agendaStudySessions.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
+   
+
+
   {agendaStudySessions.length === 0 ? (
-    <div className="empty-message">
-      <h1>You have no upcoming agenda sessions. Add one to get started!</h1>
+    <div className="empty-message" style={{ display: "flex"}}>
+
+      <img src={agendaIcon} style={{height:"230px", width:"250px"}}></img>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: "70px"}}>
+        <h1 style={{fontSize:"20px"}}>No upcoming study sessions,</h1>
+        <h1 style={{ fontSize:"20px"}}>Head to Agenda page to get started!</h1>
+      </div>
+
+     
     </div>
   ) : (
     agendaStudySessions.map((session, index) => {

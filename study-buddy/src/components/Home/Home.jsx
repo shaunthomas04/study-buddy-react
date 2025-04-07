@@ -194,7 +194,7 @@ const Header = () => (
 );
 
 
-const Sidebar = ({ friendsList, requestsList, userHash }) => {
+const Sidebar = ({ friendsList, requestsList, userInfo }) => {
 
   const [selectedFriend, setSelectedFriend] = useState(null);
 
@@ -267,7 +267,7 @@ const Sidebar = ({ friendsList, requestsList, userHash }) => {
           <ul>
             {requestsList.map((friend) => (
               <li key={friend.id}>
-                <FriendCard friend={friend} isRequest={true} userID={userHash} />
+                <FriendCard friend={friend} isRequest={true} userID={userInfo.id} />
               </li>
             ))}
           </ul>
@@ -275,6 +275,15 @@ const Sidebar = ({ friendsList, requestsList, userHash }) => {
       )}
 
       <h2>Buddies</h2>
+      {friendsList.length === 0 && (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50%" }}>
+          <img></img>  
+          <h3>Head to the Buddies Page to add some Buddies!</h3>
+        </div>
+      )}
+
+
+
       <ul>
         {friendsList.map((friend) => (
           <li key={friend.id}>
@@ -336,21 +345,28 @@ const Sidebar = ({ friendsList, requestsList, userHash }) => {
           }}
           >
         {[
-          { title: "Preferred Study Time", items: selectedFriend.studyTimes },
-          { title: "Study Environment", items: selectedFriend.studyEnvironment },
-          { title: "Collaboration Style", items: selectedFriend.collaborationStyles },
-          { title: "Type of Learner", items: selectedFriend.learnTypes },
-          { title: "Courses to Study", items: selectedFriend.courses },
-          { title: "School Interests", items: selectedFriend.interests },
+          { title: "Preferred Study Time", items: selectedFriend.studyTimes, userItems: userInfo.studyTimes },
+          { title: "Study Environment", items: selectedFriend.studyEnvironment, userItems: userInfo.studyEnvironment },
+          { title: "Collaboration Style", items: selectedFriend.collaborationStyles, userItems: userInfo.collaborationStyles },
+          { title: "Type of Learner", items: selectedFriend.learnTypes, userItems: userInfo.learnTypes },
+          { title: "Courses to Study", items: selectedFriend.courses, userItems: userInfo.courses },
+          { title: "School Interests", items: selectedFriend.interests, userItems: userInfo.interests },
         ].map((category, index) => (
-          <div
-            key={index}
-            className="category-box"
-          >
+          <div key={index} className="category-box">
             <h5 style={{ marginBottom: "10px", fontSize: "14px" }}>{category.title}</h5>
             <ul style={{ paddingLeft: "20px", margin: 0 }}>
               {category.items && category.items.length > 0 ? (
-                category.items.map((item, i) => <li key={i} style={{ fontSize: "13px" }} >{item}</li>)
+                category.items.map((item, i) => (
+                  <li
+                  key={i}
+                  style={{
+                    fontSize: category.userItems.includes(item) ? "16px" : "13px", 
+                    fontWeight: category.userItems.includes(item) ? "bolder" : "normal",
+                  }}
+                >
+                  {item}
+                </li>
+                ))
               ) : (
                 <li style={{ fontStyle: "italic", color: "gray" }}>None listed</li>
               )}
@@ -384,7 +400,7 @@ const ForumGrid = () => (
 const Content = ({ agendaStudySessions, userInfo }) => (
   <section className="content">
     <h2>Welcome back {userInfo.firstName} {userInfo.lastName}!</h2>
-    <h3>At a glance</h3>
+    <h3>Upcoming Study Session</h3>
 
     <section className="upcoming-section"  style={agendaStudySessions.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
    
@@ -494,7 +510,8 @@ const Dashboard = () => {
 
     <div className="dashboard">
       <main className="main-layout">
-        <Sidebar friendsList={buddies} requestsList={userRequests} userHash={userInformation.id}/> 
+        {/* <Sidebar friendsList={buddies} requestsList={userRequests} userInfo={userInformation}/>  */}
+        <Sidebar friendsList={[]} requestsList={userRequests} userInfo={userInformation}/> 
         <Content agendaStudySessions={agenda} userInfo={userInformation}/>
       </main>
     </div>

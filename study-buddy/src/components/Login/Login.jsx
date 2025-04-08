@@ -3,6 +3,7 @@ import "./Login.css";
 import login_image from "../../assets/login_image.jpg";
 import login_image2 from "../../assets/login_background2.png";
 import logo from "../../assets/logo.png";
+import logo2 from "../../assets/logo2.png";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, } from "firebase/firestore"; 

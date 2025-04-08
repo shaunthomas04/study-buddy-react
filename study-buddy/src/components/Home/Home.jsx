@@ -7,9 +7,6 @@ import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-f
 import agendaIcon from "./images/agendaPlaceholder.png";
 import buddiesIcon from "./images/buddiesPlaceholder.png";
 
-// placeholders to tell user to add a buddy or agenda session when none
-// Feature to automatically update ui when a buddy is added or removed
-
 // Function to handle buddy requests (accept or reject)
 const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
   try {

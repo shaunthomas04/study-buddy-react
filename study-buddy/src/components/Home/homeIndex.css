@@ -9,17 +9,108 @@ body {
   
   
   /* Sidebar */
-  .sidebar {
-    background: rgba(255, 255, 255, 0.6); /* Light transparency */
-    border-radius: 10px; /* Adds soft edges */
-    padding: 10px;
-  }
+/* Sidebar Menu Button */
+.buddy-menu-button {
+  position: fixed;
+  top: 80px; 
+  left: 10px; 
+  width: 40px;
+  height: 40px;
+  background: none;
+  color: black;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 1000;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sidebar */
+.buddy-sidebar {
+  position: fixed;
+  left: -220px;  /* Initially hidden */
+  width: 200px;
+  height: 100vh;
+  background: white;
+  transition: left 0.3s ease-in-out;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+
+/* When Sidebar is Active */
+.buddy-sidebar.buddy-active {
+  left: 0;
+}
+
+/* Sidebar Content */
+.buddy-sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+
+/* Sidebar Header */
+.buddy-sidebar-header {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Sidebar List */
+.buddy-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.buddy-sidebar ul li {
+  padding: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s;
+  text-align: center;
+  border-radius: 6px;
+  margin: 6px 0;
+  background: white;
+  color: black;
+}
+
+.buddy-sidebar ul li:hover {
+  background: #c0e3f2;
+  color: black;
+}
+
+/* Selected Buddy */
+.buddy-selected {
+  background: #a1d8f0 !important;
+  color: white !important;
+  font-weight: bold;
+}
+
   .friends-list {
     background: transparent; /* Removes the stark white background */
     padding: 10px;
     width: 20%; /* Adjust as needed to fit your layout */
+    overflow-y: scroll;
+    height: 90vh;
+
   }
-  
+  .friends-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Firefox-specific */
+.friends-list {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
   .friends-list h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
@@ -38,24 +129,20 @@ body {
     width: 100%; /* Makes buttons take full width */
     height: max-content;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.2); /* Slight transparency to blend with gradient */
+    background: grey; /* Slight transparency to blend with gradient */
     border: none;
     border-radius: 8px;
     font-size: 1rem;
     color: white;
-    cursor: pointer;
-    transition: background 0.3s ease;
   }
   
-  .friend-button:hover {
-    background: rgba(255, 255, 255, 0.4);
-  }
 
 
   /* Main Layout */
   .main-layout {
     display: flex;
     flex-grow: 1;
+    height: 90vh; /* Adjusted to fit the sidebar */
   }
   
   /* Content */
@@ -64,32 +151,175 @@ body {
     padding: 20px;
   }
   
-  /* Cards */
-  .card {
-    background: #bfe5becd;
-    width: 50px, auto;
-    height: 50px, auto;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 5px;
-  }
-  
-  /* Event */
-  /* .event {
-    background: white;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #aaa;
-    border-radius: 5px;
-  } */
+/* Forum Grid */
+.forum-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  grid-template-rows: repeat(3, auto); /* 3 rows */
+  gap: 20px; /* Adjust for more uniform spacing */
+  padding: 20px;
+}
+
+/* Card Styling */
+.card {
+  background: white; /* Match image */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  color: black;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card h4 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2465C5; /* Blue color similar to the image */
+}
+
+.card:hover {
+  transform: scale(1.02); /* Slight pop effect */
+}
+
+/* Button Styling for Consistency */
+.button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: grey;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.button:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.upcoming-section {
+  display: flex;
+  gap: 5px; /* Adds a 5-pixel gap between each card */
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  height: 200px;
+  max-width: 1200px;
+  overflow-x: scroll;
+  scroll-behavior: smooth; /* Smooth scrolling */
+  align-items: center;
+}
+
+.upcoming-section::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Firefox-specific */
+.upcoming-section  {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+/* Upcoming Cards - Improve Layout */
+/* Upcoming Cards - Improve Layout */
+.upcoming-card {
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: transform 0.2s ease-in-out;
+  margin-left: 5px;
+  margin-right: 5px;
+  min-width: 230px;
+  height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.upcoming-card::-webkit-scrollbar {
+  display: none;
+}
+
+.upcoming-card h4 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2465C5; /* Blue color similar to the image */
+}
+
+.upcoming-card:hover {
+  transform: scale(1.02); /* Slight pop effect on hover */
+}
+
+.upcoming-card p {
+  word-wrap: break-word;
+  /* overflow-wrap: break-word; */
+  white-space: normal;
+  text-align: center;
+  margin: 0;
+}
+
   
   /* Overall Dashboard Layout */
   .dashboard {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 90vh;
     width: 100%;                   
-    background: linear-gradient(0.1turn, #3f87a6, #ebf8e1);
+    background: whitesmoke;
 
 }
-  
+
+.friend-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 10px;
+    background-color: black;
+}
+.category-box {
+  background-color: #f3f3f3;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 150px;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+.category-box::-webkit-scrollbar {
+  display: none;
+}
+
+.friend-card {
+  display: flex;
+  align-items: center;
+  background-color: gray;
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out; /* Smooth transition */
+}
+
+.friend-card:hover {
+  transform: scale(1.05); /* Slightly enlarge the card on hover */
+}
+
+.request-button {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.request-button:hover {
+  transform: scale(1.2); /* Slight zoom effect */
+}

@@ -118,21 +118,29 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
       person: '',
       status: 'pending',
       notes: '',
+
     });
 
 
     // Add the new session to the user's agenda
 
     // Add the new session to user's buddy's agenda
+    const localUserInfo = localStorage.getItem("user");
+    const localUserInfoJson = JSON.parse(localUserInfo);
+    const userId = localUserInfoJson.uid;
+
     const buddyLookupName = newSession.person;
     const buddyInfo = buddiesInfoObjects.find(buddy => buddy.name === buddyLookupName);
     const buddyID = buddyInfo.id.trim();
     const buddySession = { ...newSession, status: "request", person: userName };
 
-    const localUserInfo = localStorage.getItem("user");
-    const localUserInfoJson = JSON.parse(localUserInfo);
-    const userId = localUserInfoJson.uid;
+    // Add the buddyids to the session objects
+    buddySession.recieverID = buddyID;
+    buddySession.senderID = userId;
+    newSession.recieverID = buddyID;
+    newSession.senderID = userId;
 
+    
     uploadSession(userId, newSession);
     uploadSession(buddyID, buddySession);
 
@@ -185,7 +193,7 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
       </select>
         
         <textarea style={{marginBottom: '20px',height: "90px"}} name="notes" placeholder="Notes" value={formData.notes} onChange={handleChange} className='Agenda-popup-form-field' />
-        <button type="submit">Submit</button>
+        <button style={{backgroundColor: "#0b90c9"}} type="submit">Submit</button>
 
       </form>
 

@@ -521,14 +521,22 @@ const Dashboard = () => {
       const userInfo = await getUserInfo(userID);
       const userRequests = await getUserRequests(userID);
 
-      if (!buddiesInfo || !agendaInfo) {
-        console.log("Some data is missing");
-      } else {
+      if (!buddiesInfo) {
+        console.log("Buddies data is missing");
+        setBuddies([]);
+
+      } 
+      else if (!agendaInfo) {
+        console.log("Agenda data is missing");
+        setAgenda([]);
+      } 
+      else {
         setBuddies(buddiesInfo);
         setAgenda(agendaInfo);
         setUserRequests(userRequests);
-        setLoading(false);
       }
+      setLoading(false);
+
     };
     getBuddiesInfoAndAgenda(userID);
 
@@ -544,8 +552,6 @@ const Dashboard = () => {
 
   }, []); 
 
-
-
   if (loading) {
     return (
       <div className="loading-screen">
@@ -553,7 +559,6 @@ const Dashboard = () => {
       </div>
     );
   }
-
 
   return (
     <>

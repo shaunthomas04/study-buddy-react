@@ -117,18 +117,18 @@ function LoginPage() {
   const handleLeftButton = async (e) => {
     e.preventDefault();
     if (isLogin) {
-      setIsLogin(false); // Switch to signup form
+      await handleLogin(); // Submit login
     } else {
-      await handleSignup(); // Submit signup
+      setIsLogin(true); // Switch to login form
     }
   };
 
   const handleRightButton = async (e) => {
     e.preventDefault();
     if (isLogin) {
-      await handleLogin(); // Submit login
+      setIsLogin(false); // Switch to signup form
     } else {
-      setIsLogin(true); // Switch to login form
+      await handleSignup(); // Submit signup
     }
   };
 
@@ -178,17 +178,17 @@ function LoginPage() {
                 <div className="buttons-container">
                   <button
                     type="button"
-                    className="action-button secondary"
+                    className="action-button primary"
                     onClick={handleLeftButton}
                   >
-                    Sign Up
+                    Login
                   </button>
                   <button
                     type="button"
-                    className="action-button primary"
+                    className="action-button secondary"
                     onClick={handleRightButton}
                   >
-                    Login
+                    Sign Up
                   </button>
                 </div>
               </form>

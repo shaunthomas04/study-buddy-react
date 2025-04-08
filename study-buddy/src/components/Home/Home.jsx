@@ -54,6 +54,37 @@ const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
     }
 }
 
+// function to remove buddy
+const removeBuddy = async (buddyID, userID) => {
+  try {
+    const userInfo = doc(db, "users", userID.trim());
+    const userInfoSnapshot = await getDoc(userInfo);  
+    const buddyInfo = doc(db, "users", buddyID.trim());
+    const buddyInfoSnapshot = await getDoc(buddyInfo);
+
+    if (!userInfoSnapshot.exists() || !buddyInfoSnapshot.exists()) {
+        console.log("Error removing buddy");
+        return null;
+    }
+
+    const userBuddies = userInfoSnapshot.data().buddies;
+    const buddyBuddies = buddyInfoSnapshot.data().buddies
+    const updateduserBuddies = userBuddies.filter(request => request.trim() !== buddyID.trim());
+    const updatedbuddyBuddies = buddyBuddies.filter(request => request.trim() !== userID.trim());
+
+    await updateDoc(userInfo, { buddies: updateduserBuddies });
+    await updateDoc(buddyInfo, { buddies: updatedbuddyBuddies });
+    window.location.reload();
+  
+  } 
+  catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+
+}
+
+
 
 // Function to get the user's current buddies
 const getUserBuddies = async (userHash) => {  
@@ -228,33 +259,47 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
         }}
       />
       <div>{friend.firstName} {friend.lastName}</div>
-      {isRequest && (
-        <div style={{ marginLeft: "auto", display: "flex", gap: "7px", alignItems: "center" }}>
+  
+      <div style={{ marginLeft: "auto", display: "flex", gap: "7px", alignItems: "center" }}>
+        {isRequest ? (
+          <>
+            <button 
+              style={{ backgroundColor: "green" }} 
+              className="request-button"
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                handleBuddyRequest(friend.id, userID, true);
+              }}
+            >
+              ✓
+            </button>
+            <button 
+              style={{ backgroundColor: "red" }} 
+              className="request-button"
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                handleBuddyRequest(friend.id, userID, false);
+              }}
+            >
+              x
+            </button>
+          </>
+        ) : (
           <button 
-            style={{ backgroundColor: "green" }} 
-            class="request-button"
-            onClick={(e) => { 
-              e.stopPropagation(); // Prevent the modal from closing when button is clicked
-              handleBuddyRequest(friend.id, userID, true);
-            }}
-          >
-            ✓
-          </button>
-          <button 
-            style={{backgroundColor: "red" }} 
-            class="request-button"
-            onClick={(e) => { 
-              e.stopPropagation(); 
-              handleBuddyRequest(friend.id, userID, false);
+            style={{ backgroundColor: "red" }} 
+            className="request-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              removeBuddy(friend.id, userID);
             }}
           >
             x
           </button>
-          
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
+  
 
   return (
     <aside className="friends-list">
@@ -284,7 +329,7 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
       <ul>
         {friendsList.map((friend) => (
           <li key={friend.id}>
-            <FriendCard friend={friend} isRequest={false} />
+            <FriendCard friend={friend} isRequest={false} userID={userInfo.id} />
           </li>
         ))}
       </ul>

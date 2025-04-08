@@ -63,7 +63,7 @@ const userSignup = async (email, password, firstName, lastName) => {
       studyEnvironment: [],
       studyTimes: [],
       agendaStudySessions: [],
-      profilePicture: "default",
+      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
       school: schoolsMap[emailDomain],
       id: user.uid
     });

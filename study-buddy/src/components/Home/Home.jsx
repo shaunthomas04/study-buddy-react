@@ -1,7 +1,187 @@
-import React from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./homeIndex.css";
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { auth , db } from "../../firebase.js"; 
+import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-fns";
+import agendaIcon from "./images/agendaPlaceholder.png";
+import buddiesIcon from "./images/buddiesPlaceholder.png";
+
+// Function to handle buddy requests (accept or reject)
+const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
+  try {
+      const userInfo = doc(db, "users", userID.trim());
+      const userInfoSnapshot = await getDoc(userInfo);  
+      const buddyInfo = doc(db, "users", buddyID.trim());
+      const buddyInfoSnapshot = await getDoc(buddyInfo);
+
+      if (!userInfoSnapshot.exists() || !buddyInfoSnapshot.exists()) {
+          console.log("Error accepting buddy request");
+          return null;
+      }
+
+      const userBuddyRequests = userInfoSnapshot.data().buddyRequests;
+      const userRequestsSent = userInfoSnapshot.data().buddyRequestsSent;
+      const userBuddies = userInfoSnapshot.data().buddies;
+      const buddyBuddyRequests = buddyInfoSnapshot.data().buddyRequests;
+      const buddyRequestsSent = buddyInfoSnapshot.data().buddyRequestsSent;
+      const buddyBuddies = buddyInfoSnapshot.data().buddies;
+
+      const updatedUserBuddyRequests = userBuddyRequests.filter(request => request !== buddyID.trim());
+      const updatedBuddyRequestsSent = buddyRequestsSent.filter(request => request !== userID.trim());
+
+      userBuddies.push(buddyID.trim())
+      buddyBuddies.push(userID.trim())
+    
+
+      if (isAccepted) {
+        const updatedUserRequestsSent = userRequestsSent.filter(request => request !== buddyID.trim());
+        const updatedBuddyRequests = buddyBuddyRequests.filter(request => request !== userID.trim());
+        await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests, buddies: userBuddies, buddyRequestsSent: updatedUserRequestsSent });
+        await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent, buddies: buddyBuddies, buddyRequests: updatedBuddyRequests });
+        window.location.reload();
+      }
+      else {
+        await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests });
+        await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent });
+        window.location.reload();
+      }
+
+    } 
+    catch (error) {
+      console.error("Error getting document:", error);
+      return null;
+    }
+}
+
+
+// Function to get the user's current buddies
+const getUserBuddies = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (!docSnapshot.exists()) {
+      console.log("No such document!");
+      return  
+    } 
+    
+    const data = docSnapshot.data();
+    const buddyIDs = data.buddies || [];
+
+    if (buddyIDs.length === 0){
+      return null;
+    }
+
+    const buddies = await Promise.all(buddyIDs.map(async (buddyID) => {
+      const buddyDoc = doc(db, "users", buddyID.trim());
+      const buddySnapshot = await getDoc(buddyDoc);
+      if (buddySnapshot.exists()) {
+        return buddySnapshot.data();
+      } else {
+        console.log("No such document!", buddyID);
+        return null;
+      }
+    }
+
+    ));
+    return buddies.filter(buddy => buddy !== null);
+
+
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
+// Function to get the user's current buddiesme
+const getUserRequests = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (!docSnapshot.exists()) {
+      console.log("No such document!");
+      return  
+    } 
+    
+    const data = docSnapshot.data();
+    const requested = data.buddyRequests || [];
+
+    if (requested.length === 0){
+      return [];
+    }
+
+    const buddyRequests = await Promise.all(requested.map(async (buddyID) => {
+      const buddyDoc = doc(db, "users", buddyID.trim());
+      const buddySnapshot = await getDoc(buddyDoc);
+      if (buddySnapshot.exists()) {
+        return buddySnapshot.data();
+      } else {
+        console.log("No such document!", buddyID);
+        return null;
+      }
+    }
+
+    ));
+
+    return buddyRequests.filter(buddy => buddy !== null);
+
+
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
+// Function to get the user's name and profile picture
+const getUserInfo = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data();  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
+// Function to get the user's current agenda sessions within the next 7 days
+const getUserAgenda = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      const agendaSessions = docSnapshot.data().agendaStudySessions || []; 
+      const today = new Date();
+      const nextWeek = addDays(today, 7);
+
+      const agendaSessionsCurrentWeek = agendaSessions.filter((session) => {
+        const sessionDate = parseISO(session.date); 
+        return isWithinInterval(sessionDate, { start: today, end: nextWeek });
+      });
+
+      const sortedSessions = agendaSessionsCurrentWeek.sort((a, b) => {
+        return compareAsc(parseISO(a.date), parseISO(b.date));
+      });
+      
+      return sortedSessions
+
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
+
 
 const Header = () => (
   <header className="flex justify-between bg-gray-800 text-white p-4 items-center">
@@ -11,18 +191,193 @@ const Header = () => (
 );
 
 
-const Sidebar = () => (
-  <aside className="friends-list">
-    <h2>Online</h2>
-    <ul>
-      {["John Doe", "Jane Doe", "John Smith", "Jane Smith","Find New Buddies"].map((friend, index) => (
-        <li key={index}>
-          <button className="friend-button">{friend}</button>
-        </li>
-      ))}
-    </ul>
-  </aside>
-);
+const Sidebar = ({ friendsList, requestsList, userInfo }) => {
+
+  const [selectedFriend, setSelectedFriend] = useState(null);
+
+  const handleClick = (friend) => {
+    setSelectedFriend(friend);
+  };
+
+  const closeModal = () => {
+    setSelectedFriend(null);
+  };
+
+  const FriendCard = ({ friend, isRequest, userID }) => (
+    <div
+      onClick={() => handleClick(friend)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: "gray",
+        padding: "8px",
+        borderRadius: "8px",
+        marginBottom: "8px",
+        cursor: "pointer",
+      }}
+      className="friend-card"
+    >
+      <img
+        src={friend.profilePicture}
+        alt={`${friend.firstName} ${friend.lastName}`}
+        style={{
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%",
+          marginRight: "10px",
+        }}
+      />
+      <div>{friend.firstName} {friend.lastName}</div>
+      {isRequest && (
+        <div style={{ marginLeft: "auto", display: "flex", gap: "7px", alignItems: "center" }}>
+          <button 
+            style={{ backgroundColor: "green" }} 
+            class="request-button"
+            onClick={(e) => { 
+              e.stopPropagation(); // Prevent the modal from closing when button is clicked
+              handleBuddyRequest(friend.id, userID, true);
+            }}
+          >
+            ✓
+          </button>
+          <button 
+            style={{backgroundColor: "red" }} 
+            class="request-button"
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              handleBuddyRequest(friend.id, userID, false);
+            }}
+          >
+            x
+          </button>
+          
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <aside className="friends-list">
+      {requestsList.length !== 0 && (
+        <>
+          <h2>Buddy Requests</h2>
+          <ul>
+            {requestsList.map((friend) => (
+              <li key={friend.id}>
+                <FriendCard friend={friend} isRequest={true} userID={userInfo.id} />
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <h2>Buddies</h2>
+      {friendsList.length === 0 && (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50%" }}>
+          {/* <img style={{height: "900px", width:"200px"}} src={buddiesIcon}></img>   */}
+          <h3>Head to the Buddies Page to add some Buddies!</h3>
+        </div>
+      )}
+
+
+
+      <ul>
+        {friendsList.map((friend) => (
+          <li key={friend.id}>
+            <FriendCard friend={friend} isRequest={false} />
+          </li>
+        ))}
+      </ul>
+
+      {/* Popup Modal */}
+      {selectedFriend && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+          onClick={closeModal}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "12px",
+              width: "600px",
+              height: "600px",
+              textAlign: "center",
+            }}
+          >
+            <img
+              src={selectedFriend.profilePicture}
+              alt={`${selectedFriend.firstName} ${selectedFriend.lastName}`}
+              style={{
+                width: "100px",
+                height: "100px",
+                borderRadius: "50%",
+                marginBottom: "10px",
+              }}
+            />
+            <h1>{selectedFriend.firstName} {selectedFriend.lastName}</h1>
+            {selectedFriend.major 
+             ? <h3>{selectedFriend.major} student at {selectedFriend.school}</h3>
+             : <h3>Student at {selectedFriend.school}</h3>}
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "20px",
+            marginTop: "30px",
+            textAlign: "left"
+          }}
+          >
+        {[
+          { title: "Preferred Study Time", items: selectedFriend.studyTimes, userItems: userInfo.studyTimes },
+          { title: "Study Environment", items: selectedFriend.studyEnvironment, userItems: userInfo.studyEnvironment },
+          { title: "Collaboration Style", items: selectedFriend.collaborationStyles, userItems: userInfo.collaborationStyles },
+          { title: "Type of Learner", items: selectedFriend.learnTypes, userItems: userInfo.learnTypes },
+          { title: "Courses to Study", items: selectedFriend.courses, userItems: userInfo.courses },
+          { title: "School Interests", items: selectedFriend.interests, userItems: userInfo.interests },
+        ].map((category, index) => (
+          <div key={index} className="category-box">
+            <h5 style={{ marginBottom: "10px", fontSize: "14px" }}>{category.title}</h5>
+            <ul style={{ paddingLeft: "20px", margin: 0 }}>
+              {category.items && category.items.length > 0 ? (
+                category.items.map((item, i) => (
+                  <li
+                  key={i}
+                  style={{
+                    fontSize: category.userItems.includes(item) ? "16px" : "13px", 
+                    fontWeight: category.userItems.includes(item) ? "bolder" : "normal",
+                  }}
+                >
+                  {item}
+                </li>
+                ))
+              ) : (
+                <li style={{ fontStyle: "italic", color: "gray" }}>None listed</li>
+              )}
+            </ul>
+          </div>
+        ))}
+      </div>
+           
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+};
 
 const Card = ({ title, description }) => (
   <div className="card">
@@ -39,44 +394,133 @@ const ForumGrid = () => (
   </section>
 );
 
-const Content = () => (
+const Content = ({ agendaStudySessions, userInfo }) => (
   <section className="content">
-      <h2>Welcome,</h2>
-      <h2>[Name]</h2>
-      <h2></h2>
-      <h3>At a glance</h3>
-      <section className="upcoming-section">
-    <div className="upcoming-card">
-      <h4>Upcoming Event: [Date]</h4>
-      <p>[Event]</p>
+    <h2>Welcome back {userInfo.firstName} {userInfo.lastName}!</h2>
+    <h3>Upcoming Study Session</h3>
+
+    <section className="upcoming-section"  style={agendaStudySessions.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
+   
+
+
+  {agendaStudySessions.length === 0 ? (
+    <div className="empty-message" style={{ display: "flex"}}>
+
+      <img src={agendaIcon} style={{height:"230px", width:"250px"}}></img>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: "70px"}}>
+        <h1 style={{fontSize:"20px"}}>No upcoming study sessions,</h1>
+        <h1 style={{ fontSize:"20px"}}>Head to Agenda page to get started!</h1>
+      </div>
+
+     
     </div>
-    <div className="upcoming-card">
-      <h4>Upcoming Event:  [Date]</h4>
-      <p>[Event]</p>
-  </div>
+  ) : (
+    agendaStudySessions.map((session, index) => {
+      const backgroundColor =
+        session.status === "accepted"
+          ? "#71FF65"
+          : session.status === "pending"
+          ? "#FFFD62"
+          : session.status === "request"
+          ? "#6E6FFF"
+          : "#FF5B57";
+
+          const formattedDate = format(parseISO(session.date), "MMMM dd");         
+          const formattedTime = format(
+           new Date(`1970-01-01T${session.time}:00`),
+           "hh:mm a"
+         );
+
+      return (
+        <div
+          key={index}
+          className="upcoming-card"
+          style={{ backgroundColor }}
+        >
+          <h4>{formattedDate}</h4>
+          <h6 style={{ marginBottom: "7px" }}>
+            Meeting with {session.person} at {formattedTime}
+          </h6>
+          <p style={{ wordWrap: "break-word" }}>{session.notes}</p>
+        </div>
+      );
+    })
+  )}
 </section>
+
 
     <h3>Forums</h3>
     <ForumGrid />
   </section>
 );
 
+
 const Dashboard = () => {
+  const [loading, setLoading] = useState(true);
+  const [buddies, setBuddies] = useState([]);
+  const [agenda, setAgenda] = useState([]);
+  const [userInformation, setUserInfo] = useState(null);
+  const [userRequests, setUserRequests] = useState([]);
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
       throw new Error("Failed to load user data from localStorage");
     }
-  }); 
+    const user = JSON.parse(storedUser);
+    const userID = user.uid;
+
+    const getBuddiesInfoAndAgenda = async (userID) => {
+      const buddiesInfo = await getUserBuddies(userID);
+      const agendaInfo = await getUserAgenda(userID);
+      const userInfo = await getUserInfo(userID);
+      const userRequests = await getUserRequests(userID);
+
+      if (!buddiesInfo || !agendaInfo) {
+        console.log("Some data is missing");
+      } else {
+        setBuddies(buddiesInfo);
+        setAgenda(agendaInfo);
+        setUserRequests(userRequests);
+        setLoading(false);
+      }
+    };
+    getBuddiesInfoAndAgenda(userID);
+
+    // Firestore real-time listener for user info
+    const unsubscribe = onSnapshot(doc(db, "users", userID), (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        console.log("Data changed:", docSnapshot.data());
+        setUserInfo(docSnapshot.data());  // Update state with Firestore data
+      }
+    });
+
+    return () => unsubscribe();
+
+  }, []); 
+
+
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
 
   return (
+    <>
+    <Header />
+
     <div className="dashboard">
-      <Header />
       <main className="main-layout">
-        <Sidebar />
-        <Content />
+        <Sidebar friendsList={buddies} requestsList={userRequests} userInfo={userInformation}/> 
+        <Content agendaStudySessions={agenda} userInfo={userInformation}/>
       </main>
     </div>
+  </>
   );
 };
 

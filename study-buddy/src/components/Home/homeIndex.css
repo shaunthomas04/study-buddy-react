@@ -98,8 +98,19 @@ body {
     background: transparent; /* Removes the stark white background */
     padding: 10px;
     width: 20%; /* Adjust as needed to fit your layout */
+    overflow-y: scroll;
+    height: 90vh;
+
   }
-  
+  .friends-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Firefox-specific */
+.friends-list {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
   .friends-list h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
@@ -123,19 +134,15 @@ body {
     border-radius: 8px;
     font-size: 1rem;
     color: white;
-    cursor: pointer;
-    transition: background 0.3s ease;
   }
   
-  .friend-button:hover {
-    background: rgba(255, 255, 255, 0.4);
-  }
 
 
   /* Main Layout */
   .main-layout {
     display: flex;
     flex-grow: 1;
+    height: 90vh; /* Adjusted to fit the sidebar */
   }
   
   /* Content */
@@ -176,14 +183,6 @@ body {
   transform: scale(1.02); /* Slight pop effect */
 }
 
-/* Spacing for "Upcoming" Section */
-.upcoming-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Adds space between each item */
-  padding: 10px 0;
-}
-
 /* Button Styling for Consistency */
 .button {
   padding: 12px 20px;
@@ -201,19 +200,50 @@ body {
 
 .upcoming-section {
   display: flex;
-  flex-direction: column;
   gap: 5px; /* Adds a 5-pixel gap between each card */
-  padding: 10px 0;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  height: 200px;
+  max-width: 1200px;
+  overflow-x: scroll;
+  scroll-behavior: smooth; /* Smooth scrolling */
+  align-items: center;
+}
+
+.upcoming-section::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Firefox-specific */
+.upcoming-section  {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
 }
 
 /* Upcoming Cards - Improve Layout */
+/* Upcoming Cards - Improve Layout */
 .upcoming-card {
-  background: white;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   text-align: left;
   transition: transform 0.2s ease-in-out;
+  margin-left: 5px;
+  margin-right: 5px;
+  min-width: 230px;
+  height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.upcoming-card::-webkit-scrollbar {
+  display: none;
 }
 
 .upcoming-card h4 {
@@ -225,15 +255,71 @@ body {
 .upcoming-card:hover {
   transform: scale(1.02); /* Slight pop effect on hover */
 }
-  
+
+.upcoming-card p {
+  word-wrap: break-word;
+  /* overflow-wrap: break-word; */
+  white-space: normal;
+  text-align: center;
+  margin: 0;
+}
+
   
   /* Overall Dashboard Layout */
   .dashboard {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 90vh;
     width: 100%;                   
     background: whitesmoke;
 
 }
-  
+
+.friend-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 10px;
+    background-color: black;
+}
+.category-box {
+  background-color: #f3f3f3;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 150px;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+.category-box::-webkit-scrollbar {
+  display: none;
+}
+
+.friend-card {
+  display: flex;
+  align-items: center;
+  background-color: gray;
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out; /* Smooth transition */
+}
+
+.friend-card:hover {
+  transform: scale(1.05); /* Slightly enlarge the card on hover */
+}
+
+.request-button {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.request-button:hover {
+  transform: scale(1.2); /* Slight zoom effect */
+}

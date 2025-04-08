@@ -2,6 +2,8 @@ import React, { useState, useEffect  } from 'react';
 import './CalendarDay.css';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-fns";
+
 
 // This component is used to show the study sessions for a specific day in a popup when the user clicks on the day in the calendar
 const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }) => {    
@@ -23,10 +25,13 @@ const CalendarDaySessionPopup = ({ calendarDayStudySessions, isOpen, setIsOpen }
         return null;
     }
 
+    const studySessionDate = studySessions[0].date;
+    const formattedDate = format(parseISO(studySessionDate), "MMMM dd");  
+
     return (
         <div className="CalendarDay-popup-outer-container" onClick={(e) => e.stopPropagation()}>
             <button className="CalendarDay-popup-close-button" onClick={closePopup}>X</button>
-            <h1 style={{ margin: "20px" }}>Agenda for {studySessions[0].date}</h1>
+            <h1 style={{ margin: "20px" }}>Agenda for {formattedDate}</h1>
             <div className="CalendarDay-popup-inner-container">
                 {studySessions?.map((studySession, index) => (
                     <CalendarPopupSessions key={index} studySession={studySession} />
@@ -108,11 +113,16 @@ const CalendarPopupSessions = ({studySession}) => {
     const blue = "#6E6FFF";
     const red = "#FF5B57";
 
+    const formattedTime = format(
+           new Date(`1970-01-01T${studySession.time}:00`),
+           "hh:mm a"
+         );
+
     const color = studySession.status === "accepted" ? green : studySession.status === "pending" ? yellow : studySession.status === "request" ? blue: red;
-    const studySessionText = studySession.status === "accepted" ? `Study session with ${studySession.person} at ${studySession.time}`
-    : studySession.status === "pending" ? `Study session with ${studySession.person} at ${studySession.time} is pending` 
-    : studySession.status === "request" ? `Study session with ${studySession.person} at ${studySession.time} is requested`
-    : `Study session with ${studySession.person} at ${studySession.time} has been rejected`;
+    const studySessionText = studySession.status === "accepted" ? `Study session with ${studySession.person} at ${formattedTime}`
+    : studySession.status === "pending" ? `Study session with ${studySession.person} at ${formattedTime} is pending` 
+    : studySession.status === "request" ? `Study session with ${studySession.person} at ${formattedTime} is requested`
+    : `Study session with ${studySession.person} at ${formattedTime} has been rejected`;
 
     const [isOpen, setIsOpen] = useState(false);
     const togglePopup = () => {
@@ -153,11 +163,16 @@ const CalendarDaySession = ({studySession}) => {
     const yellow = "#FFFD62";
     const blue = "#6E6FFF";
     const red = "#FF5B57";
+
+    const formattedTime = format(
+           new Date(`1970-01-01T${studySession.time}:00`),
+           "hh:mm a"
+         );
     
     const color = studySession.status === "accepted" ? green : studySession.status === "pending" ? yellow : studySession.status === "request" ? blue: red;
     return(
         <div className="CalendarDay-study-session-outer-container" style={{backgroundColor: color}}> 
-            <div className="CalendarDay-study-session-text"> {studySession.time} with {studySession.person}</div>
+            <div className="CalendarDay-study-session-text"> {formattedTime} with {studySession.person}</div>
         </div>
     )
 };

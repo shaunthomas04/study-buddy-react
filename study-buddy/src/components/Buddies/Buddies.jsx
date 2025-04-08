@@ -108,10 +108,10 @@ const generateBuddyPreferences = (suggestedUsers) => {
     acc[fullName] = {
       school: user.school || "Unknown School",
       major: user.major || "Undeclared", 
-      studyTime: user.studyTimes?.[0] || "Anytime",
-      environment: user.studyEnvironment?.[0] || "Any",
-      collaboration: user.collaborationStyles?.[0] || "Group Study",
-      typeLearner: user.learnTypes?.[0] || "Visual Learner", 
+      studyTime: user.studyTimes?.[0] || ["Anytime"],
+      environment: user.studyEnvironment?.[0] || ["Any"],
+      collaboration: user.collaborationStyles?.[0] || ["Group Study"],
+      typeLearner: user.learnTypes?.[0] || ["Visual Learner"], 
       preferredCourses: user.courses || ["Science", "Math", "Literature", "History"],
       schoolInterests: user.interests || ["Studying"],
       userId: user.id || "Unknown",
@@ -263,18 +263,27 @@ const Buddies = () => {
 };
 
 const PreferenceCard = ({ title, value }) => {
-    const icon = preferenceIconMap[title]; 
-  
-    return (
-      <div className="preference-card">
-        <h4 className="preference-heading">
-          {icon && <img src={icon} alt={`${title} icon`} className="preference-icon" />}
-          {title}
-        </h4>
+  const icon = preferenceIconMap[title];
+
+  return (
+    <div className="preference-card">
+      <h4 className="preference-heading">
+        {icon && <img src={icon} alt={`${title} icon`} className="preference-icon" />}
+        {title}
+      </h4>
+      {Array.isArray(value) ? (
+        <ul>
+          {value.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      ) : (
         <p>{value}</p>
-      </div>
-    );
-  };
+      )}
+    </div>
+  );
+};
+
   
   
   const CourseList = ({ title, courses }) => {

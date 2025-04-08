@@ -154,7 +154,7 @@ function LoginForm({ toggleForm }) {
         <input type="password" id="login-password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
         {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-        <div className="buttons-container">
+         <div className="buttons-container">
           <button type="submit" className="action-button">Login</button>
           <button
             id="switch-to-signup"
@@ -168,6 +168,7 @@ function LoginForm({ toggleForm }) {
     </div>
   );
 }
+
 function SignupForm({ toggleForm }) {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
@@ -201,7 +202,7 @@ function SignupForm({ toggleForm }) {
           <input type="password" id="signup-password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
           {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-        
+
         <div className="buttons-container">
           <button type="submit" className="action-button">Sign Up</button>
           <button

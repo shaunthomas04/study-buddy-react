@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect,useRef  } from 'react';
 import './CalendarDay.css';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
@@ -178,28 +178,46 @@ const CalendarDaySession = ({studySession}) => {
 };
 
 // This is the main parent component that is returned and displays an acutal day in the calendar on the agenda page 
-const CalendarDay = ({date, calendarDayInfo}) => {
-    // calendarDayInfo
+const CalendarDay = ({ date, calendarDayInfo }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const popupContainerRef = useRef(null);
+
     const togglePopup = () => {
         setIsOpen(!isOpen);
     };
-    
-    return(
+
+    // Close the popup when clicking outside of the container
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popupContainerRef.current && !popupContainerRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    return (
         <div className="CalendarDay-outer-container" onClick={togglePopup}>
             <h1 className="CalendarDay-date">{date}</h1>
-            <div className='CalendarDay-tasks-container'>
-            
-            {calendarDayInfo.studySessions?.length > 0 &&  
-                    calendarDayInfo.studySessions.map((studySession, index) => (
-                        <CalendarDaySession key={index} studySession={studySession} />
-                    ))
-                }
+            <div className="CalendarDay-tasks-container">
+                {calendarDayInfo.studySessions?.length > 0 && calendarDayInfo.studySessions.map((studySession, index) => (
+                    <CalendarDaySession key={index} studySession={studySession} />
+                ))}
             </div>
-            <CalendarDaySessionPopup calendarDayStudySessions={calendarDayInfo.studySessions} isOpen={isOpen} setIsOpen={setIsOpen} />
+            <div ref={popupContainerRef}>
+                <CalendarDaySessionPopup
+                    calendarDayStudySessions={calendarDayInfo.studySessions}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                />
+            </div>
         </div>
-    )
-    
+    );
 };
 
 export default CalendarDay;

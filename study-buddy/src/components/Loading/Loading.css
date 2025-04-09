@@ -6,10 +6,21 @@
     height: 80vh;
     text-align: center;
   }
+
+  .loading-logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 20px;
+  }
   
   .loading-gif {
     width: 300px;
     height: 200px;
+  }
+
+  .loading-text {
     margin-top: 20px;
+    font-size: 1.2rem;
+    color: #444
   }
   

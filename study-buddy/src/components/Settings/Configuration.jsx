@@ -73,7 +73,6 @@ const setUserImage = async (event, userID) => {
   else {
     alert('Please select an image file.');
   }
-  
 };
 
 // Function to get the user data from localStorage
@@ -152,16 +151,12 @@ const deleteItem = async (userHash, field, item) => {
   catch (error) {
     console.error("Error uploading session:", error);
   }
-
 }
-
-
 
 // The plan is to allow a user to add to their different sections by inputintg text and pressing enter.
 // This function should then search the db for that field and append the new information to the exisitng array
 // Each item should be given a component that displays on member of a section and then the user can press delete on it
 // It should then search the db for the array of that field and that item and remove it from the array
-
 
 const FieldItem = ({fieldItemName, filed, userHashId}) => {
   return(
@@ -248,18 +243,22 @@ const SettingsPage = () => {
     <div className="configuration-settings-page">
       <div className="configuration-settings-container">
         {/* Profile Section (Moved to the Right) */}
-        <div className="profile-header" style={{ display: "flex" , flexDirection: "row" }}>
-          <div className="profile-avatar">
-              <img src={userInfoDb.profilePicture}/>
+        <div className="profile-header" style={{ display: "grid" , flexDirection: "column", alignItems: "center" }}>
           </div>
-
           <div className="profile-info">
+          <div className="profile-avatar">
+              <img src={userInfoDb.profilePicture} alt="Profile" className="profile-avatar"/>
+          </div>
+          <br />
             <h2>{`${userInfoDb.firstName} ${userInfoDb.lastName}`}</h2>
+            <br />
             <p>{`${userInfoDb.school}`}</p>
+            <h3>Major: {userInfoDb.major}</h3>
           </div>
 
-          <div style={{display:"flex"}}>
-            <h3>Major: {userInfoDb.major}</h3>
+
+          <div className="profile-fields">
+
               <select value={""}
               onChange={(e) => {
                 const newValue = e.target.value;
@@ -268,6 +267,7 @@ const SettingsPage = () => {
                   setDescriptions({ ...descriptions, [item.key]: "" });
                 }, 500); 
               }}>
+                
                 <option value="" disabled>Select Major</option>
                 {schoolInformation.majors.map((major, index) => (
                   <option key={index} value={major}>
@@ -275,10 +275,11 @@ const SettingsPage = () => {
                   </option>
                 ))}
               </select>
-
-
+              {/* Input for users profile picture, currently using my id here */}
+          <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />
+          <br />
           </div>
-        </div>
+
 
         {/* Editable Grid (Fixed State Issue) */}
         <div className="editable-grid">
@@ -325,8 +326,6 @@ const SettingsPage = () => {
                       </option>
                     ))}
                   </select>
-
-
               </div>
             );
           })}
@@ -334,12 +333,8 @@ const SettingsPage = () => {
 
         {/* Settings Options */}
         <div className="configuration-settings-options">
-        
+        <p><i>Refresh your page to apply changes</i></p>
           <button className="configuration-logout-button" onClick={logoutUser}>Logout</button>
-
-          {/* Input for users profile picture, currently using my id here */}
-          <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />
-
         </div>
       </div>
     </div>

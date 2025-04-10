@@ -9,6 +9,7 @@ import CourseStudyIcon from './iconbuddy/CourseStudy.png';
 import InterestIcon from './iconbuddy/SchoolInterest.png';
 import { db } from "../../firebase.js"; 
 import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import Loading from '../Loading/Loading.jsx';
 
 const preferenceIconMap = {
     "Preferred Study Time": StudyTimeIcon,
@@ -162,10 +163,7 @@ const Buddies = () => {
 
   if (loading) {
     return (
-      <>
-        <Navbar />
-        <div>Loading...</div>
-      </>
+      <Loading />
     );
   }
 

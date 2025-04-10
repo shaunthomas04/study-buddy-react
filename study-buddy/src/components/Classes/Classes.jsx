@@ -1,6 +1,29 @@
 import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import './Classes.css';
+import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate, set } from "date-fns";
+import { useEffect } from 'react';
+import { auth , db } from "../../firebase.js"; 
+import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+
+
+// get user info from firebase
+const getUserInfo = async (userHash) => {  
+  try {
+    const userInfo = doc(db, "users", userHash.trim());
+    const docSnapshot = await getDoc(userInfo);  
+    if (docSnapshot.exists()) {
+      return docSnapshot.data();  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+}
 
 const Classes = () => {
   const [activeClass, setActiveClass] = useState('CSC313');
@@ -84,6 +107,7 @@ const Classes = () => {
     setShowReplyInput((prev) => ({ ...prev, [parentId]: false }));
   };
 
+// time stamop format
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     const hours = date.getHours();
@@ -94,6 +118,7 @@ const Classes = () => {
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
+// render replies
   const renderReplies = (replies, depth = 1) => {
     return replies.map((reply) => (
       <div key={reply.id} className="reply" style={{ marginLeft: depth * 20 }}>

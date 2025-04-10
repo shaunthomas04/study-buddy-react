@@ -323,3 +323,39 @@ body {
 .request-button:hover {
   transform: scale(1.2); /* Slight zoom effect */
 }
+
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+}
+
+/* Logo */
+.loading-logo {
+  width: 100px; 
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* Loading Gif */
+.loading-gif {
+  width: 50px; 
+  height: 50px;
+  margin-bottom: 20px;
+}
+
+/* Loading Text */
+.loading-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2465C5; 
+  text-align: center;
+}

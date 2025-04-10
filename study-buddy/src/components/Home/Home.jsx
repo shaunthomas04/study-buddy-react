@@ -554,8 +554,9 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="loading-screen">
-        <h1>Loading...</h1>
+      <div className="loading-screen" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "white" }}>
+        <img src="https://cdn.discordapp.com/attachments/1343710392693686283/1359241235302449192/Adobe_Express_-_file_2.png?ex=67f8150b&is=67f6c38b&hm=a9e9fb9a4693a8f4d1b9d126eb04033ad2c2479ee85f7fb9feb8c721e8bf3574&format=webp&quality=lossless&width=891&height=889" alt="Logo" style={{ width: "200px", height: "auto" }} />
+        <h2 style={{ marginTop: "20px", fontSize: "18px", color: "#555" }}>Loading...</h2>
       </div>
     );
   }

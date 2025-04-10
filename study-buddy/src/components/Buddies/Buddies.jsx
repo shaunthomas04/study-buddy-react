@@ -13,15 +13,14 @@ import Loading from '../Loading/Loading.jsx';
 import Redirect from '../Redirect/Redirect.jsx';
 
 const preferenceIconMap = {
-    "Preferred Study Time": StudyTimeIcon,
-    "Study Environment": StudyEnivrIcon,
-    "Collaboration Style": StyleIcon,
-    "Type of Learner": TypeLearnerIcon,
-    "Courses to Study": CourseStudyIcon,
-    "School Interests": InterestIcon
+  "Preferred Study Time": StudyTimeIcon,
+  "Study Environment": StudyEnivrIcon,
+  "Collaboration Style": StyleIcon,
+  "Type of Learner": TypeLearnerIcon,
+  "Courses to Study": CourseStudyIcon,
+  "School Interests": InterestIcon
 };
 
-// Function to send a buddy request
 const sendBuddyRequest = async (userId, suggestedBuddyId) => {
   try {
     const userInfo = doc(db, "users", userId);
@@ -30,13 +29,12 @@ const sendBuddyRequest = async (userId, suggestedBuddyId) => {
     const userDocSnapshot = await getDoc(userInfo);  
     const suggestedBuddyDocSnapshot = await getDoc(suggestedBuddyInfo);
 
-    if (!userDocSnapshot.exists() || !suggestedBuddyDocSnapshot.exists()) {
-      console.log("No such document");
-      return false;
-    }
+    if (!userDocSnapshot.exists() || !suggestedBuddyDocSnapshot.exists()) return false;
 
-    if (userDocSnapshot.data().buddyRequestsSent?.includes(suggestedBuddyId) ||
-        suggestedBuddyDocSnapshot.data().buddyRequests?.includes(userId)) {
+    if (
+      userDocSnapshot.data().buddyRequestsSent?.includes(suggestedBuddyId) ||
+      suggestedBuddyDocSnapshot.data().buddyRequests?.includes(userId)
+    ) {
       console.log("Request already sent to this user.");
       return false;
     }
@@ -46,14 +44,12 @@ const sendBuddyRequest = async (userId, suggestedBuddyId) => {
 
     console.log("Buddy request sent successfully!");
     return true;
-
   } catch (error) {
     console.error("Error sending request:", error);
     return false;
   }
 };
 
-// Get user info from Firestore
 const getUserInfo = async (userHash) => {
   try {
     const userInfo = doc(db, "users", userHash.trim());
@@ -65,7 +61,6 @@ const getUserInfo = async (userHash) => {
   }
 };
 
-// Get buddy recommendations from Firestore
 const getUserRecommendations = async (userHash) => {
   try {
     const userInfo = await getUserInfo(userHash);
@@ -84,28 +79,27 @@ const getUserRecommendations = async (userHash) => {
   }
 };
 
-// Generate buddy preference objects
 const generateBuddyPreferences = (suggestedUsers) => {
-  const buddyPreferences = suggestedUsers.reduce((acc, user) => {
+  const defaultArray = (arr, fallback) => Array.isArray(arr) && arr.length ? arr : [fallback];
+
+  return suggestedUsers.reduce((acc, user) => {
     const fullName = `${user.firstName} ${user.lastName}`;
 
     acc[fullName] = {
       school: user.school || "Unknown School",
-      major: user.major || "Undeclared", 
-      studyTime: user.studyTimes?.[0] || ["Anytime"],
-      environment: user.studyEnvironment?.[0] || ["Any"],
-      collaboration: user.collaborationStyles?.[0] || ["Group Study"],
-      typeLearner: user.learnTypes?.[0] || ["Visual Learner"], 
-      preferredCourses: user.courses || ["Science", "Math", "Literature", "History"],
-      schoolInterests: user.interests || ["Studying"],
+      major: user.major || "Undeclared",
+      studyTime: defaultArray(user.studyTimes, "Anytime"),
+      environment: defaultArray(user.studyEnvironment, "Any"),
+      collaboration: defaultArray(user.collaborationStyles, "Group Study"),
+      typeLearner: defaultArray(user.learnTypes, "Visual Learner"),
+      preferredCourses: defaultArray(user.courses, "General Studies"),
+      schoolInterests: defaultArray(user.interests, "Studying"),
       userId: user.id || "Unknown",
       profilePicture: user.profilePicture || "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791"
     };
 
     return acc;
   }, {});
-
-  return buddyPreferences;
 };
 
 const Buddies = () => {
@@ -135,7 +129,6 @@ const Buddies = () => {
         setUserRecommendations(buddyPrefs);
         setLoading(false);
 
-        // Map sent requests to buddy full names
         const sent = {};
         recommendations.forEach((buddy) => {
           const fullName = `${buddy.firstName} ${buddy.lastName}`;

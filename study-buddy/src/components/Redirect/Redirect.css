@@ -1,0 +1,11 @@
+.redirect-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+}

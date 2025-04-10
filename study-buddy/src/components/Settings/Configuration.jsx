@@ -243,22 +243,21 @@ const SettingsPage = () => {
     <div className="configuration-settings-page">
       <div className="configuration-settings-container">
         {/* Profile Section (Moved to the Right) */}
-        <div className="profile-header" style={{ display: "grid" , flexDirection: "column", alignItems: "center" }}>
-          </div>
-          <div className="profile-info">
-          <div className="profile-avatar">
+        <div className="profile-avatar">
               <img src={userInfoDb.profilePicture} alt="Profile" className="profile-avatar"/>
           </div>
-          <br />
+        {/* <div className="profile-header" style={{ display: "grid" , flexDirection: "column", alignItems: "center" }}>
+          </div> */}
+          <div className="profile-info">
+
             <h2>{`${userInfoDb.firstName} ${userInfoDb.lastName}`}</h2>
-            <br />
+
             <p>{`${userInfoDb.school}`}</p>
             <h3>Major: {userInfoDb.major}</h3>
           </div>
 
 
           <div className="profile-fields">
-
               <select value={""}
               onChange={(e) => {
                 const newValue = e.target.value;
@@ -277,7 +276,6 @@ const SettingsPage = () => {
               </select>
               {/* Input for users profile picture, currently using my id here */}
           <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />
-          <br />
           </div>
 
 
@@ -333,7 +331,6 @@ const SettingsPage = () => {
 
         {/* Settings Options */}
         <div className="configuration-settings-options">
-        <p><i>Refresh your page to apply changes</i></p>
           <button className="configuration-logout-button" onClick={logoutUser}>Logout</button>
         </div>
       </div>

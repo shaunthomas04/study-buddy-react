@@ -149,6 +149,41 @@ const Classes = () => {
 
   const classOptions = ['CSC313', 'EGR302', 'EGR304'];
 
+const [courses, setUserCourses] = useState([]);
+const [name, setUserName] = useState(null);
+const [profilePicture, setProfilePicture] = useState("https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791");
+const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      throw new Error("Failed to load user data from localStorage");
+    }
+    const user = JSON.parse(storedUser);
+    const userID = user.uid;
+
+    const callingGetUserInfo = async () => 
+      {
+        const userInfo = await getUserInfo(userID);
+        const userCourses = userInfo.courses;
+        const userName = `${userInfo.firstName} ${userInfo.lastName}`;
+        const profilePicture = userInfo.profilePicture;
+        setUserCourses(userCourses);
+        setUserName(userName);
+        setProfilePicture(profilePicture);
+        setLoading(false);
+      }
+
+    callingGetUserInfo();
+
+  }, []);
+
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <div className="hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -157,7 +192,7 @@ const Classes = () => {
       <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <h2>Classes</h2>
         <ul>
-          {classOptions.map((cls) => (
+          {courses.map((cls) => (
             <li
               key={cls}
               className={`sidebar-item ${activeClass === cls ? 'active' : ''}`}

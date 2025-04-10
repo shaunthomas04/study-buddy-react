@@ -6,6 +6,7 @@ import { app, auth , db } from "../../firebase";
 import { getDownloadURL, getStorage, listAll, ref , uploadBytes} from "firebase/storage";
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import { useNavigate } from 'react-router-dom';
+import Loading from '../Loading/Loading.jsx';
 
 
 // Function to update the image path in Firestore
@@ -230,10 +231,7 @@ const SettingsPage = () => {
 
   if (loading) {
     return(
-      <>
-        <Navbar/>
-       <div>Loading...</div>;
-      </>
+      <Loading/>
     )
   }
 

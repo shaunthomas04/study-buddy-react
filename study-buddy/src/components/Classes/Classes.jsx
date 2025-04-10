@@ -5,6 +5,7 @@ import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate, s
 import { useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import Loading from '../Loading/Loading.jsx';
 
 
 // get user info from firebase
@@ -24,6 +25,29 @@ const getUserInfo = async (userHash) => {
     return null;
   }
 }
+
+// get forums for a user's classes
+const getForums = async (userClassestoGet) => {
+
+  const forumsInfo = await Promise.all(userClassestoGet.map(async (specificClass) => {
+    const classInfo = doc(db, "forums", specificClass.trim());
+    const docSnapshot = await getDoc(classInfo); 
+
+    if (docSnapshot.exists()) {
+      return docSnapshot.data().questions;  
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  }));
+
+  return forumsInfo;
+}
+
+
+
+
 
 const Classes = () => {
   const [activeClass, setActiveClass] = useState('CSC313');
@@ -118,7 +142,7 @@ const Classes = () => {
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
-// render replies
+// render replies not actually create them, takes in the replies and depth of the reply
   const renderReplies = (replies, depth = 1) => {
     return replies.map((reply) => (
       <div key={reply.id} className="reply" style={{ marginLeft: depth * 20 }}>
@@ -147,12 +171,12 @@ const Classes = () => {
     ));
   };
 
-  const classOptions = ['CSC313', 'EGR302', 'EGR304'];
 
 const [courses, setUserCourses] = useState([]);
 const [name, setUserName] = useState(null);
 const [profilePicture, setProfilePicture] = useState("https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791");
 const [loading, setLoading] = useState(true);
+const [forumsData, setForumsData] = useState({});
 
 
   useEffect(() => {
@@ -169,23 +193,62 @@ const [loading, setLoading] = useState(true);
         const userCourses = userInfo.courses;
         const userName = `${userInfo.firstName} ${userInfo.lastName}`;
         const profilePicture = userInfo.profilePicture;
+
         setUserCourses(userCourses);
         setUserName(userName);
         setProfilePicture(profilePicture);
         setLoading(false);
       }
 
+
     callingGetUserInfo();
 
   }, []);
 
+  useEffect(() => {
+    if (!courses || courses.length === 0) return;
+  
+    const unsubscribes = [];
+  
+    // Loop through each course and listen for real-time updates
+    courses.forEach((course) => {
+      const classRef = doc(db, 'forums', course.trim());
+  
+      const unsubscribe = onSnapshot(classRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          setForumsData((prev) => ({
+            ...prev,
+            [course]: docSnapshot.data().questions, 
+          }));
+        } else {
+          console.log("No such document");
+          setForumsData((prev) => ({
+            ...prev,
+            [course]: [], 
+          }));
+        }
+      });
+  
+      // Collect the unsubscribe functions for each listener
+      unsubscribes.push(unsubscribe);
+    });
+  
+    // Cleanup function: Unsubscribe from all listeners when the component unmounts or courses change
+    return () => {
+      unsubscribes.forEach((unsub) => unsub());
+    };
+  }, [courses]);
+
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading/> ;
   }
+
+  console.log("Forums Data:", forumsData); // Log the forums data to check its structure
 
   return (
     <>
+      {/* Sidebar content */}
       <div className="hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
         ☰
       </div>
@@ -207,6 +270,7 @@ const [loading, setLoading] = useState(true);
         </ul>
       </div>
 
+      {/* Main content */}
       <Navbar />
       <div className="classes-container">
         <div className="scrollable-box">

@@ -6,7 +6,9 @@ import { useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import Loading from '../Loading/Loading.jsx';
-
+import Redirect from '../Redirect/Redirect.jsx';
+import { Filter } from 'bad-words'
+import { RegExpMatcher, TextCensor, englishDataset, englishRecommendedTransformers} from 'obscenity';
 
 // get user info from firebase
 const getUserInfo = async (userHash) => {  
@@ -90,6 +92,19 @@ const uploadReply = async (className, parentId, replyObj) => {
   }
 };
 
+// Function to get the current date and time
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();  
+  let hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12 || 12; 
+
+  return `${month}/${day} ${hours}:${minutes}${ampm}`;
+};
+
 
 // React component for the classes page
 const Classes = () => {
@@ -99,6 +114,23 @@ const Classes = () => {
   const [replyInputs, setReplyInputs] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const filter = new Filter();
+  // Custom filtered out bad words
+  filter.addWords(
+    'FUBAR', 
+    'SNAFU', 
+    'POS', 
+    'WTF', 
+    'BS', 
+    'GTFO', 
+    'LMAO', 
+    'FML', 
+    'IDGAF'
+);
+  const matcher = new RegExpMatcher({
+    ...englishDataset.build(),
+    ...englishRecommendedTransformers,
+  });
 
   // Function to handle the post submission and creation of a new post
   const handlePost = async () => {
@@ -108,18 +140,25 @@ const Classes = () => {
       id: Date.now(),
       subject,
       text: details,
-      timestamp: new Date(),
+      timestamp: getCurrentDateTime(),
       replies: [],
       user: name,
       profilePicture: profilePicture
     };
 
+    // Check for profanity using the filter and matcher
+    if (filter.isProfane(subject) || filter.isProfane(details) || matcher.hasMatch(subject) || matcher.hasMatch(details)) {
+      alert("Please avoid using inappropriate language.");
+    }
+    else {
     setForumsData((prev) => ({
       ...prev,
       [activeClass]: [...prev[activeClass], newPost],
     }));
 
     await uploadQuestion(activeClass, newPost);
+
+  }
 
     setSubject('');
     setDetails('');
@@ -143,7 +182,7 @@ const Classes = () => {
     const newReply = {
       id: Date.now(),
       text: replyText,
-      timestamp: new Date(),
+      timestamp: getCurrentDateTime(),
       replies: [],
       user: name,
       profilePicture: profilePicture,
@@ -205,7 +244,7 @@ const Classes = () => {
               <img src={reply.profilePicture} alt="Profile" className="profile-picture" /> 
               <span className="user-name">{reply.user}</span>
             </div>
-            <span className="timestamp">{formatTimestamp(reply.timestamp)}</span>
+            <span className="timestamp">{reply.timestamp}</span>
           </div>
 
         </div>
@@ -305,14 +344,17 @@ const [forumsLoading, setForumsLoading] = useState(true);
     };
   }, [courses]);
 
+  
+
 
   if (loading || forumsLoading) {
     return <Loading/> ;
   }
+  if (courses.length === 0) {
+    return <Redirect />
+  }
 
-  // console.log("Forums Data:", forumsData); // Log the forums data to check its structure
-  // console.log("Courses:", courses); // Log the courses to check their values
-  // console.log(forumsData["CSC312"])
+
 
   return (
     <>
@@ -386,7 +428,7 @@ const [forumsLoading, setForumsLoading] = useState(true);
                             <img src={post.profilePicture} alt="Profile" className="profile-picture" /> 
                             <span className="user-name">{post.user}</span>
                           </div>
-                          <span className="timestamp">{formatTimestamp(post.timestamp)}</span>
+                          <span className="timestamp">{post.timestamp}</span>
                         </div>
                           
                       </>

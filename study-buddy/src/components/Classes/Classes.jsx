@@ -26,33 +26,10 @@ const getUserInfo = async (userHash) => {
   }
 }
 
-// get forums for a user's classes
-const getForums = async (userClassestoGet) => {
-
-  const forumsInfo = await Promise.all(userClassestoGet.map(async (specificClass) => {
-    const classInfo = doc(db, "forums", specificClass.trim());
-    const docSnapshot = await getDoc(classInfo); 
-
-    if (docSnapshot.exists()) {
-      return docSnapshot.data().questions;  
-    } 
-    else {
-      console.log("No such document");
-      return null;
-    }
-  }));
-
-  return forumsInfo;
-}
-
-
-
-
-
 const Classes = () => {
-  const [activeClass, setActiveClass] = useState('CSC313');
+  const [activeClass, setActiveClass] = useState(null);
   const [posts, setPosts] = useState({
-    CSC313: [],
+    CSC312: [],
     EGR302: [],
     EGR304: [],
   });
@@ -143,6 +120,8 @@ const Classes = () => {
   };
 
 // render replies not actually create them, takes in the replies and depth of the reply
+// replies contains the replies and text is the body
+// id, text, timestamp, replies, user, profilePicture
   const renderReplies = (replies, depth = 1) => {
     return replies.map((reply) => (
       <div key={reply.id} className="reply" style={{ marginLeft: depth * 20 }}>
@@ -198,6 +177,7 @@ const [forumsData, setForumsData] = useState({});
         setUserName(userName);
         setProfilePicture(profilePicture);
         setLoading(false);
+        setActiveClass(userCourses[0]); 
       }
 
 
@@ -244,7 +224,8 @@ const [forumsData, setForumsData] = useState({});
     return <Loading/> ;
   }
 
-  console.log("Forums Data:", forumsData); // Log the forums data to check its structure
+  // console.log("Forums Data:", forumsData); // Log the forums data to check its structure
+  // console.log("Courses:", posts); // Log the courses to check their values
 
   return (
     <>
@@ -272,6 +253,8 @@ const [forumsData, setForumsData] = useState({});
 
       {/* Main content */}
       <Navbar />
+
+      {/* Container for welcome info of class */}
       <div className="classes-container">
         <div className="scrollable-box">
           <h1>{activeClass}</h1>
@@ -280,6 +263,7 @@ const [forumsData, setForumsData] = useState({});
             Feel free to post any questions you have for the class.
           </p>
 
+          {/* Container to post input */}
           <div className="post-input">
             <input
               type="text"
@@ -299,8 +283,12 @@ const [forumsData, setForumsData] = useState({});
             </button>
           </div>
 
+          {/* Container that holds all of the posts */}
+          {/* Subject is the title, text is the body, replies holds the replies, id is used for something */}
           <div className="discussion-posts">
-            {[...posts[activeClass]].reverse().map((post) => (
+
+            {/* Functio that maps info to a class div wich is a question */}
+            {[...forumsData[activeClass]].reverse().map((post) => (
               <div key={post.id} className="post">
                 <div className="post-text">
                   <div className="post-header">

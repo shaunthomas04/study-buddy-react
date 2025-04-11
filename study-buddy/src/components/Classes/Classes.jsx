@@ -26,20 +26,36 @@ const getUserInfo = async (userHash) => {
   }
 }
 
+// Function to upload a question to a class
+const uploadQuestion = async (className, question) => {
+  try {
+    const classRef = doc(db, "forums", className.trim());
+    const classDoc = await getDoc(classRef);
+
+    if (classDoc.exists()) {
+      await updateDoc(classRef, {
+        questions: arrayUnion(question),
+      });
+    } else {
+      console.log("Class document does not exist.");
+    }
+  } catch (error) {
+    console.error("Error uploading question:", error);
+  }
+}
+
+
+// React component for the classes page
 const Classes = () => {
   const [activeClass, setActiveClass] = useState(null);
-  const [posts, setPosts] = useState({
-    CSC313: [],
-    EGR302: [],
-    EGR304: [],
-  });
   const [subject, setSubject] = useState('');
   const [details, setDetails] = useState('');
   const [replyInputs, setReplyInputs] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handlePost = () => {
+  // Function to handle the post submission and creation of a new post
+  const handlePost = async () => {
     if (subject.trim() === '' || details.trim() === '') return;
 
     const newPost = {
@@ -54,6 +70,8 @@ const Classes = () => {
       ...prev,
       [activeClass]: [...prev[activeClass], newPost],
     }));
+
+    await uploadQuestion(activeClass, newPost);
 
     setSubject('');
     setDetails('');
@@ -231,9 +249,9 @@ const [forumsLoading, setForumsLoading] = useState(true);
     return <Loading/> ;
   }
 
-  console.log("Forums Data:", forumsData); // Log the forums data to check its structure
-  console.log("Courses:", courses); // Log the courses to check their values
-  console.log(forumsData["CSC312"])
+  // console.log("Forums Data:", forumsData); // Log the forums data to check its structure
+  // console.log("Courses:", courses); // Log the courses to check their values
+  // console.log(forumsData["CSC312"])
 
   return (
     <>

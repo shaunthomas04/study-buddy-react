@@ -29,7 +29,7 @@ const getUserInfo = async (userHash) => {
 const Classes = () => {
   const [activeClass, setActiveClass] = useState(null);
   const [posts, setPosts] = useState({
-    CSC312: [],
+    CSC313: [],
     EGR302: [],
     EGR304: [],
   });
@@ -50,7 +50,7 @@ const Classes = () => {
       replies: [],
     };
 
-    setPosts((prev) => ({
+    setForumsData((prev) => ({
       ...prev,
       [activeClass]: [...prev[activeClass], newPost],
     }));
@@ -99,7 +99,7 @@ const Classes = () => {
       });
     };
 
-    setPosts((prev) => ({
+    setForumsData((prev) => ({
       ...prev,
       [activeClass]: addReply(prev[activeClass]),
     }));
@@ -155,7 +155,8 @@ const [courses, setUserCourses] = useState([]);
 const [name, setUserName] = useState(null);
 const [profilePicture, setProfilePicture] = useState("https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791");
 const [loading, setLoading] = useState(true);
-const [forumsData, setForumsData] = useState({});
+const [forumsData, setForumsData] = useState(null);
+const [forumsLoading, setForumsLoading] = useState(true);
 
 
   useEffect(() => {
@@ -176,8 +177,8 @@ const [forumsData, setForumsData] = useState({});
         setUserCourses(userCourses);
         setUserName(userName);
         setProfilePicture(profilePicture);
+        setActiveClass(userCourses[0]);
         setLoading(false);
-        setActiveClass(userCourses[0]); 
       }
 
 
@@ -189,8 +190,8 @@ const [forumsData, setForumsData] = useState({});
     if (!courses || courses.length === 0) return;
   
     const unsubscribes = [];
+    const loadedCourses = new Set();
   
-    // Loop through each course and listen for real-time updates
     courses.forEach((course) => {
       const classRef = doc(db, 'forums', course.trim());
   
@@ -198,34 +199,41 @@ const [forumsData, setForumsData] = useState({});
         if (docSnapshot.exists()) {
           setForumsData((prev) => ({
             ...prev,
-            [course]: docSnapshot.data().questions, 
+            [course]: docSnapshot.data().questions,
           }));
         } else {
-          console.log("No such document");
+          console.log(`No document found for course: ${course}`);
           setForumsData((prev) => ({
             ...prev,
-            [course]: [], 
+            [course]: [],
           }));
+        }
+  
+        // Mark this course as loaded
+        loadedCourses.add(course);
+  
+        // If all courses have been loaded, stop loading
+        if (loadedCourses.size === courses.length) {
+          setForumsLoading(false);
         }
       });
   
-      // Collect the unsubscribe functions for each listener
       unsubscribes.push(unsubscribe);
     });
   
-    // Cleanup function: Unsubscribe from all listeners when the component unmounts or courses change
     return () => {
       unsubscribes.forEach((unsub) => unsub());
     };
   }, [courses]);
 
 
-  if (loading) {
+  if (loading || forumsLoading) {
     return <Loading/> ;
   }
 
-  // console.log("Forums Data:", forumsData); // Log the forums data to check its structure
-  // console.log("Courses:", posts); // Log the courses to check their values
+  console.log("Forums Data:", forumsData); // Log the forums data to check its structure
+  console.log("Courses:", courses); // Log the courses to check their values
+  console.log(forumsData["CSC312"])
 
   return (
     <>

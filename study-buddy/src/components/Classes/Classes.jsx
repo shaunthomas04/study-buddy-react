@@ -36,7 +36,12 @@ const uploadQuestion = async (className, question) => {
       await updateDoc(classRef, {
         questions: arrayUnion(question),
       });
-    } else {
+    } 
+    else {
+      // If the class document doesn't exist, create it with the question
+      await setDoc(classRef, {
+        questions: [question], 
+      });
       console.log("Class document does not exist.");
     }
   } catch (error) {
@@ -140,6 +145,8 @@ const Classes = () => {
       text: replyText,
       timestamp: new Date(),
       replies: [],
+      user: name,
+      profilePicture: profilePicture,
     };
   
     const addReply = (items) => {
@@ -192,7 +199,15 @@ const Classes = () => {
       <div key={reply.id} className="reply" style={{ marginLeft: depth * 20 }}>
         <div className="reply-header">
           <span className="reply-text">→ {reply.text}</span>
-          <span className="timestamp">{formatTimestamp(reply.timestamp)}</span>
+
+          <div className="post-header-row">
+            <div className="user-info">
+              <img src={reply.profilePicture} alt="Profile" className="profile-picture" /> 
+              <span className="user-name">{reply.user}</span>
+            </div>
+            <span className="timestamp">{formatTimestamp(reply.timestamp)}</span>
+          </div>
+
         </div>
         <button className="reply-button" onClick={() => toggleReplyInput(reply.id)}>
           Reply
@@ -248,7 +263,6 @@ const [forumsLoading, setForumsLoading] = useState(true);
 
 
     callingGetUserInfo();
-
   }, []);
 
   useEffect(() => {
@@ -360,40 +374,54 @@ const [forumsLoading, setForumsLoading] = useState(true);
           {/* Subject is the title, text is the body, replies holds the replies, id is used for something */}
           <div className="discussion-posts">
 
-            {/* Functio that maps info to a class div wich is a question */}
-            {[...forumsData[activeClass]].reverse().map((post) => (
-              <div key={post.id} className="post">
-                <div className="post-text">
-                  <div className="post-header">
-                    <div className="post-subject">{post.subject}</div>
-                    <span className="timestamp">{formatTimestamp(post.timestamp)}</span>
-                  </div>
-                  <p>{post.text}</p>
-                  <button className="reply-button" onClick={() => toggleReplyInput(post.id)}>
-                    Reply
-                  </button>
+          {Array.isArray(forumsData[activeClass]) && forumsData[activeClass].length > 0 ? (
+              [...forumsData[activeClass]].reverse().map((post) => (
+                <div key={post.id} className="post">
+                  <div className="post-text">
+                    <div className="post-header">
+                      <div className="post-subject">{post.subject}</div>
+                      <>
+                        <div className="post-header-row">
+                          <div className="user-info">
+                            <img src={post.profilePicture} alt="Profile" className="profile-picture" /> 
+                            <span className="user-name">{post.user}</span>
+                          </div>
+                          <span className="timestamp">{formatTimestamp(post.timestamp)}</span>
+                        </div>
+                          
+                      </>
 
-                  {showReplyInput[post.id] && (
-                    <div className="reply-section-row">
-                      <input
-                        type="text"
-                        placeholder="Write a reply..."
-                        value={replyInputs[post.id] || ''}
-                        onChange={(e) => handleReplyChange(post.id, e.target.value)}
-                      />
-                      <button
-                        className="submit-reply"
-                        onClick={() => handleReplySubmit(post.id)}
-                      >
-                        Post
-                      </button>
+
                     </div>
-                  )}
+                    <p>{post.text}</p>
+                    <button className="reply-button" onClick={() => toggleReplyInput(post.id)}>
+                      Reply
+                    </button>
 
-                  {renderReplies(post.replies)}
+                    {showReplyInput[post.id] && (
+                      <div className="reply-section-row">
+                        <input
+                          type="text"
+                          placeholder="Write a reply..."
+                          value={replyInputs[post.id] || ''}
+                          onChange={(e) => handleReplyChange(post.id, e.target.value)}
+                        />
+                        <button
+                          className="submit-reply"
+                          onClick={() => handleReplySubmit(post.id)}
+                        >
+                          Post
+                        </button>
+                      </div>
+                    )}
+
+                    {renderReplies(post.replies)}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="no-posts">No questions yet. Be the first to post!</p>
+            )}
           </div>
         </div>
       </div>

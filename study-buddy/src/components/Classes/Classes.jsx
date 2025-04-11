@@ -44,6 +44,47 @@ const uploadQuestion = async (className, question) => {
   }
 }
 
+// Function to upload a reply to a question in a class
+const uploadReply = async (className, parentId, replyObj) => {
+  try {
+    const classRef = doc(db, "forums", className.trim());
+    const classDoc = await getDoc(classRef);
+
+    if (classDoc.exists()) {
+      const currentData = classDoc.data().questions;
+
+      const addReply = (items) => {
+        return items.map((item) => {
+          if (item.id === parentId) {
+            return {
+              ...item,
+              replies: [...item.replies, replyObj],
+            };
+          } else if (item.replies?.length > 0) {
+            return {
+              ...item,
+              replies: addReply(item.replies),
+            };
+          }
+          return item;
+        });
+      };
+
+      const updatedQuestions = addReply(currentData);
+
+      await updateDoc(classRef, {
+        questions: updatedQuestions,
+      });
+
+      console.log("Reply uploaded to Firebase");
+    } else {
+      console.log("Class document does not exist.");
+    }
+  } catch (error) {
+    console.error("Error uploading reply:", error);
+  }
+};
+
 
 // React component for the classes page
 const Classes = () => {
@@ -64,6 +105,8 @@ const Classes = () => {
       text: details,
       timestamp: new Date(),
       replies: [],
+      user: name,
+      profilePicture: profilePicture
     };
 
     setForumsData((prev) => ({
@@ -88,24 +131,23 @@ const Classes = () => {
     setReplyInputs((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleReplySubmit = (parentId) => {
+  const handleReplySubmit = async (parentId) => {
     const replyText = replyInputs[parentId]?.trim();
     if (!replyText) return;
-
+  
+    const newReply = {
+      id: Date.now(),
+      text: replyText,
+      timestamp: new Date(),
+      replies: [],
+    };
+  
     const addReply = (items) => {
       return items.map((item) => {
         if (item.id === parentId) {
           return {
             ...item,
-            replies: [
-              ...item.replies,
-              {
-                id: Date.now(),
-                text: replyText,
-                timestamp: new Date(),
-                replies: [],
-              },
-            ],
+            replies: [...item.replies, newReply],
           };
         } else if (item.replies.length > 0) {
           return {
@@ -116,15 +158,20 @@ const Classes = () => {
         return item;
       });
     };
-
+  
+    // Update frontend state
     setForumsData((prev) => ({
       ...prev,
       [activeClass]: addReply(prev[activeClass]),
     }));
-
-    setReplyInputs((prev) => ({ ...prev, [parentId]: '' }));
+  
+    // Upload reply to Firestore
+    await uploadReply(activeClass, parentId, newReply);
+  
+    setReplyInputs((prev) => ({ ...prev, [parentId]: "" }));
     setShowReplyInput((prev) => ({ ...prev, [parentId]: false }));
   };
+  
 
 // time stamop format
   const formatTimestamp = (timestamp) => {

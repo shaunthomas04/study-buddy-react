@@ -6,7 +6,9 @@ import { useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import Loading from '../Loading/Loading.jsx';
-
+import Redirect from '../Redirect/Redirect.jsx';
+import { Filter } from 'bad-words'
+import { RegExpMatcher, TextCensor, englishDataset, englishRecommendedTransformers} from 'obscenity';
 
 // get user info from firebase
 const getUserInfo = async (userHash) => {  
@@ -99,6 +101,12 @@ const Classes = () => {
   const [replyInputs, setReplyInputs] = useState({});
   const [showReplyInput, setShowReplyInput] = useState({});
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const filter = new Filter();
+  // filter.addWords('some', 'bad', 'word') // Add any custom words you want to filter out
+  const matcher = new RegExpMatcher({
+    ...englishDataset.build(),
+    ...englishRecommendedTransformers,
+  });
 
   // Function to handle the post submission and creation of a new post
   const handlePost = async () => {
@@ -114,12 +122,19 @@ const Classes = () => {
       profilePicture: profilePicture
     };
 
+    // Check for profanity using the filter and matcher
+    if (filter.isProfane(subject) || filter.isProfane(details) || matcher.hasMatch(subject) || matcher.hasMatch(details)) {
+      alert("Please avoid using inappropriate language.");
+    }
+    else {
     setForumsData((prev) => ({
       ...prev,
       [activeClass]: [...prev[activeClass], newPost],
     }));
 
     await uploadQuestion(activeClass, newPost);
+
+  }
 
     setSubject('');
     setDetails('');
@@ -305,14 +320,15 @@ const [forumsLoading, setForumsLoading] = useState(true);
     };
   }, [courses]);
 
+  if (courses.length === 0) {
+    return <Redirect />
+  }
+
 
   if (loading || forumsLoading) {
     return <Loading/> ;
   }
 
-  // console.log("Forums Data:", forumsData); // Log the forums data to check its structure
-  // console.log("Courses:", courses); // Log the courses to check their values
-  // console.log(forumsData["CSC312"])
 
   return (
     <>

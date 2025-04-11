@@ -92,6 +92,19 @@ const uploadReply = async (className, parentId, replyObj) => {
   }
 };
 
+// Function to get the current date and time
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();  
+  let hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12 || 12; 
+
+  return `${month}/${day} ${hours}:${minutes}${ampm}`;
+};
+
 
 // React component for the classes page
 const Classes = () => {
@@ -102,7 +115,18 @@ const Classes = () => {
   const [showReplyInput, setShowReplyInput] = useState({});
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const filter = new Filter();
-  // filter.addWords('some', 'bad', 'word') // Add any custom words you want to filter out
+  // Custom filtered out bad words
+  filter.addWords(
+    'FUBAR', 
+    'SNAFU', 
+    'POS', 
+    'WTF', 
+    'BS', 
+    'GTFO', 
+    'LMAO', 
+    'FML', 
+    'IDGAF'
+);
   const matcher = new RegExpMatcher({
     ...englishDataset.build(),
     ...englishRecommendedTransformers,
@@ -116,7 +140,7 @@ const Classes = () => {
       id: Date.now(),
       subject,
       text: details,
-      timestamp: new Date(),
+      timestamp: getCurrentDateTime(),
       replies: [],
       user: name,
       profilePicture: profilePicture
@@ -158,7 +182,7 @@ const Classes = () => {
     const newReply = {
       id: Date.now(),
       text: replyText,
-      timestamp: new Date(),
+      timestamp: getCurrentDateTime(),
       replies: [],
       user: name,
       profilePicture: profilePicture,
@@ -220,7 +244,7 @@ const Classes = () => {
               <img src={reply.profilePicture} alt="Profile" className="profile-picture" /> 
               <span className="user-name">{reply.user}</span>
             </div>
-            <span className="timestamp">{formatTimestamp(reply.timestamp)}</span>
+            <span className="timestamp">{reply.timestamp}</span>
           </div>
 
         </div>
@@ -320,14 +344,16 @@ const [forumsLoading, setForumsLoading] = useState(true);
     };
   }, [courses]);
 
-  if (courses.length === 0) {
-    return <Redirect />
-  }
+  
 
 
   if (loading || forumsLoading) {
     return <Loading/> ;
   }
+  if (courses.length === 0) {
+    return <Redirect />
+  }
+
 
 
   return (
@@ -402,7 +428,7 @@ const [forumsLoading, setForumsLoading] = useState(true);
                             <img src={post.profilePicture} alt="Profile" className="profile-picture" /> 
                             <span className="user-name">{post.user}</span>
                           </div>
-                          <span className="timestamp">{formatTimestamp(post.timestamp)}</span>
+                          <span className="timestamp">{post.timestamp}</span>
                         </div>
                           
                       </>

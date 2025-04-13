@@ -70,11 +70,44 @@ const reccomendBuddies = async (userId) => {
     }
     const userCourses = userInfo.courses; // Array of course codes
     const userBuddies = userInfo.buddies;
+    const userBuddyRequests = userInfo.buddyRequests; // Array of user's buddy requests sent by others
+    const userBuddyRequestsSent = userInfo.buddyRequestsSent; // Array of buddy requests sent by the user
+
+    console.log("User Buddies:", userBuddies);
 
     // Look for potential buddies based on user's courses and current buddies
     const potentialBuddiesListMap = new Map();
 
-    // Look through buddys' buddies (working)
+    // Add potential buddies who have the same classes
+    // Gets all users with similar courses, and adds them to the potential buddies
+
+    const allUsers = await getAllUsers();
+
+    for (let buddy of allUsers){
+      const buddyCourses = buddy.courses;
+      const similarCourses = userCourses.some(course => buddyCourses.includes(course));
+      const similarCoursesCount = userCourses.filter(course => buddyCourses.includes(course)).length;
+      const isCurrentlyBuddy = userBuddies.some(b => b.trim() === buddy.id.trim());
+
+
+      if(!isCurrentlyBuddy && buddy.id.trim() !== userId.trim() && similarCourses){
+            potentialBuddiesListMap.set(buddy.id, (potentialBuddiesListMap.get(buddy.id) || 0) + similarCoursesCount);
+        }
+    }
+
+    const sortedBuddies = Array.from(potentialBuddiesListMap.entries()).sort((a, b) => b[1] - a[1]);
+    const sortedBuddyIds = sortedBuddies.map(entry => entry[0]);
+
+    for (let i = sortedBuddyIds.length - 1; i >= 0; i--) {
+      const buddy = sortedBuddyIds[i].trim();
+      const isDuplicate = userBuddyRequests.some(b => b.trim() === buddy) || userBuddyRequestsSent.some(b => b.trim() === buddy) || userBuddies.some(b => b.trim() === buddy);
+      if (isDuplicate) {
+          sortedBuddyIds.splice(i, 1);
+      }
+    }
+
+
+    //Look through buddys' buddies (working)
     for (let buddy of userBuddies){
         const buddyInfo = await getUserInfo(buddy);
         if (!buddyInfo) {
@@ -84,30 +117,16 @@ const reccomendBuddies = async (userId) => {
         // Add buddy's buddies to potential buddies list if they are not already buddies and not the user
         const buddyBuddies = buddyInfo.buddies;
         for (let buddyID of buddyBuddies){
-            if (!userBuddies.includes(buddyID) && buddyID !== userId){
-                potentialBuddiesListMap.set(buddyID, (potentialBuddiesListMap.get(buddyID) || 0) + 1);
-            }            
+          if (!sortedBuddyIds.includes(buddyID.trim()) && !userBuddies.includes(buddyID) && buddyID !== userId) {
+            sortedBuddyIds.push(buddyID.trim());
+          }         
         }
     }
 
-    // Add potential buddies who have the same classes
-    // Gets all users with similar courses, and adds them to the potential buddies
-    const allUsers = await getAllUsers();
 
-    for (let buddy of allUsers){
-      const buddyCourses = buddy.courses;
-      const similarCourses = userCourses.some(course => buddyCourses.includes(course));
-      const similarCoursesCount = userCourses.filter(course => buddyCourses.includes(course)).length;
-      const isCurrentlyBuddy = userBuddies.includes(` ${buddy.id}`);
 
-      if(!isCurrentlyBuddy && buddy.id.trim() !== userId.trim() && similarCourses){
-            potentialBuddiesListMap.set(buddy.id, (potentialBuddiesListMap.get(buddy.id) || 0) + similarCoursesCount);
-        }
-    }
-
-    const sortedBuddies = Array.from(potentialBuddiesListMap.entries()).sort((a, b) => b[1] - a[1]);
-    const sortedBuddyIds = sortedBuddies.map(entry => entry[0]);
-    return sortedBuddyIds;
+    const sortedBuddiesSet = new Set(sortedBuddyIds);
+    return Array.from(sortedBuddiesSet); // Return the sorted buddy IDs as a Set to avoid duplicates
 }
 
 // Function to reccomend buddies to a user that can be used in either the HTTP function or the Firestore function
@@ -125,15 +144,17 @@ const reccomendBuddiesAlgorithm = async (userHash) => {
     }
 
     await updateBuddySuggestions(userHash, buddiesReccomendations);
+
+    return buddiesReccomendations;
 }
 
 
 // Test function to build algorithm until it works then move it into the updateUserOnFirestoreChange function
 exports.getUserInfoHTTP = onRequest({ timeoutSeconds: 120 }, async (req, res) => {
 try {
-    const userHash = "Lk9IRfnLa7bS5dvuJvjF1JZuxR73";
-    await reccomendBuddiesAlgorithm(userHash);
-    res.status(200).json({ message: "User info fetched successfully." });
+    const userHash = "L6OWogOvbBV5ywI9B9JgMcRPOSx1";
+    const buddiesRecommended = await reccomendBuddiesAlgorithm(userHash);
+    res.status(200).json({ message: "User info fetched successfully.", buddiesRecommended: buddiesRecommended });
 } 
 catch (error) {
     console.error("Error fetching user:", error);
@@ -149,8 +170,9 @@ exports.updateUserOnFirestoreChange = onDocumentUpdated(
   async (event) => {
     try {
       const userId = event.params.userId;
-      await reccomendBuddiesAlgorithm(userId);  
+      const buddiesRecommended = await reccomendBuddiesAlgorithm(userId);  
       logger.log(`Buddy suggestions updated for user ${userId}`);
+      logger.log("Buddy suggestions:", buddiesRecommended);
     } 
     catch (error) {
       logger.error("Error updating user on Firestore change:", error);

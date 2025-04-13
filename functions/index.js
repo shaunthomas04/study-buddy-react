@@ -179,3 +179,134 @@ exports.updateUserOnFirestoreChange = onDocumentUpdated(
     }
   }
 );
+
+
+// Code to create function that will look through each forums every couple of days and find the trending activity
+
+// Function to get all forums from Firestore
+const getAllForums = async () => {
+    try {
+      const forumsRef = db.collection("forums");
+      const snapshot = await forumsRef.get();
+  
+      if (snapshot.empty) {
+        throw new Error("No forums found");
+      }
+  
+      const forumsList = [];
+      snapshot.forEach(doc => {
+        forumsList.push({ id: doc.id, ...doc.data() });
+      });
+  
+      return forumsList; 
+    } 
+    catch (error) {
+      throw new Error("Error fetching users: " + error.message);
+    }
+  };
+
+// Function to write new forum metadata to Firestore
+
+
+// Function that takes in forum array and then looks through each forum and finds the trending activity
+const findTrendingActivity = (forums) => {
+  const todayMidnight = new Date();
+  todayMidnight.setHours(0, 0, 0, 0); // 12:00 AM today
+
+  const parseTimestamp = (timestampStr) => {
+    const [datePart, timePart] = timestampStr.split(" ");
+    const [month, day] = datePart.split("/").map(Number);
+    let [hour, minute] = timePart.match(/\d+/g).map(Number);
+    const isPM = timePart.toLowerCase().includes("pm");
+
+    if (isPM && hour < 12) hour += 12;
+    if (!isPM && hour === 12) hour = 0;
+
+    const now = new Date();
+    return new Date(now.getFullYear(), month - 1, day, hour, minute);
+  };
+
+  const countRecentReplies = (replies) => {
+    let count = 0;
+    for (const reply of replies) {
+      const replyTime = parseTimestamp(reply.timestamp);
+      if (replyTime > todayMidnight) {
+        count += 1;
+      }
+      if (reply.replies && reply.replies.length > 0) {
+        count += countRecentReplies(reply.replies);
+      }
+    }
+    return count;
+  };
+
+  forums.forEach(forum => {
+    let trendingQuestionId = null;
+    let maxTrendingPoints = -1;
+
+    if (forum.questions && forum.questions.length > 0) {
+      forum.questions.forEach(question => {
+        let totalReplies = 0;
+        if (question.replies && question.replies.length > 0) {
+          totalReplies = countRecentReplies(question.replies);
+        }
+        question.trendingPoints = totalReplies;
+
+        // Check if this question has the most trending points
+        if (totalReplies > maxTrendingPoints) {
+          maxTrendingPoints = totalReplies;
+          trendingQuestionId = question.id;
+        }
+      });
+
+      // If all trendingPoints are 0, just pick the first question
+      if (maxTrendingPoints === 0) {
+        trendingQuestionId = forum.questions[0].id;
+      }
+    } else {
+      trendingQuestionId = null;
+    }
+
+    forum.trendingTopic = trendingQuestionId;
+  });
+
+  return forums;
+};
+
+const updateTrendingActivity = async (forums) => {
+  try {
+    const forumsRef = db.collection("forums");
+
+    // Iterate over each forum and update the forum with its new trendingTopic
+    for (const forum of forums) {
+      if (forum.id) {
+        const forumRef = forumsRef.doc(forum.id);
+
+        // Update the forum document with the trendingTopic and other relevant data
+        await forumRef.update({
+          trendingTopic: forum.trendingTopic
+        });
+
+        console.log(`Updated forum ${forum.id} with trending topic: ${forum.trendingTopic}`);
+      }
+    }
+
+    console.log("All forums updated successfully.");
+  } catch (error) {
+    console.error("Error updating forum data: ", error.message);
+  }
+};
+
+// Test function to build algorithm until it works then move it into the updateUserOnFirestoreChange function
+exports.getAllForumsHTTP = onRequest({ timeoutSeconds: 120 }, async (req, res) => {
+  try {
+      const forums = await getAllForums();
+      const trendingPointsForums = findTrendingActivity(forums);
+      await updateTrendingActivity(trendingPointsForums); 
+      res.status(200).json({ message: "Forums fetched successfully.", forums: trendingPointsForums });
+  } 
+  catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ error: "Error fetching user: " + error.message });
+  }
+  });

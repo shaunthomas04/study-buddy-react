@@ -5,6 +5,8 @@ const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, onSnapshot } = require('firebase-admin/firestore');
 const { user } = require("firebase-functions/v1/auth");
 const { log } = require("firebase-functions/logger");
+const { pubsub } = require("firebase-functions/v2");
+
 
 
 //Simple HTTP function
@@ -307,3 +309,33 @@ exports.getAllForumsHTTP = onRequest({ timeoutSeconds: 120 }, async (req, res) =
       res.status(500).json({ error: "Error fetching user: " + error.message });
   }
   });
+
+// Function to write trending data to Firestore on db update
+exports.onForumUpdated = onDocumentUpdated('forums/{forumId}', async (event) => {
+  try {
+    // Get the updated forum document
+    const forumId = event.params.forumId; // Get the forumId from the event params
+    const forumRef = db.collection('forums').doc(forumId);
+    const forumDoc = await forumRef.get();
+
+    if (!forumDoc.exists) {
+      console.log('Forum does not exist!');
+      return null;
+    }
+
+    const forum = forumDoc.data();
+    const forums = [forum];
+    const trendingPointsForums = findTrendingActivity(forums);
+
+    // Update the trending topic for this forum
+    await forumRef.update({
+      trendingTopic: trendingPointsForums[0].trendingTopic,
+    });
+
+    console.log('Forum trending topic updated successfully!');
+    return null;
+  } catch (error) {
+    logger.error("Error updating forums on Firestore change:", error);
+    throw new Error("Error processing Firestore update: " + error.message);
+  }
+});

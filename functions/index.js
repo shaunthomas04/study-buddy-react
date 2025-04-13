@@ -205,9 +205,6 @@ const getAllForums = async () => {
     }
   };
 
-// Function to write new forum metadata to Firestore
-
-
 // Function that takes in forum array and then looks through each forum and finds the trending activity
 const findTrendingActivity = (forums) => {
   const todayMidnight = new Date();

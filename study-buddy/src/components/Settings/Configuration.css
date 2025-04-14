@@ -261,3 +261,43 @@ body {
   cursor: pointer;
 }
 
+/* Hide the file input */
+.file-input {
+  display: none;
+}
+
+/* Style for the profile image button */
+.profile-image-button {
+  background-image: url(https://cdn.iconscout.com/icon/free/png-256/free-edit-icon-download-in-svg-png-gif-file-formats--pen-write-pencil-ball-study-user-interface-vol-2-pack-icons-2202989.png?f=webp&w=256);
+  background-size: contain; /* Ensure the entire image is visible */
+  background-position: center;
+  width: 20px; /* Adjust the size */
+  height: 20px;
+  border: none;
+  border-radius: 10px; /* Less rounded corners */
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  background-color: transparent; /* Remove background color */
+}
+
+.profile-image-button:hover {
+  transform: scale(1.05); /* Hover effect */
+}
+
+.profile-image-button:focus {
+  outline: none; /* Remove the outline on focus */
+}
+
+.profile-image-button-placeholder {
+  background-size: contain; /* Ensure the entire image is visible */
+  background-position: center;
+  width: 20px; /* Adjust the size */
+  height: 20px;
+  border: none;
+  border-radius: 10px; /* Less rounded corners */
+  padding: 0;
+
+  background-color: transparent; /* Remove background color */
+}

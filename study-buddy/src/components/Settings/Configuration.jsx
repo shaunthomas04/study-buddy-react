@@ -6,6 +6,7 @@ import { app, auth , db } from "../../firebase";
 import { getDownloadURL, getStorage, listAll, ref , uploadBytes} from "firebase/storage";
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import { useNavigate } from 'react-router-dom';
+import Loading from '../Loading/Loading.jsx';
 
 
 // Function to update the image path in Firestore
@@ -73,7 +74,6 @@ const setUserImage = async (event, userID) => {
   else {
     alert('Please select an image file.');
   }
-  
 };
 
 // Function to get the user data from localStorage
@@ -152,16 +152,12 @@ const deleteItem = async (userHash, field, item) => {
   catch (error) {
     console.error("Error uploading session:", error);
   }
-
 }
-
-
 
 // The plan is to allow a user to add to their different sections by inputintg text and pressing enter.
 // This function should then search the db for that field and append the new information to the exisitng array
 // Each item should be given a component that displays on member of a section and then the user can press delete on it
 // It should then search the db for the array of that field and that item and remove it from the array
-
 
 const FieldItem = ({fieldItemName, filed, userHashId}) => {
   return(
@@ -235,10 +231,7 @@ const SettingsPage = () => {
 
   if (loading) {
     return(
-      <>
-        <Navbar/>
-       <div>Loading...</div>;
-      </>
+      <Loading/>
     )
   }
 
@@ -248,18 +241,43 @@ const SettingsPage = () => {
     <div className="configuration-settings-page">
       <div className="configuration-settings-container">
         {/* Profile Section (Moved to the Right) */}
-        <div className="profile-header" style={{ display: "flex" , flexDirection: "row" }}>
+
+
+        <div style={{display: "flex", flexDirection: "row", alignItems: "flex-end" }}>
+          <div className="profile-image-button-placeholder">
+
+          </div>
+          
           <div className="profile-avatar">
-              <img src={userInfoDb.profilePicture}/>
+              <img src={userInfoDb.profilePicture} alt="Profile" className="profile-avatar"/>
           </div>
 
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(event) => setUserImage(event, userInfoDb.id)}
+            className="file-input" // Add class to the input
+          />
+          <button
+            onClick={() => document.querySelector('input[type="file"]').click()}
+            className="profile-image-button" // Add class to the button
+            aria-label="Change profile picture"
+          >
+          </button>
+        </div>
+     
+        {/* <div className="profile-header" style={{ display: "grid" , flexDirection: "column", alignItems: "center" }}>
+          </div> */}
           <div className="profile-info">
+
             <h2>{`${userInfoDb.firstName} ${userInfoDb.lastName}`}</h2>
+
             <p>{`${userInfoDb.school}`}</p>
+            <h3>Major: {userInfoDb.major}</h3>
           </div>
 
-          <div style={{display:"flex"}}>
-            <h3>Major: {userInfoDb.major}</h3>
+
+          <div className="profile-fields">
               <select value={""}
               onChange={(e) => {
                 const newValue = e.target.value;
@@ -268,6 +286,7 @@ const SettingsPage = () => {
                   setDescriptions({ ...descriptions, [item.key]: "" });
                 }, 500); 
               }}>
+                
                 <option value="" disabled>Select Major</option>
                 {schoolInformation.majors.map((major, index) => (
                   <option key={index} value={major}>
@@ -276,9 +295,22 @@ const SettingsPage = () => {
                 ))}
               </select>
 
+              {/* <input
+                type="file"
+                accept="image/*"
+                onChange={(event) => setUserImage(event, userInfoDb.id)}
+                className="file-input" // Add class to the input
+              />
+              <button
+                onClick={() => document.querySelector('input[type="file"]').click()}
+                className="profile-image-button" // Add class to the button
+                aria-label="Change profile picture"
+              >
+              </button> */}
 
+         
           </div>
-        </div>
+
 
         {/* Editable Grid (Fixed State Issue) */}
         <div className="editable-grid">
@@ -295,16 +327,10 @@ const SettingsPage = () => {
 
             return (
               <div className="grid-box" key={item.key}>
-                <h3>{item.title}</h3>
-                {Array.isArray(fieldValue) ? (
-                  fieldValue.map((value, index) => (
-                    <FieldItem fieldItemName={value} key={index} filed={item.field} userHashId={userInfoDb.id}/>
-                  ))
-                ) : (
-                  <h4>{fieldValue}</h4>
-                )}
 
-                  <select
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
+                  <h3>{item.title}</h3>
+                   <select
                     value={descriptions[item.key] || ""}
                     onChange={(e) => {
                       const newValue = e.target.value;
@@ -315,9 +341,10 @@ const SettingsPage = () => {
                       }, 500); 
                     }}
                     className="configuration-dropdown"
+                    style={{ marginBottom: "10px"}}
                   >
                     <option value="" disabled>
-                      Add Tags
+                      {/* Add Tags */}
                     </option>
                     {item.options.map((option, index) => (
                       <option key={index} value={option}>
@@ -325,7 +352,16 @@ const SettingsPage = () => {
                       </option>
                     ))}
                   </select>
+                </div>
 
+
+                {Array.isArray(fieldValue) ? (
+                  fieldValue.map((value, index) => (
+                    <FieldItem fieldItemName={value} key={index} filed={item.field} userHashId={userInfoDb.id}/>
+                  ))
+                ) : (
+                  <h4>{fieldValue}</h4>
+                )}
 
               </div>
             );
@@ -334,12 +370,7 @@ const SettingsPage = () => {
 
         {/* Settings Options */}
         <div className="configuration-settings-options">
-        
           <button className="configuration-logout-button" onClick={logoutUser}>Logout</button>
-
-          {/* Input for users profile picture, currently using my id here */}
-          <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />
-
         </div>
       </div>
     </div>

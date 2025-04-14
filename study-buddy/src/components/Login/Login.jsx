@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Login.css";
 import login_image2 from "../../assets/login_background2.png";
 import logo from "../../assets/logo.png";
+import logo2 from "../../assets/logo2.png";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase.js";
 import { setDoc, doc, getDoc } from "firebase/firestore";
@@ -62,7 +63,7 @@ const userSignup = async (email, password, firstName, lastName) => {
       studyEnvironment: [],
       studyTimes: [],
       agendaStudySessions: [],
-      profilePicture: "default",
+      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
       school: schoolsMap[emailDomain],
       id: user.uid
     });

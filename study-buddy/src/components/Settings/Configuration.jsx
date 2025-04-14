@@ -273,7 +273,8 @@ const SettingsPage = () => {
                 ))}
               </select>
               {/* Input for users profile picture, currently using my id here */}
-          <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />
+              <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />
+         
           </div>
 
 
@@ -292,16 +293,10 @@ const SettingsPage = () => {
 
             return (
               <div className="grid-box" key={item.key}>
-                <h3>{item.title}</h3>
-                {Array.isArray(fieldValue) ? (
-                  fieldValue.map((value, index) => (
-                    <FieldItem fieldItemName={value} key={index} filed={item.field} userHashId={userInfoDb.id}/>
-                  ))
-                ) : (
-                  <h4>{fieldValue}</h4>
-                )}
 
-                  <select
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
+                  <h3>{item.title}</h3>
+                   <select
                     value={descriptions[item.key] || ""}
                     onChange={(e) => {
                       const newValue = e.target.value;
@@ -312,9 +307,10 @@ const SettingsPage = () => {
                       }, 500); 
                     }}
                     className="configuration-dropdown"
+                    style={{ marginBottom: "10px"}}
                   >
                     <option value="" disabled>
-                      Add Tags
+                      {/* Add Tags */}
                     </option>
                     {item.options.map((option, index) => (
                       <option key={index} value={option}>
@@ -322,6 +318,17 @@ const SettingsPage = () => {
                       </option>
                     ))}
                   </select>
+                </div>
+
+
+                {Array.isArray(fieldValue) ? (
+                  fieldValue.map((value, index) => (
+                    <FieldItem fieldItemName={value} key={index} filed={item.field} userHashId={userInfoDb.id}/>
+                  ))
+                ) : (
+                  <h4>{fieldValue}</h4>
+                )}
+
               </div>
             );
           })}

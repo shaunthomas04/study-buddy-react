@@ -241,9 +241,31 @@ const SettingsPage = () => {
     <div className="configuration-settings-page">
       <div className="configuration-settings-container">
         {/* Profile Section (Moved to the Right) */}
-        <div className="profile-avatar">
+
+
+        <div style={{display: "flex", flexDirection: "row", alignItems: "flex-end" }}>
+          <div className="profile-image-button-placeholder">
+
+          </div>
+          
+          <div className="profile-avatar">
               <img src={userInfoDb.profilePicture} alt="Profile" className="profile-avatar"/>
           </div>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(event) => setUserImage(event, userInfoDb.id)}
+            className="file-input" // Add class to the input
+          />
+          <button
+            onClick={() => document.querySelector('input[type="file"]').click()}
+            className="profile-image-button" // Add class to the button
+            aria-label="Change profile picture"
+          >
+          </button>
+        </div>
+     
         {/* <div className="profile-header" style={{ display: "grid" , flexDirection: "column", alignItems: "center" }}>
           </div> */}
           <div className="profile-info">
@@ -272,8 +294,21 @@ const SettingsPage = () => {
                   </option>
                 ))}
               </select>
-              {/* Input for users profile picture, currently using my id here */}
-          <input type="file" accept="image/*" onChange={(event) => setUserImage(event, userInfoDb.id)} />
+
+              {/* <input
+                type="file"
+                accept="image/*"
+                onChange={(event) => setUserImage(event, userInfoDb.id)}
+                className="file-input" // Add class to the input
+              />
+              <button
+                onClick={() => document.querySelector('input[type="file"]').click()}
+                className="profile-image-button" // Add class to the button
+                aria-label="Change profile picture"
+              >
+              </button> */}
+
+         
           </div>
 
 
@@ -292,16 +327,10 @@ const SettingsPage = () => {
 
             return (
               <div className="grid-box" key={item.key}>
-                <h3>{item.title}</h3>
-                {Array.isArray(fieldValue) ? (
-                  fieldValue.map((value, index) => (
-                    <FieldItem fieldItemName={value} key={index} filed={item.field} userHashId={userInfoDb.id}/>
-                  ))
-                ) : (
-                  <h4>{fieldValue}</h4>
-                )}
 
-                  <select
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
+                  <h3>{item.title}</h3>
+                   <select
                     value={descriptions[item.key] || ""}
                     onChange={(e) => {
                       const newValue = e.target.value;
@@ -312,9 +341,10 @@ const SettingsPage = () => {
                       }, 500); 
                     }}
                     className="configuration-dropdown"
+                    style={{ marginBottom: "10px"}}
                   >
                     <option value="" disabled>
-                      Add Tags
+                      {/* Add Tags */}
                     </option>
                     {item.options.map((option, index) => (
                       <option key={index} value={option}>
@@ -322,6 +352,17 @@ const SettingsPage = () => {
                       </option>
                     ))}
                   </select>
+                </div>
+
+
+                {Array.isArray(fieldValue) ? (
+                  fieldValue.map((value, index) => (
+                    <FieldItem fieldItemName={value} key={index} filed={item.field} userHashId={userInfoDb.id}/>
+                  ))
+                ) : (
+                  <h4>{fieldValue}</h4>
+                )}
+
               </div>
             );
           })}

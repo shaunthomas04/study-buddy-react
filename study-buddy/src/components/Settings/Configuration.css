@@ -38,8 +38,7 @@ body {
   border-radius: 12px; 
   box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1); 
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  height: auto;
-  min-height: 140px;
+  height: 170px;
   overflow: scroll;
 
   scrollbar-width: none; /* Firefox */
@@ -240,11 +239,65 @@ body {
 }
 
 .configuration-dropdown {
-  max-width: 80px;          /* Adjust width as needed */
-  height: 20px;         /* Set a fixed height for the dropdown */
-  font-size: 12px;      /* Adjust the font size */
-  border: 1px solid #ccc; /* Add a border */
-  border-radius: 4px;   /* Rounded corners for the dropdown */
-  background-color: #fff; /* White background */
+  appearance: none; /* Remove default styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background-color: white;
+
+  text-indent: 100%; /* Push text off-screen */
+  white-space: nowrap;
+  overflow: hidden;
+
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666' stroke-width='1.5'/%3E%3C/svg%3E"); 
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
+  cursor: pointer;
+}
+
+/* Hide the file input */
+.file-input {
+  display: none;
+}
+
+/* Style for the profile image button */
+.profile-image-button {
+  background-image: url(https://cdn.iconscout.com/icon/free/png-256/free-edit-icon-download-in-svg-png-gif-file-formats--pen-write-pencil-ball-study-user-interface-vol-2-pack-icons-2202989.png?f=webp&w=256);
+  background-size: contain; /* Ensure the entire image is visible */
+  background-position: center;
+  width: 20px; /* Adjust the size */
+  height: 20px;
+  border: none;
+  border-radius: 10px; /* Less rounded corners */
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  background-color: transparent; /* Remove background color */
+}
+
+.profile-image-button:hover {
+  transform: scale(1.05); /* Hover effect */
+}
+
+.profile-image-button:focus {
+  outline: none; /* Remove the outline on focus */
+}
+
+.profile-image-button-placeholder {
+  background-size: contain; /* Ensure the entire image is visible */
+  background-position: center;
+  width: 20px; /* Adjust the size */
+  height: 20px;
+  border: none;
+  border-radius: 10px; /* Less rounded corners */
+  padding: 0;
+
+  background-color: transparent; /* Remove background color */
 }

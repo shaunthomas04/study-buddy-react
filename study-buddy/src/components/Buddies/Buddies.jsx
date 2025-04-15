@@ -48,7 +48,7 @@ const sendBuddyRequest = async (userId, suggestedBuddyId) => {
     const suggestedBuddyEmail = suggestedBuddyDocSnapshot.data().email;
     const message = `${userName} has sent you a buddy request!`;
 
-    // await sendRequestAlert(suggestedBuddyName, suggestedBuddyEmail, message);
+    await sendRequestAlert(suggestedBuddyName, suggestedBuddyEmail, message);
 
 
     // Update Firestore

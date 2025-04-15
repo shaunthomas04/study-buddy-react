@@ -81,7 +81,7 @@ const acceptStudySession = async (senderID, recieverID, studySessionHash) => {
         const buddyName = `${senderDocSnapshot.data().firstName} ${senderDocSnapshot.data().lastName}`;
         const userName = `${recieverDocSnapshot.data().firstName} ${recieverDocSnapshot.data().lastName}`;
         const message = `Your study session with ${userName} on ${date} at ${time} has been accepted!`;
-        sendRequestAlert(buddyName, buddyEmail, message);
+        // sendRequestAlert(buddyName, buddyEmail, message);
 
       } 
       catch (error) {
@@ -127,7 +127,7 @@ const acceptStudySession = async (senderID, recieverID, studySessionHash) => {
          const buddyName = `${senderDocSnapshot.data().firstName} ${senderDocSnapshot.data().lastName}`;
          const userName = `${recieverDocSnapshot.data().firstName} ${recieverDocSnapshot.data().lastName}`;
          const message = `Your study session with ${userName} on ${date} at ${time} has been declined.`;
-         sendRequestAlert(buddyName, buddyEmail, message);
+        //  sendRequestAlert(buddyName, buddyEmail, message);
       } 
       catch (error) {
         console.error("Error getting document:", error);

@@ -68,13 +68,26 @@ const removeBuddy = async (buddyID, userID) => {
         return null;
     }
 
+    // Get the current buddies and remove the buddyIDs from both users
     const userBuddies = userInfoSnapshot.data().buddies;
     const buddyBuddies = buddyInfoSnapshot.data().buddies
     const updateduserBuddies = userBuddies.filter(request => request.trim() !== buddyID.trim());
     const updatedbuddyBuddies = buddyBuddies.filter(request => request.trim() !== userID.trim());
 
-    await updateDoc(userInfo, { buddies: updateduserBuddies });
-    await updateDoc(buddyInfo, { buddies: updatedbuddyBuddies });
+    
+    // Get the user and buddy's names
+    const userName = userInfoSnapshot.data().firstName + " " + userInfoSnapshot.data().lastName;
+    const buddyName = buddyInfoSnapshot.data().firstName + " " + buddyInfoSnapshot.data().lastName;
+    
+    // Remove any agenda sessions between the two users
+    const userAgenda = userInfoSnapshot.data().agendaStudySessions || [];
+    const buddyAgenda = buddyInfoSnapshot.data().agendaStudySessions || [];
+    const updatedUserAgenda = userAgenda.filter(session => session.person !== buddyName);
+    const updatedBuddyAgenda = buddyAgenda.filter(session => session.person !== userName);
+
+    // Update the user and buddy documents in Firestore to remoeve the buddy and agenda sessions
+    await updateDoc(userInfo, { buddies: updateduserBuddies, agendaStudySessions: updatedUserAgenda });
+    await updateDoc(buddyInfo, { buddies: updatedbuddyBuddies, agendaStudySessions: updatedBuddyAgenda });
     window.location.reload();
   
   } 

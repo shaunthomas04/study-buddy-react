@@ -11,6 +11,7 @@ import { db } from "../../firebase.js";
 import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import Loading from '../Loading/Loading.jsx';
 import Redirect from '../Redirect/Redirect.jsx';
+import { sendRequestAlert } from '../Email/Email.js';
 
 const preferenceIconMap = {
   "Preferred Study Time": StudyTimeIcon,
@@ -38,6 +39,12 @@ const sendBuddyRequest = async (userId, suggestedBuddyId) => {
       console.log("Request already sent to this user.");
       return false;
     }
+
+    // Send email notification
+    const userName = `${userDocSnapshot.data().firstName} ${userDocSnapshot.data().lastName}`;
+    const suggestedBuddyName = `${suggestedBuddyDocSnapshot.data().firstName} ${suggestedBuddyDocSnapshot.data().lastName}`;
+    const suggestedBuddyEmail = suggestedBuddyDocSnapshot.data().email;
+    await sendRequestAlert(userName, suggestedBuddyName, suggestedBuddyEmail);
 
     await updateDoc(userInfo, { buddyRequestsSent: arrayUnion(suggestedBuddyId) });
     await updateDoc(suggestedBuddyInfo, { buddyRequests: arrayUnion(userId) });

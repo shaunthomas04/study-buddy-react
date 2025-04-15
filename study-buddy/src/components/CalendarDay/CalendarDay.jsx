@@ -3,6 +3,7 @@ import './CalendarDay.css';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-fns";
+import { sendRequestAlert } from '../Email/Email.js';
 
 
 // This component is used to show the study sessions for a specific day in a popup when the user clicks on the day in the calendar
@@ -56,6 +57,11 @@ const acceptStudySession = async (senderID, recieverID, studySessionHash) => {
         const recieverStudySessions = recieverDocSnapshot.data().agendaStudySessions;
         const senderStudySessions = senderDocSnapshot.data().agendaStudySessions;
 
+        const matchedSession = recieverStudySessions.find(
+            session => session.sessionID === studySessionHash
+          );
+
+
         const updatedReceiverSessions = recieverStudySessions.map(session =>
             session.sessionID === studySessionHash ? { ...session, status: "accepted" } : session
         );
@@ -65,6 +71,17 @@ const acceptStudySession = async (senderID, recieverID, studySessionHash) => {
 
         await updateDoc(reciever, { agendaStudySessions: updatedReceiverSessions });
         await updateDoc(sender, { agendaStudySessions: updatedSenderSessions });
+
+
+          
+        // Send notification email to buddy
+        const time = matchedSession.time;
+        const date = matchedSession.date;
+        const buddyEmail = senderDocSnapshot.data().email;
+        const buddyName = `${senderDocSnapshot.data().firstName} ${senderDocSnapshot.data().lastName}`;
+        const userName = `${recieverDocSnapshot.data().firstName} ${recieverDocSnapshot.data().lastName}`;
+        const message = `Your study session with ${userName} on ${date} at ${time} has been accepted!`;
+        // sendRequestAlert(buddyName, buddyEmail, message);
 
       } 
       catch (error) {
@@ -88,6 +105,11 @@ const acceptStudySession = async (senderID, recieverID, studySessionHash) => {
         const recieverStudySessions = recieverDocSnapshot.data().agendaStudySessions;
         const senderStudySessions = senderDocSnapshot.data().agendaStudySessions;
 
+        const matchedSession = recieverStudySessions.find(
+            session => session.sessionID === studySessionHash
+          );
+
+
         const updatedReceiverSessions = recieverStudySessions.filter(session => 
             session.sessionID !== studySessionHash 
         );
@@ -98,6 +120,14 @@ const acceptStudySession = async (senderID, recieverID, studySessionHash) => {
         await updateDoc(reciever, { agendaStudySessions: updatedReceiverSessions });
         await updateDoc(sender, { agendaStudySessions: updatedSenderSessions });
 
+        // Send notification email to buddy
+        const time = matchedSession.time;
+        const date = matchedSession.date;
+         const buddyEmail = senderDocSnapshot.data().email;
+         const buddyName = `${senderDocSnapshot.data().firstName} ${senderDocSnapshot.data().lastName}`;
+         const userName = `${recieverDocSnapshot.data().firstName} ${recieverDocSnapshot.data().lastName}`;
+         const message = `Your study session with ${userName} on ${date} at ${time} has been declined.`;
+        //  sendRequestAlert(buddyName, buddyEmail, message);
       } 
       catch (error) {
         console.error("Error getting document:", error);

@@ -7,6 +7,9 @@ import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-f
 import agendaIcon from "./images/agendaPlaceholder.png";
 import buddiesIcon from "./images/buddiesPlaceholder.png";
 import Loading from '../Loading/Loading.jsx';
+// ignore this error don't know why it is showing up when it works
+import { sendRequestAlert } from '../Email/Email.js';
+
 
 // Function to handle buddy requests (accept or reject)
 const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
@@ -30,6 +33,8 @@ const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
 
       const updatedUserBuddyRequests = userBuddyRequests.filter(request => request !== buddyID.trim());
       const updatedBuddyRequestsSent = buddyRequestsSent.filter(request => request !== userID.trim());
+      const buddyName = `${buddyInfoSnapshot.data().firstName} ${buddyInfoSnapshot.data().lastName}`;
+      const buddyEmail = buddyInfoSnapshot.data().email;
 
       userBuddies.push(buddyID.trim())
       buddyBuddies.push(userID.trim())
@@ -40,11 +45,21 @@ const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
         const updatedBuddyRequests = buddyBuddyRequests.filter(request => request !== userID.trim());
         await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests, buddies: userBuddies, buddyRequestsSent: updatedUserRequestsSent });
         await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent, buddies: buddyBuddies, buddyRequests: updatedBuddyRequests });
+        
+        // Send email notification to the buddy
+        const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has accepted your buddy request!`;
+        // await sendRequestAlert(buddyName, buddyEmail, message);
+
         window.location.reload();
       }
       else {
         await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests });
         await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent });
+
+        // Send email notification to the buddy
+        const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has rejected your buddy request.`;
+        // await sendRequestAlert(buddyName, buddyEmail, message);
+
         window.location.reload();
       }
 
@@ -75,6 +90,14 @@ const removeBuddy = async (buddyID, userID) => {
 
     await updateDoc(userInfo, { buddies: updateduserBuddies });
     await updateDoc(buddyInfo, { buddies: updatedbuddyBuddies });
+
+
+    // Send email notification to the buddy
+    const buddyName = `${buddyInfoSnapshot.data().firstName} ${buddyInfoSnapshot.data().lastName}`;
+    const buddyEmail = buddyInfoSnapshot.data().email;
+    const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has removed you from their buddy list.`;
+    // await sendRequestAlert(buddyName, buddyEmail, message);
+
     window.location.reload();
   
   } 
@@ -84,7 +107,6 @@ const removeBuddy = async (buddyID, userID) => {
   }
 
 }
-
 
 
 // Function to get the user's current buddies

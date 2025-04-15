@@ -304,6 +304,8 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
 
   return (
     <aside className="friends-list">
+      {console.log("Friends List:", friendsList)}
+      {console.log("Requests List:", requestsList)}
       {requestsList.length !== 0 && (
         <>
           <h2>Buddy Requests</h2>
@@ -318,12 +320,14 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
       )}
 
       <h2>Buddies</h2>
+
+      
       {friendsList.length === 0 && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50%" }}>
-          {/* <img style={{height: "900px", width:"200px"}} src={buddiesIcon}></img>   */}
           <h3>Head to the Buddies Page to add some Buddies!</h3>
         </div>
       )}
+
 
 
 
@@ -525,17 +529,24 @@ const Dashboard = () => {
       if (!buddiesInfo) {
         console.log("Buddies data is missing");
         setBuddies([]);
-
-      } 
-      else if (!agendaInfo) {
+      } else {
+        setBuddies(buddiesInfo);
+      }
+      
+      if (!agendaInfo) {
         console.log("Agenda data is missing");
         setAgenda([]);
-      } 
-      else {
-        setBuddies(buddiesInfo);
+      } else {
         setAgenda(agendaInfo);
+      }
+      
+      if (!userRequests) {
+        console.log("User Requests data is missing");
+        setUserRequests([]);
+      } else {
         setUserRequests(userRequests);
       }
+      
       setLoading(false);
 
     };

@@ -1,11 +1,11 @@
 import emailjs from '@emailjs/browser';
 
 // Function to send a noitfication about a new request
-export const sendRequestAlert = async (senderName, recieverName, recieverEmail) => {
+export const sendRequestAlert = async (recieverName, recieverEmail, message) => {
   const templateParams = {
     name: recieverName,
-    senderName: senderName,
-    email: recieverEmail
+    email: recieverEmail,
+    message: message
   };
 
   try {

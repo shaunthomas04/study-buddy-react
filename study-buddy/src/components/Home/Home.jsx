@@ -12,8 +12,50 @@ import { sendRequestAlert } from '../Email/Email.js';
 
 // Function to get all the trending forums
 const getTrendingForums = async (userId) => {
+  try {
+    const userTrendingForums = [];
+    const userInfo = doc(db, "users", userId.trim());
+    const docSnapshot = await getDoc(userInfo);
+      
+    if (docSnapshot.exists()) {
+      const userClasses = docSnapshot.data().courses || []; // Get the user's classes
 
-  
+      // Go through each forums and find trending topic and then add that specific questions to the userTrendingForums array
+      for (const userClass of userClasses) {
+        const classRef = doc(db, "forums", userClass.trim());
+        const classSnapshot = await getDoc(classRef);
+        if (classSnapshot.exists()) {
+          const trendingTopicID = classSnapshot.data().trendingTopic;
+          const questions = classSnapshot.data().questions || []; 
+          if (trendingTopicID === null) {
+            console.log("No trending topic for this class!");
+            continue;
+          }
+
+          // Find the trending topic in the questions array and add it to the userTrendingForums array
+          const trendingTopic = questions.find((question) => question.id === trendingTopicID);
+          if (trendingTopic) {
+            trendingTopic.class = userClass;
+            userTrendingForums.push(trendingTopic);
+          } else {
+            console.log("No such trending topic in the questions array!", trendingTopicID);
+          }
+
+        } else {
+          console.log("No such document class!", userClass);
+        }
+      }
+      return userTrendingForums;
+    } 
+    else {
+      console.log("No such document");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return null;
+  }
+
 }
 
 
@@ -335,8 +377,7 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
 
   return (
     <aside className="friends-list">
-      {console.log("Friends List:", friendsList)}
-      {console.log("Requests List:", requestsList)}
+
       {requestsList.length !== 0 && (
         <>
           <h2>Buddy Requests</h2>
@@ -488,8 +529,6 @@ const ForumGrid = ({forumsData}) => (
   
   <section className="forum-scroll-container">
   {forumsData.map((forum, index) => (
-    console.log("Forum Data:", forum),
-
     <Card
       key={forum.id || index}
       forumObjectCard={forum}
@@ -561,6 +600,7 @@ const Dashboard = () => {
   const [agenda, setAgenda] = useState([]);
   const [userInformation, setUserInfo] = useState(null);
   const [userRequests, setUserRequests] = useState([]);
+  const [trendingForumsState, setTrendingForums] = useState([]);
 
   const dummyData = [
     {
@@ -664,26 +704,32 @@ const Dashboard = () => {
       const agendaInfo = await getUserAgenda(userID);
       const userInfo = await getUserInfo(userID);
       const userRequests = await getUserRequests(userID);
+      const trendingForums = await getTrendingForums(userID);
 
       if (!buddiesInfo) {
-        console.log("Buddies data is missing");
         setBuddies([]);
       } else {
         setBuddies(buddiesInfo);
       }
       
       if (!agendaInfo) {
-        console.log("Agenda data is missing");
         setAgenda([]);
       } else {
         setAgenda(agendaInfo);
       }
       
       if (!userRequests) {
-        console.log("User Requests data is missing");
         setUserRequests([]);
       } else {
         setUserRequests(userRequests);
+      }
+
+      if (!trendingForums){
+        console.log("Trending Forums data is missing");
+        setTrendingForums([]);
+      }
+      else {
+        setTrendingForums(trendingForums);
       }
       
       setLoading(false);
@@ -706,6 +752,7 @@ const Dashboard = () => {
       <Loading />
     );
   }
+  console.log(trendingForumsState)
 
   return (
     <>
@@ -713,7 +760,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <main className="main-layout">
         <Sidebar friendsList={buddies} requestsList={userRequests} userInfo={userInformation}/> 
-        <Content agendaStudySessions={agenda} userInfo={userInformation} forumsInfo={dummyData}/>
+        <Content agendaStudySessions={agenda} userInfo={userInformation} forumsInfo={trendingForumsState}/>
       </main>
     </div>
   </>

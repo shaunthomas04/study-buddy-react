@@ -160,7 +160,7 @@ body {
 
 /* Card Styling */
 .card {
-  background: white; /* Match image */
+  background: white;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -169,6 +169,33 @@ body {
   font-weight: 500;
   color: black;
   transition: transform 0.2s ease-in-out;
+  height: 300px;
+  width: 500px;
+  overflow-y: auto;
+
+  /* Hide scrollbar by default */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.card::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Show scrollbar on hover */
+.card:hover {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #aaa transparent;
+}
+
+.card:hover::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+
+.card:hover::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 10px;
 }
 
 .card h4 {
@@ -353,4 +380,72 @@ body {
   font-weight: bold;
   color: #2465C5; 
   text-align: center;
+}
+
+.forum-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem;
+  scroll-snap-type: x mandatory;
+  width: 1200px;
+  /* Hide scrollbar by default */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.forum-scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+
+.forum-scroll-container > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.forum-scroll-container:hover {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #aaa transparent;
+}
+
+.subject {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.text {
+  margin-bottom: 6px;
+}
+
+.meta {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.replies {
+  border-left: 3px solid #ddd;
+  padding-left: 12px;
+  margin-top: 10px;
+}
+
+.replies-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.reply {
+  margin-bottom: 10px;
+}
+
+.reply-text {
+  margin: 0;
+}
+
+.reply-meta {
+  font-size: 11px;
+  color: #666;
 }

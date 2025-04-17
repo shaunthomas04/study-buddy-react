@@ -518,13 +518,10 @@ const Content = ({ agendaStudySessions, userInfo }) => (
     })
   )}
 </section>
-
-
     <h3>Forums</h3>
     <ForumGrid />
   </section>
 );
-
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -580,9 +577,7 @@ const Dashboard = () => {
         setUserInfo(docSnapshot.data());  // Update state with Firestore data
       }
     });
-
     return () => unsubscribe();
-
   }, []); 
 
   if (loading) {

@@ -589,7 +589,7 @@ const Content = ({ agendaStudySessions, userInfo, forumsInfo }) => (
     })
   )}
 </section>
-    <h3>Forums</h3>
+    <h3>Trending Forums</h3>
     <ForumGrid forumsData={forumsInfo}/>
   </section>
 );

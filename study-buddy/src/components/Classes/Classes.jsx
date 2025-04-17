@@ -42,7 +42,8 @@ const uploadQuestion = async (className, question) => {
     else {
       // If the class document doesn't exist, create it with the question
       await setDoc(classRef, {
-        questions: [question], 
+        questions: [question],
+        trendingTopic: null 
       });
       console.log("Class document does not exist.");
     }

@@ -227,8 +227,6 @@ const SettingsPage = () => {
     return () => unsubscribe();
   }, []);
   
-
-
   if (loading) {
     return(
       <Loading/>

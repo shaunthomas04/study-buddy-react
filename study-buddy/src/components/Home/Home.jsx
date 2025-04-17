@@ -534,14 +534,10 @@ const Content = ({ agendaStudySessions, userInfo }) => (
     })
   )}
 </section>
-
-
     <h3>Forums</h3>
     <ForumGrid />
   </section>
 );
-
-
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [buddies, setBuddies] = useState([]);

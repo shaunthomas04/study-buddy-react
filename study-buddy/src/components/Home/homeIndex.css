@@ -137,8 +137,6 @@ body {
     color: white;
   }
   
-
-
   /* Main Layout */
   .main-layout {
     display: flex;
@@ -233,7 +231,7 @@ body {
   scrollbar-width: none; /* Hides scrollbar in Firefox */
 }
 
-/* Upcoming Cards - Improve Layout */
+
 /* Upcoming Cards - Improve Layout */
 .upcoming-card {
   padding: 15px;

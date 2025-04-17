@@ -10,6 +10,15 @@ import Loading from '../Loading/Loading.jsx';
 // ignore this error don't know why it is showing up when it works
 import { sendRequestAlert } from '../Email/Email.js';
 
+// Function to get all the trending forums
+const getTrendingForums = async (userId) => {
+
+  
+}
+
+
+
+
 
 // Function to handle buddy requests (accept or reject)
 const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
@@ -451,22 +460,45 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
   );
 };
 
-const Card = ({ title, description }) => (
+const Card = ({ forumObjectCard }) => (
   <div className="card">
-    <h4>{title}</h4>
-    <p>{description}</p>
+    <h4 className="subject">{forumObjectCard.subject} - {forumObjectCard.class}</h4>
+    <p className="text">{forumObjectCard.text}</p>
+    <p className="meta">
+      Posted by <strong>{forumObjectCard.user}</strong> at {forumObjectCard.timestamp}
+    </p>
+
+    {forumObjectCard.replies && forumObjectCard.replies.length > 0 && (
+      <div className="replies">
+        <p className="replies-title">Replies:</p>
+        {forumObjectCard.replies.map((reply, index) => (
+          <div key={reply.id || index} className="reply">
+            <p className="reply-text">{reply.text}</p>
+            <p className="reply-meta">
+              — <strong>{reply.user}</strong> at {reply.timestamp}
+            </p>
+          </div>
+        ))}
+      </div>
+    )}
   </div>
 );
 
-const ForumGrid = () => (
-  <section className="forum-grid">
-    {[...Array(6)].map((_, index) => (
-      <Card key={index} title={`Forum ${index + 1}`} description="Forum details here" />
-    ))}
-  </section>
+const ForumGrid = ({forumsData}) => (
+  
+  <section className="forum-scroll-container">
+  {forumsData.map((forum, index) => (
+    console.log("Forum Data:", forum),
+
+    <Card
+      key={forum.id || index}
+      forumObjectCard={forum}
+    />
+  ))}
+</section>
 );
 
-const Content = ({ agendaStudySessions, userInfo }) => (
+const Content = ({ agendaStudySessions, userInfo, forumsInfo }) => (
   <section className="content">
     <h2>Welcome back {userInfo.firstName} {userInfo.lastName}!</h2>
     <h3>Upcoming Study Session</h3>
@@ -519,7 +551,7 @@ const Content = ({ agendaStudySessions, userInfo }) => (
   )}
 </section>
     <h3>Forums</h3>
-    <ForumGrid />
+    <ForumGrid forumsData={forumsInfo}/>
   </section>
 );
 
@@ -529,6 +561,95 @@ const Dashboard = () => {
   const [agenda, setAgenda] = useState([]);
   const [userInformation, setUserInfo] = useState(null);
   const [userRequests, setUserRequests] = useState([]);
+
+  const dummyData = [
+    {
+      id: 1744680072678,
+      class: "EGR302",
+      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+      subject: "Absent for today",
+      text: "Hey I was absent. Does anyone have any notes for today's lecture?",
+      timestamp: "4/14 6:21pm",
+      user: "Joshua Rivera",
+      replies: [
+        {
+          id: 1744680094375,
+          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+          text: "Hey I have the notes",
+          timestamp: "4/14 6:21pm",
+          user: "Emily Chen"
+        },
+        {
+          id: 1744680094379,
+          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+          text: "I can send you the slides too if you want.",
+          timestamp: "4/14 6:23pm",
+          user: "Michael Tan"
+        },
+        {
+          id: 1744680094380,
+          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+          text: "Check the class Drive folder, I uploaded them there. vadfasd fadsfas dfasdfas dfasdfa sdfasdf asdfas dfasdf adsfadfas df",
+          timestamp: "4/14 6:25pm",
+          user: "Aisha Patel"
+        }
+      ]
+    },
+    {
+      id: 1744680072679,
+      class: "EGR303",
+      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+      subject: "Need help with assignment",
+      text: "Can someone explain question 3 from the homework? I'm stuck.",
+      timestamp: "4/14 7:45pm",
+      user: "Emily Chen",
+      replies: [
+        {
+          id: 1744680094376,
+          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+          text: "I think it’s asking for the torque calculation using method 2.",
+          timestamp: "4/14 8:05pm",
+          user: "Joshua Rivera"
+        }
+      ]
+    },
+    {
+      id: 1744680072680,
+      class: "EGR304",
+      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+      subject: "Study group this weekend",
+      text: "Anyone down to study together on Saturday? We can reserve a room in the library.",
+      timestamp: "4/15 11:02am",
+      user: "Michael Tan",
+      replies: [
+        {
+          id: 1744680094377,
+          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+          text: "I'm in! What time were you thinking?",
+          timestamp: "4/15 11:15am",
+          user: "Emily Chen"
+        }
+      ]
+    },
+    {
+      id: 1744680072681,
+      class: "EGR305",
+      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+      subject: "Quiz next week?",
+      text: "Did the professor mention a quiz for next week? I might’ve missed it.",
+      timestamp: "4/15 2:37pm",
+      user: "Aisha Patel",
+      replies: [
+        {
+          id: 1744680094378,
+          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
+          text: "Yeah, it's next Thursday. Covers chapters 4–6.",
+          timestamp: "4/15 2:45pm",
+          user: "Michael Tan"
+        }
+      ]
+    }
+  ];
   
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -592,7 +713,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <main className="main-layout">
         <Sidebar friendsList={buddies} requestsList={userRequests} userInfo={userInformation}/> 
-        <Content agendaStudySessions={agenda} userInfo={userInformation}/>
+        <Content agendaStudySessions={agenda} userInfo={userInformation} forumsInfo={dummyData}/>
       </main>
     </div>
   </>

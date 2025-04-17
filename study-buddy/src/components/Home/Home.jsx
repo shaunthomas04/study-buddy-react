@@ -7,6 +7,9 @@ import { parseISO, isWithinInterval, addDays, compareAsc, format  } from "date-f
 import agendaIcon from "./images/agendaPlaceholder.png";
 import buddiesIcon from "./images/buddiesPlaceholder.png";
 import Loading from '../Loading/Loading.jsx';
+// ignore this error don't know why it is showing up when it works
+import { sendRequestAlert } from '../Email/Email.js';
+
 
 // Function to handle buddy requests (accept or reject)
 const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
@@ -30,6 +33,8 @@ const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
 
       const updatedUserBuddyRequests = userBuddyRequests.filter(request => request !== buddyID.trim());
       const updatedBuddyRequestsSent = buddyRequestsSent.filter(request => request !== userID.trim());
+      const buddyName = `${buddyInfoSnapshot.data().firstName} ${buddyInfoSnapshot.data().lastName}`;
+      const buddyEmail = buddyInfoSnapshot.data().email;
 
       userBuddies.push(buddyID.trim())
       buddyBuddies.push(userID.trim())
@@ -40,11 +45,21 @@ const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
         const updatedBuddyRequests = buddyBuddyRequests.filter(request => request !== userID.trim());
         await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests, buddies: userBuddies, buddyRequestsSent: updatedUserRequestsSent });
         await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent, buddies: buddyBuddies, buddyRequests: updatedBuddyRequests });
+        
+        // Send email notification to the buddy
+        const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has accepted your buddy request!`;
+        // await sendRequestAlert(buddyName, buddyEmail, message);
+
         window.location.reload();
       }
       else {
         await updateDoc(userInfo, { buddyRequests: updatedUserBuddyRequests });
         await updateDoc(buddyInfo, { buddyRequestsSent: updatedBuddyRequestsSent });
+
+        // Send email notification to the buddy
+        const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has rejected your buddy request.`;
+        // await sendRequestAlert(buddyName, buddyEmail, message);
+
         window.location.reload();
       }
 
@@ -75,6 +90,14 @@ const removeBuddy = async (buddyID, userID) => {
 
     await updateDoc(userInfo, { buddies: updateduserBuddies });
     await updateDoc(buddyInfo, { buddies: updatedbuddyBuddies });
+
+
+    // Send email notification to the buddy
+    const buddyName = `${buddyInfoSnapshot.data().firstName} ${buddyInfoSnapshot.data().lastName}`;
+    const buddyEmail = buddyInfoSnapshot.data().email;
+    const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has removed you from their buddy list.`;
+    // await sendRequestAlert(buddyName, buddyEmail, message);
+
     window.location.reload();
   
   } 
@@ -84,7 +107,6 @@ const removeBuddy = async (buddyID, userID) => {
   }
 
 }
-
 
 
 // Function to get the user's current buddies
@@ -304,6 +326,8 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
 
   return (
     <aside className="friends-list">
+      {console.log("Friends List:", friendsList)}
+      {console.log("Requests List:", requestsList)}
       {requestsList.length !== 0 && (
         <>
           <h2>Buddy Requests</h2>
@@ -318,12 +342,14 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
       )}
 
       <h2>Buddies</h2>
+
+      
       {friendsList.length === 0 && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50%" }}>
-          {/* <img style={{height: "900px", width:"200px"}} src={buddiesIcon}></img>   */}
           <h3>Head to the Buddies Page to add some Buddies!</h3>
         </div>
       )}
+
 
 
 
@@ -447,10 +473,9 @@ const Content = ({ agendaStudySessions, userInfo }) => (
 
     <section className="upcoming-section"  style={agendaStudySessions.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
    
-
-
   {agendaStudySessions.length === 0 ? (
     <div className="empty-message" style={{ display: "flex"}}>
+    
 
       <img src={agendaIcon} style={{height:"230px", width:"250px"}}></img>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: "70px"}}>
@@ -493,13 +518,10 @@ const Content = ({ agendaStudySessions, userInfo }) => (
     })
   )}
 </section>
-
-
     <h3>Forums</h3>
     <ForumGrid />
   </section>
 );
-
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -525,17 +547,24 @@ const Dashboard = () => {
       if (!buddiesInfo) {
         console.log("Buddies data is missing");
         setBuddies([]);
-
-      } 
-      else if (!agendaInfo) {
+      } else {
+        setBuddies(buddiesInfo);
+      }
+      
+      if (!agendaInfo) {
         console.log("Agenda data is missing");
         setAgenda([]);
-      } 
-      else {
-        setBuddies(buddiesInfo);
+      } else {
         setAgenda(agendaInfo);
+      }
+      
+      if (!userRequests) {
+        console.log("User Requests data is missing");
+        setUserRequests([]);
+      } else {
         setUserRequests(userRequests);
       }
+      
       setLoading(false);
 
     };
@@ -548,9 +577,7 @@ const Dashboard = () => {
         setUserInfo(docSnapshot.data());  // Update state with Firestore data
       }
     });
-
     return () => unsubscribe();
-
   }, []); 
 
   if (loading) {

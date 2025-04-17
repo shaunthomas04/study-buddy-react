@@ -11,6 +11,9 @@ import { db } from "../../firebase.js";
 import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import Loading from '../Loading/Loading.jsx';
 import Redirect from '../Redirect/Redirect.jsx';
+// ignore this error don't know why it is showing up when it works
+import { sendRequestAlert } from '../Email/Email.js';
+
 
 const preferenceIconMap = {
   "Preferred Study Time": StudyTimeIcon,
@@ -39,6 +42,16 @@ const sendBuddyRequest = async (userId, suggestedBuddyId) => {
       return false;
     }
 
+    // Send email notification
+    const userName = `${userDocSnapshot.data().firstName} ${userDocSnapshot.data().lastName}`;
+    const suggestedBuddyName = `${suggestedBuddyDocSnapshot.data().firstName} ${suggestedBuddyDocSnapshot.data().lastName}`;
+    const suggestedBuddyEmail = suggestedBuddyDocSnapshot.data().email;
+    const message = `${userName} has sent you a buddy request!`;
+
+    // await sendRequestAlert(suggestedBuddyName, suggestedBuddyEmail, message);
+
+
+    // Update Firestore
     await updateDoc(userInfo, { buddyRequestsSent: arrayUnion(suggestedBuddyId) });
     await updateDoc(suggestedBuddyInfo, { buddyRequests: arrayUnion(userId) });
 

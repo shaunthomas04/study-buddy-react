@@ -119,7 +119,7 @@ const Buddies = () => {
   const [buddies, setBuddies] = useState([]);
   const [activeBuddy, setActiveBuddy] = useState("");
   const [sentRequests, setSentRequests] = useState({});
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userRecommendations, setUserRecommendations] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -185,10 +185,6 @@ const Buddies = () => {
   return (
     <>
       <Navbar />
-
-      <button className="buddy-menu-button" onClick={toggleSidebar}>
-        {sidebarOpen ? "✖" : "☰"}
-      </button>
 
       <aside className={`buddy-sidebar ${sidebarOpen ? "buddy-active" : ""}`}>
         <h2 className="buddy-sidebar-header">Find Buddies</h2>

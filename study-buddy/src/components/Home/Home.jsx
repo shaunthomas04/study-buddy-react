@@ -482,12 +482,9 @@ const Content = ({ agendaStudySessions, userInfo }) => (
 
     <section className="upcoming-section"  style={agendaStudySessions.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
    
-
-
   {agendaStudySessions.length === 0 ? (
     <div className="empty-message" style={{ display: "flex"}}>
-      
-
+    
       <img src={agendaIcon} style={{height:"230px", width:"250px"}}></img>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: "70px", color: "black" }}>
       <div className="card">

@@ -263,7 +263,7 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
       style={{
         display: "flex",
         alignItems: "center",
-        backgroundColor: "lightgray",
+        backgroundColor: "gray",
         padding: "8px",
         borderRadius: "8px",
         marginBottom: "8px",
@@ -281,10 +281,7 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
           marginRight: "10px",
         }}
       />
-      <div style={{ marginLeft: "auto", display: "column", alignItems: "center", color: "black" }}>
-      <div><h2>{friend.firstName} {friend.lastName}</h2></div>
-      <div><sub>{friend.major}</sub></div>
-      </div>   
+      <div>{friend.firstName} {friend.lastName}</div>
   
       <div style={{ marginLeft: "auto", display: "flex", gap: "7px", alignItems: "center" }}>
         {isRequest ? (
@@ -348,14 +345,8 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
 
       
       {friendsList.length === 0 && (
-        <div style={{ display: "flex", flexDirection: "column", height: "50%",  color:"black", backgroundColor: "" }}>
-          {/* <img style={{height: "900px", width:"200px"}} src={buddiesIcon}></img>   */}
-          <div className="card">
-          <a activeclassname="active" class="nav-link" href="/buddies" data-discover="true">
-          <h3>Add some Buddies here!
-          </h3>
-        </a>
-          </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50%" }}>
+          <h3>Head to the Buddies Page to add some Buddies!</h3>
         </div>
       )}
 
@@ -469,7 +460,7 @@ const Card = ({ title, description }) => (
 
 const ForumGrid = () => (
   <section className="forum-grid">
-    {[...Array(1)].map((_, index) => (
+    {[...Array(6)].map((_, index) => (
       <Card key={index} title={`Forum ${index + 1}`} description="Forum details here" />
     ))}
   </section>
@@ -478,22 +469,18 @@ const ForumGrid = () => (
 const Content = ({ agendaStudySessions, userInfo }) => (
   <section className="content">
     <h2>Welcome back {userInfo.firstName} {userInfo.lastName}!</h2>
-    <h4><i>Upcoming Study Sessions</i></h4>
+    <h3>Upcoming Study Session</h3>
 
     <section className="upcoming-section"  style={agendaStudySessions.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : {}}>
    
   {agendaStudySessions.length === 0 ? (
     <div className="empty-message" style={{ display: "flex"}}>
     
+
       <img src={agendaIcon} style={{height:"230px", width:"250px"}}></img>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: "70px", color: "black" }}>
-      <div className="card">
-      <a activeclassname="active" class="nav-link" href="/buddies" data-discover="true">
-         
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: "70px"}}>
         <h1 style={{fontSize:"20px"}}>No upcoming study sessions,</h1>
-        <h2 style={{ fontSize:"14px", color: "black"}}><i>Head to Agenda page to get started!</i></h2>
-        </a>
-        </div>
+        <h1 style={{ fontSize:"20px"}}>Head to Agenda page to get started!</h1>
       </div>
 
      

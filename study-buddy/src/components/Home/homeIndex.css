@@ -11,7 +11,6 @@ body {
   /* Sidebar */
 /* Sidebar Menu Button */
 .buddy-menu-button {
-  
   position: fixed;
   top: 80px; 
   left: 10px; 
@@ -154,15 +153,16 @@ body {
   
 /* Forum Grid */
 .forum-grid {
-  display: column;
-  align-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  grid-template-rows: repeat(3, auto); /* 3 rows */
   gap: 20px; /* Adjust for more uniform spacing */
   padding: 20px;
 }
 
 /* Card Styling */
 .card {
-  background: lightgray; /* Match image */
+  background: white; /* Match image */
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -173,22 +173,10 @@ body {
   transition: transform 0.2s ease-in-out;
 }
 
-.card h1{
-  font-size: 1.1rem;
-  color: #3f87a6;
-  margin-bottom: 10px;
-}
-  
-.card h3{
-  
-  color: black;
-  font-style: italic;
-}
-
 .card h4 {
-  font-size: 1.1rem;
-  color: #3f87a6;
-  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2465C5; /* Blue color similar to the image */
 }
 
 .card:hover {
@@ -259,9 +247,9 @@ body {
 }
 
 .upcoming-card h4 {
-  font-size: 1.1rem;
-  color: #3f87a6;
-  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2465C5; /* Blue color similar to the image */
 }
 
 .upcoming-card:hover {
@@ -311,28 +299,17 @@ body {
 }
 
 .friend-card {
-  background-color: white;
-  background: white;
+  display: flex;
   align-items: center;
+  background-color: gray;
   padding: 8px;
   border-radius: 8px;
   margin-bottom: 8px;
   cursor: pointer;
-  color: black;
   transition: transform 0.3s ease-in-out; /* Smooth transition */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
-
-.friend-card h2
-{
-  font-size: 1.1rem;
-    color: #3f87a6;
-    margin-bottom: 10px;
-}
-
 
 .friend-card:hover {
-  color: #a1d8f0;
   transform: scale(1.05); /* Slightly enlarge the card on hover */
 }
 

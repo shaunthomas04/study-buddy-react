@@ -6,6 +6,7 @@ import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate, s
 import { useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
+import { sendRequestAlert } from '../Email/Email.js';
 
 // Function to upload a session to user agenda database
 const uploadSession = async (userHash, session) => {
@@ -144,6 +145,11 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
     uploadSession(userId, newSession);
     uploadSession(buddyID, buddySession);
 
+    // Send notification email to buddy
+    const buddyEmail = buddyInfo.email;
+    const buddyName = buddyInfo.name;
+    const message = `You have a new study session request from ${userName} on ${newSession.date} at ${newSession.time}.\nNotes: ${newSession.notes}`;
+    // sendRequestAlert(buddyName, buddyEmail, message);
 
     setStudySessions(prevSessions => {
       const updatedSessions = [...prevSessions, newSession];

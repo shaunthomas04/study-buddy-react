@@ -9,13 +9,13 @@ const Navbar = () => {
             <nav className="navbar">
                 <ul className="nav-list">
                     <li className="nav-item">
-                        <NavLink exact className="nav-link" activeClassName="active" to="/Home">Home</NavLink>
+                        <NavLink exact className="nav-link" activeClassName="active" to="/home">Home</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink className="nav-link" activeClassName="active" to="/classes">Classes</NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link" activeClassName="active" to="/buddies">Buddies</NavLink>
+                        <NavLink className="nav-link" activeClassName="active" to="/buddies">Explore</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink className="nav-link" activeClassName="active" to="/agenda">Agenda</NavLink>

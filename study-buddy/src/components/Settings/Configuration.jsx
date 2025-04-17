@@ -278,6 +278,7 @@ const SettingsPage = () => {
 
 
           <div className="profile-fields">
+            <h2> <nl></nl></h2>
               <select value={""}
               onChange={(e) => {
                 const newValue = e.target.value;
@@ -286,7 +287,7 @@ const SettingsPage = () => {
                   setDescriptions({ ...descriptions, [item.key]: "" });
                 }, 500); 
               }}>
-                
+
                 <option value="" disabled>Select Major</option>
                 {schoolInformation.majors.map((major, index) => (
                   <option key={index} value={major}>
@@ -294,26 +295,17 @@ const SettingsPage = () => {
                   </option>
                 ))}
               </select>
-
-              {/* <input
-                type="file"
-                accept="image/*"
-                onChange={(event) => setUserImage(event, userInfoDb.id)}
-                className="file-input" // Add class to the input
-              />
-              <button
-                onClick={() => document.querySelector('input[type="file"]').click()}
-                className="profile-image-button" // Add class to the button
-                aria-label="Change profile picture"
-              >
-              </button> */}
+              <h2> <nl></nl></h2>
+              </div>
 
          
-          </div>
+
 
 
         {/* Editable Grid (Fixed State Issue) */}
+        
         <div className="editable-grid">
+
           {[
   { title: "Preferred Study Time", key: "studyTime", field: "studyTimes", options: schoolInformation.studyTime },
   { title: "Study Environment", key: "environment", field: "studyEnvironment", options: schoolInformation.studyEnvironment },
@@ -329,7 +321,7 @@ const SettingsPage = () => {
               <div className="grid-box" key={item.key}>
 
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
-                  <h3>{item.title}</h3>
+                  <h2>{item.title}</h2>
                    <select
                     value={descriptions[item.key] || ""}
                     onChange={(e) => {

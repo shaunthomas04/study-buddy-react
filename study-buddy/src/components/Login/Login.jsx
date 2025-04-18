@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import login_image2 from "../../assets/login_background2.png";
+import backgroundImage from "../../assets/background.png";
 import logo from "../../assets/logo.png";
 import logo2 from "../../assets/logo2.png";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
@@ -138,7 +139,7 @@ function LoginPage() {
         <div className="login-container">
           <div className="auth-container">
             <div className="auth-items-container">
-              <img src={logo} className="login-logo" alt="Logo" />
+              <img src={logo2} className="login-logo" alt="Logo" />
               <h1>{isLogin ? "Welcome to Study Buddy!" : "Sign up to get started!"}</h1>
               <form className="auth-form">
                 {!isLogin && (

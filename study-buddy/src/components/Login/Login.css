@@ -102,7 +102,7 @@ input {
 button {
     width: 50%;
     height: 40px;
-    background-color: #18801c;
+    background-color: #3c8fb6;
     color: white;
     border: none;
     border-radius: 10px;
@@ -110,7 +110,7 @@ button {
 }
 
 .action-button:hover {
-    background-color: #45a049;
+    background-color: #57b9e6;
 }
 
 .action-button:disabled {

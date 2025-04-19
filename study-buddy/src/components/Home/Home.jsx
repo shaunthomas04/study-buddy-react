@@ -58,10 +58,6 @@ const getTrendingForums = async (userId) => {
 
 }
 
-
-
-
-
 // Function to handle buddy requests (accept or reject)
 const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
   try {
@@ -139,8 +135,14 @@ const removeBuddy = async (buddyID, userID) => {
     const updateduserBuddies = userBuddies.filter(request => request.trim() !== buddyID.trim());
     const updatedbuddyBuddies = buddyBuddies.filter(request => request.trim() !== userID.trim());
 
-    await updateDoc(userInfo, { buddies: updateduserBuddies });
-    await updateDoc(buddyInfo, { buddies: updatedbuddyBuddies });
+    // Remove buddy's sesssions from the user's agenda
+    const userAgenda = userInfoSnapshot.data().agendaStudySessions || [];
+    const buddyAgenda = buddyInfoSnapshot.data().agendaStudySessions || [];
+    const updateduserAgenda = userAgenda.filter(session => session.senderID !== buddyID.trim() && session.recieverID !== buddyID.trim());
+    const updatedbuddyAgenda = buddyAgenda.filter(session => session.senderID !== userID.trim() && session.recieverID !== userID.trim());
+
+    await updateDoc(userInfo, { buddies: updateduserBuddies, agendaStudySessions: updateduserAgenda });
+    await updateDoc(buddyInfo, { buddies: updatedbuddyBuddies, agendaStudySessions: updatedbuddyAgenda });
 
 
     // Send email notification to the buddy
@@ -602,95 +604,6 @@ const Dashboard = () => {
   const [userRequests, setUserRequests] = useState([]);
   const [trendingForumsState, setTrendingForums] = useState([]);
 
-  const dummyData = [
-    {
-      id: 1744680072678,
-      class: "EGR302",
-      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-      subject: "Absent for today",
-      text: "Hey I was absent. Does anyone have any notes for today's lecture?",
-      timestamp: "4/14 6:21pm",
-      user: "Joshua Rivera",
-      replies: [
-        {
-          id: 1744680094375,
-          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-          text: "Hey I have the notes",
-          timestamp: "4/14 6:21pm",
-          user: "Emily Chen"
-        },
-        {
-          id: 1744680094379,
-          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-          text: "I can send you the slides too if you want.",
-          timestamp: "4/14 6:23pm",
-          user: "Michael Tan"
-        },
-        {
-          id: 1744680094380,
-          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-          text: "Check the class Drive folder, I uploaded them there. vadfasd fadsfas dfasdfas dfasdfa sdfasdf asdfas dfasdf adsfadfas df",
-          timestamp: "4/14 6:25pm",
-          user: "Aisha Patel"
-        }
-      ]
-    },
-    {
-      id: 1744680072679,
-      class: "EGR303",
-      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-      subject: "Need help with assignment",
-      text: "Can someone explain question 3 from the homework? I'm stuck.",
-      timestamp: "4/14 7:45pm",
-      user: "Emily Chen",
-      replies: [
-        {
-          id: 1744680094376,
-          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-          text: "I think it’s asking for the torque calculation using method 2.",
-          timestamp: "4/14 8:05pm",
-          user: "Joshua Rivera"
-        }
-      ]
-    },
-    {
-      id: 1744680072680,
-      class: "EGR304",
-      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-      subject: "Study group this weekend",
-      text: "Anyone down to study together on Saturday? We can reserve a room in the library.",
-      timestamp: "4/15 11:02am",
-      user: "Michael Tan",
-      replies: [
-        {
-          id: 1744680094377,
-          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-          text: "I'm in! What time were you thinking?",
-          timestamp: "4/15 11:15am",
-          user: "Emily Chen"
-        }
-      ]
-    },
-    {
-      id: 1744680072681,
-      class: "EGR305",
-      profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-      subject: "Quiz next week?",
-      text: "Did the professor mention a quiz for next week? I might’ve missed it.",
-      timestamp: "4/15 2:37pm",
-      user: "Aisha Patel",
-      replies: [
-        {
-          id: 1744680094378,
-          profilePicture: "https://firebasestorage.googleapis.com/v0/b/egr302-study-buddy.firebasestorage.app/o/default.jpg?alt=media&token=04fa121f-af34-4a53-a0ac-548679302791",
-          text: "Yeah, it's next Thursday. Covers chapters 4–6.",
-          timestamp: "4/15 2:45pm",
-          user: "Michael Tan"
-        }
-      ]
-    }
-  ];
-  
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
@@ -740,7 +653,6 @@ const Dashboard = () => {
     // Firestore real-time listener for user info
     const unsubscribe = onSnapshot(doc(db, "users", userID), (docSnapshot) => {
       if (docSnapshot.exists()) {
-        console.log("Data changed:", docSnapshot.data());
         setUserInfo(docSnapshot.data());  // Update state with Firestore data
       }
     });
@@ -752,7 +664,6 @@ const Dashboard = () => {
       <Loading />
     );
   }
-  console.log(trendingForumsState)
 
   return (
     <>

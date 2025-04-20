@@ -9,6 +9,11 @@ import CourseStudyIcon from './iconbuddy/CourseStudy.png';
 import InterestIcon from './iconbuddy/SchoolInterest.png';
 import { db } from "../../firebase.js"; 
 import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import Loading from '../Loading/Loading.jsx';
+import Redirect from '../Redirect/Redirect.jsx';
+// ignore this error don't know why it is showing up when it works
+import { sendRequestAlert } from '../Email/Email.js';
+
 
 const preferenceIconMap = {
   "Preferred Study Time": StudyTimeIcon,
@@ -37,6 +42,16 @@ const sendBuddyRequest = async (userId, suggestedBuddyId) => {
       return false;
     }
 
+    // Send email notification
+    const userName = `${userDocSnapshot.data().firstName} ${userDocSnapshot.data().lastName}`;
+    const suggestedBuddyName = `${suggestedBuddyDocSnapshot.data().firstName} ${suggestedBuddyDocSnapshot.data().lastName}`;
+    const suggestedBuddyEmail = suggestedBuddyDocSnapshot.data().email;
+    const message = `${userName} has sent you a buddy request!`;
+
+    // await sendRequestAlert(suggestedBuddyName, suggestedBuddyEmail, message);
+
+
+    // Update Firestore
     await updateDoc(userInfo, { buddyRequestsSent: arrayUnion(suggestedBuddyId) });
     await updateDoc(suggestedBuddyInfo, { buddyRequests: arrayUnion(userId) });
 
@@ -70,7 +85,7 @@ const getUserRecommendations = async (userHash) => {
     });
 
     const suggestions = await Promise.all(buddyPromises);
-    return suggestions.filter(Boolean);
+    return suggestions.filter(Boolean); // Remove nulls
   } catch (error) {
     console.error("Error getting recommendations:", error);
     return [];
@@ -149,21 +164,19 @@ const Buddies = () => {
     callGetUserRecommendations();
   }, []);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   if (loading) {
     return (
-      <>
-        <Navbar />
-        <div>Loading...</div>
-      </>
+      <Loading />
     );
   }
 
   if (!buddies.length) {
     return (
-      <>
-        <Navbar />
-        <div className="no-buddies-message">Add some courses in your profile to get started!</div>
-      </>
+      <Redirect/>
     );
   }
 
@@ -173,7 +186,7 @@ const Buddies = () => {
     <>
       <Navbar />
 
-      <aside className="buddy-sidebar buddy-active">
+      <aside className={`buddy-sidebar ${sidebarOpen ? "buddy-active" : ""}`}>
         <h2 className="buddy-sidebar-header">Find Buddies</h2>
         <ul>
           {buddies.map((buddy, index) => (
@@ -188,7 +201,7 @@ const Buddies = () => {
         </ul>
       </aside>
 
-      <div className="buddy-container">
+      <div className={`buddy-container ${sidebarOpen ? "shifted" : ""}`}>
         <div className="profile-section">
           <div className="profile-header">
             <div className="profile-avatar">
@@ -198,24 +211,24 @@ const Buddies = () => {
               <h1 className="profile-name">{activeBuddy}</h1>
               <h3 className="profile-school">{buddyPref.school}</h3>
               <h4 className="profile-major">{buddyPref.major}</h4>
-
-              <button
-                className="send-request-btn"
-                disabled={sentRequests[activeBuddy]}
-                onClick={async () => {
-                  const success = await sendBuddyRequest(currentUserId, buddyPref.userId);
-                  if (success) {
-                    setSentRequests(prev => ({
-                      ...prev,
-                      [activeBuddy]: true
-                    }));
-                  }
-                }}
-              >
-                {sentRequests[activeBuddy] ? "Request Sent" : "Send Buddy Request"}
-              </button>
             </div>
           </div>
+
+          <button
+            className="send-request-btn"
+            disabled={sentRequests[activeBuddy]}
+            onClick={async () => {
+              const success = await sendBuddyRequest(currentUserId, buddyPref.userId);
+              if (success) {
+                setSentRequests(prev => ({
+                  ...prev,
+                  [activeBuddy]: true
+                }));
+              }
+            }}
+          >
+            {sentRequests[activeBuddy] ? "Request Sent" : "Send Buddy Request"}
+          </button>
         </div>
 
         <main className="buddy-profile-content">

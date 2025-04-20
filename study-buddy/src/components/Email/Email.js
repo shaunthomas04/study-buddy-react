@@ -1,4 +1,4 @@
-import emailjs from '@emailjs/browser';
+// import emailjs from '@emailjs/browser';
 
 // Function to send a noitfication about a new request
 export const sendRequestAlert = async (recieverName, recieverEmail, message) => {

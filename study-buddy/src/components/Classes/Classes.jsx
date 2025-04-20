@@ -5,10 +5,10 @@ import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format, getDate, s
 import { useEffect } from 'react';
 import { auth , db } from "../../firebase.js"; 
 import { setDoc, doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
-import Loading from '../Loading/Loading.jsx';
-import Redirect from '../Redirect/Redirect.jsx';
-import { Filter } from 'bad-words'
-import { RegExpMatcher, TextCensor, englishDataset, englishRecommendedTransformers} from 'obscenity';
+// import Loading from '../Loading/Loading.jsx';
+// import Redirect from '../Redirect/Redirect.jsx';
+// // import { Filter } from 'bad-words'
+// import { RegExpMatcher, TextCensor, englishDataset, englishRecommendedTransformers} from 'obscenity';
 
 // get user info from firebase
 const getUserInfo = async (userHash) => {  

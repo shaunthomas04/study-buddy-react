@@ -256,7 +256,7 @@ const PreferenceCard = ({ title, value }) => {
         {title}
       </h4>
       {Array.isArray(value) ? (
-        <ul>
+        <ul className="hidden-scroll">
           {value.map((item, index) => (
             <li key={index}>{item}</li>
           ))}
@@ -277,7 +277,7 @@ const CourseList = ({ title, courses }) => {
         {icon && <img src={icon} alt={`${title} icon`} className="preference-icon" />}
         {title}
       </h4>
-      <ul>
+      <ul className="hidden-scroll">
         {courses.map((course, index) => (
           <li key={index}>{course}</li>
         ))}

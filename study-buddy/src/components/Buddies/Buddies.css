@@ -210,7 +210,7 @@ body, html {
     text-align: center;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
     background: white;  
-    height: 250px;
+    height: 210px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -291,4 +291,14 @@ body, html {
     font-size: 1rem;
     color:#2a7431;
     font-weight: bold;
+}
+
+.hidden-scroll {
+    overflow: auto;
+    scrollbar-width: none;       /* Firefox */
+    -ms-overflow-style: none;    /* IE and Edge */
+}
+
+.hidden-scroll::-webkit-scrollbar {
+    display: none;               /* Chrome, Safari, Opera */
 }

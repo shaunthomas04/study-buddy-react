@@ -149,7 +149,7 @@ const AddStudySessionPopup = ({ studySessions, setStudySessions, setIsVisible, u
     const buddyEmail = buddyInfo.email;
     const buddyName = buddyInfo.name;
     const message = `You have a new study session request from ${userName} on ${newSession.date} at ${newSession.time}.\nNotes: ${newSession.notes}`;
-    // sendRequestAlert(buddyName, buddyEmail, message);
+    sendRequestAlert(buddyName, buddyEmail, message);
 
     setStudySessions(prevSessions => {
       const updatedSessions = [...prevSessions, newSession];

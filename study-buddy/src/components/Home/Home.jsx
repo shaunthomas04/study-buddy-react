@@ -95,7 +95,7 @@ const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
         
         // Send email notification to the buddy
         const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has accepted your buddy request!`;
-        // await sendRequestAlert(buddyName, buddyEmail, message);
+        await sendRequestAlert(buddyName, buddyEmail, message);
 
         window.location.reload();
       }
@@ -105,7 +105,7 @@ const handleBuddyRequest = async (buddyID, userID, isAccepted) => {
 
         // Send email notification to the buddy
         const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has rejected your buddy request.`;
-        // await sendRequestAlert(buddyName, buddyEmail, message);
+        await sendRequestAlert(buddyName, buddyEmail, message);
 
         window.location.reload();
       }
@@ -149,7 +149,7 @@ const removeBuddy = async (buddyID, userID) => {
     const buddyName = `${buddyInfoSnapshot.data().firstName} ${buddyInfoSnapshot.data().lastName}`;
     const buddyEmail = buddyInfoSnapshot.data().email;
     const message = `${userInfoSnapshot.data().firstName} ${userInfoSnapshot.data().lastName} has removed you from their buddy list.`;
-    // await sendRequestAlert(buddyName, buddyEmail, message);
+    await sendRequestAlert(buddyName, buddyEmail, message);
 
     window.location.reload();
   

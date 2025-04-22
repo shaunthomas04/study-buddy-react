@@ -316,7 +316,7 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
       style={{
         display: "flex",
         alignItems: "center",
-        backgroundColor: "gray",
+        backgroundColor: "lightgray",
         padding: "8px",
         borderRadius: "8px",
         marginBottom: "8px",
@@ -334,7 +334,10 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
           marginRight: "10px",
         }}
       />
-      <div>{friend.firstName} {friend.lastName}</div>
+      <div style={{ marginLeft: "auto", display: "column", alignItems: "center", color: "black" }}>
+      <div><h2>{friend.firstName} {friend.lastName}</h2></div>
+      <div><sub>{friend.major}</sub></div>
+      </div>   
   
       <div style={{ marginLeft: "auto", display: "flex", gap: "7px", alignItems: "center" }}>
         {isRequest ? (
@@ -395,15 +398,16 @@ const Sidebar = ({ friendsList, requestsList, userInfo }) => {
 
       <h2>Buddies</h2>
 
-      
       {friendsList.length === 0 && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50%" }}>
-          <h3>Head to the Buddies Page to add some Buddies!</h3>
+          <div className="card">
+          <a activeclassname="active" class="nav-link" href="/buddies" data-discover="true">
+          <h3>Add some Buddies here!
+          </h3>
+        </a>
+          </div>
         </div>
       )}
-
-
-
 
       <ul>
         {friendsList.map((friend) => (

@@ -276,6 +276,7 @@ const SettingsPage = () => {
 
 
           <div className="profile-fields">
+              <h2> <nl></nl></h2>
               <select value={""}
               onChange={(e) => {
                 const newValue = e.target.value;
@@ -291,22 +292,7 @@ const SettingsPage = () => {
                     {major}
                   </option>
                 ))}
-              </select>
-
-              {/* <input
-                type="file"
-                accept="image/*"
-                onChange={(event) => setUserImage(event, userInfoDb.id)}
-                className="file-input" // Add class to the input
-              />
-              <button
-                onClick={() => document.querySelector('input[type="file"]').click()}
-                className="profile-image-button" // Add class to the button
-                aria-label="Change profile picture"
-              >
-              </button> */}
-
-         
+              </select>         
           </div>
 
 
@@ -327,7 +313,7 @@ const SettingsPage = () => {
               <div className="grid-box" key={item.key}>
 
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
-                  <h3>{item.title}</h3>
+                <h2>{item.title}</h2>
                    <select
                     value={descriptions[item.key] || ""}
                     onChange={(e) => {

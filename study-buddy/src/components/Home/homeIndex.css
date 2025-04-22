@@ -198,10 +198,22 @@ body {
   border-radius: 10px;
 }
 
+.card h1{
+  font-size: 1.1rem;
+  color: #3f87a6;
+  margin-bottom: 10px;
+}
+  
+.card h3{
+  
+  color: black;
+  font-style: italic;
+}
+
 .card h4 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2465C5; /* Blue color similar to the image */
+  font-size: 1.1rem;
+  color: #3f87a6;
+  margin-bottom: 10px; /* Blue color similar to the image */
 }
 
 .card:hover {
@@ -272,10 +284,11 @@ body {
 }
 
 .upcoming-card h4 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2465C5; /* Blue color similar to the image */
-}
+  font-size: 1.1rem;
+  color: #3f87a6;
+  margin-bottom: 10px;
+} /* Blue color similar to the image */
+
 
 .upcoming-card:hover {
   transform: scale(1.02); /* Slight pop effect on hover */
@@ -332,8 +345,15 @@ body {
   cursor: pointer;
   transition: transform 0.3s ease-in-out; /* Smooth transition */
 }
+.friend-card h2
+{
+  font-size: 1.1rem;
+    color: #3f87a6;
+    margin-bottom: 10px;
+}
 
 .friend-card:hover {
+  background-color: #a1d8f0;
   transform: scale(1.05); /* Slightly enlarge the card on hover */
 }
 
